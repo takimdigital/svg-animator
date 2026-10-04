@@ -122,6 +122,8 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 ```
 svg-animator/
 ├── SKILL.md                      this file (pipeline + rules)
+├── README.md                     what it is, install, gallery
+├── CONTRIBUTING.md               how to propose a change (read before opening a PR)
 ├── references/                   read on demand
 │   ├── diagram-types.md          12 diagram types + compose: catalog and spec fields
 │   ├── animated-things.md        10 non-diagram types: catalog and spec fields
@@ -137,5 +139,5 @@ svg-animator/
 │   ├── lint_svg_anim.py · render_frames.py
 ├── assets/
 │   ├── template.svg · specs/*.json · examples/*.svg
-└── evals/evals.json
+└── docs/                         README artwork and the curated gallery
 ```
