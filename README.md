@@ -316,8 +316,8 @@ mark — you can buy me a coffee.
   <img src="docs/support.svg" alt="A coffee cup with rising steam, above the words buy me a coffee" width="420">
 </p>
 
-<!-- TODO(taakim): replace the two URLs below with your real Buy Me a Coffee
-     page and the matching button image from https://www.buymeacoffee.com/embed -->
+<!-- TODO(maintainer): replace the link below with your real Buy Me a Coffee page.
+     Grab the button snippet from https://www.buymeacoffee.com/embed -->
 <p align="center">
   <a href="https://www.buymeacoffee.com/YOUR_HANDLE">
     <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy me a coffee" width="180">
@@ -357,54 +357,6 @@ Six steps — **full detail, with working code, in [CONTRIBUTING.md](CONTRIBUTIN
    its spec fields in `references/`.
 5. Add a spec to `assets/specs/`, run the pipeline, **view the frames**.
 6. Commit the generated `.svg` to `assets/examples/`.
-
-## Support this work
-
-This skill is MIT licensed, free, and has no telemetry, no account, and no upsell.
-It costs me nothing to run and nothing to share, so I'm not going to pretend
-otherwise. If it saved you an afternoon — or if you just liked the hand-drawn
-mark — you can buy me a coffee.
-
-<p align="center">
-  <img src="docs/support.svg" alt="A coffee cup with rising steam, above the words buy me a coffee" width="420">
-</p>
-
-<!-- TODO(taakim): replace the two URLs below with your real Buy Me a Coffee
-     page and the matching button image from https://www.buymeacoffee.com/embed -->
-<p align="center">
-  <a href="https://www.buymeacoffee.com/YOUR_HANDLE">
-    <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy me a coffee" width="180">
-  </a>
-</p>
-
-> **Maintainer:** the link above and in `docs/support.svg` are placeholders —
-> swap in your real page before making the repo public.
-
-**Other ways to help, if a coffee isn't your thing** — and these are worth more
-to me:
-
-- **Open an issue** with a graphic that came out wrong. That's the highest-value
-  contribution there is; it tells me what to fix.
-- **Send a real example.** Paste the SVG, say what you expected, say what you got.
-- **Improve the references.** If a technique in `references/` is unclear or a
-  debugging entry is missing, that's a gift.
-- **Tell people.** The README only helps if it reaches someone who needs it.
-
-Contributions of any size are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)
-for the exact shape a pull request should take.
-
----
-
-## Adding a generator type
-
-1. Write the emitter in `scripts/things_a.py` (or `things_b.py` / `diagram_extra.py`),
-   returning `(svg_fragment, height, info)`.
-2. Take `dur`, `theme` and `colors` from the common helper — never hardcode a colour
-   or a duration; the master clock belongs to the caller.
-3. Build every base shape as the **finished** state, then add animation as overlays.
-4. Register it in `gen_diagram.py`'s dispatch table.
-5. Add a spec to `assets/specs/`, run the pipeline, and **view the frames**.
-6. Add the generated `.svg` to `assets/examples/`.
 
 ---
 
