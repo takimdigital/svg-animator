@@ -694,6 +694,92 @@ def lint_one(path, quiet=False):
         dur = el.get("dur", "?")
         report("INFO", f"animateMotion on '{pname}' (dur={dur}, path length {plen:.0f}px, {segs} segment(s), calcMode={el.get('calcMode') or 'paced(default)'}):" + ("\n" + "\n".join(lines) if lines else " no rect crossings"))
 
+    # 6. text fit -------------------------------------------------------
+    # Catches the blind spot where a node's label is wider than the shape it
+    # sits in. references/diagram-types.md 5 documents the limit (mono width
+    # ~0.6 x font-size per char, cards add ~34px padding, subs <= 26 chars)
+    # but nothing enforced it, so a long sub silently drew through its shape
+    # while the linter reported 0 errors and 0 warnings.
+    CH_W = 0.63      # mean glyph advance / font-size for the mono stack
+    MARGIN = 6.0     # breathing room required either side of a label
+    MIN_W, MIN_H = 36.0, 20.0   # below this a shape is decoration, not a container
+
+    def font_size(el):
+        fs = fnum(el.get("font-size"))
+        if fs:
+            return fs
+        return 18.0 if el.get("font-weight") in ("600", "700", "bold") else 12.0
+
+    def text_width(el):
+        """Estimated rendered width of a <text>, honouring textLength."""
+        if el.get("textLength"):
+            return fnum(el.get("textLength"))
+        return len("".join(el.itertext()).strip()) * font_size(el) * CH_W
+
+    # Shapes a label could sit inside, as (label, box, inner_width). Full-bleed
+    # backgrounds and anything too small to be a card are excluded, matching the
+    # geometry checks above.
+    shapes = []
+    for el in root.iter():
+        if in_defs(el):
+            continue
+        o_ = anc_offset(el)
+        if o_ is None or el.get("transform"):
+            continue
+        if local(el.tag) == "rect":
+            w, h = fnum(el.get("width")), fnum(el.get("height"))
+            if not (w and h) or w < MIN_W or h < MIN_H:
+                continue
+            if vbw and w >= 0.9 * vbw and h >= 0.9 * vbh:
+                continue
+            x = o_[0] + fnum(el.get("x"), 0.0)
+            y = o_[1] + fnum(el.get("y"), 0.0)
+            shapes.append((f"card at ({x:.0f},{y:.0f}) {w:.0f}x{h:.0f}",
+                           (x, y, x + w, y + h), w - 2 * MARGIN, None, None))
+        elif local(el.tag) == "circle":
+            r_ = fnum(el.get("r"))
+            if not r_ or 2 * r_ < MIN_W:
+                continue
+            cx = o_[0] + fnum(el.get("cx"), 0.0)
+            cy = o_[1] + fnum(el.get("cy"), 0.0)
+            shapes.append((f"circle at ({cx:.0f},{cy:.0f}) r={r_:.0f}",
+                           (cx - r_, cy - r_, cx + r_, cy + r_), 2 * r_ - 2 * MARGIN, cx, cy))
+
+    for el in root.iter():
+        if local(el.tag) != "text" or in_defs(el):
+            continue
+        body = "".join(el.itertext()).strip()
+        if not body:
+            continue
+        o_ = anc_offset(el)
+        if o_ is None:
+            continue
+        ty = o_[1] + fnum(el.get("y"), 0.0)
+        tx = o_[0] + fnum(el.get("x"), 0.0)
+        tw = text_width(el)
+        # Containment uses the ANCHOR point, not the label's visual midpoint:
+        # for text-anchor="middle" the anchor x is the shape's own centre, and a
+        # badly overflowing label's midpoint can land well outside the shape it
+        # is centred on -- which would hide exactly the case we want to catch.
+        # The tightest containing shape wins; for a circle the usable width is
+        # the chord at the label's baseline, not the diameter.
+        host = None
+        for name, (x0, y0, x1, y1), inner, cx_, cy_ in shapes:
+            if inner <= 0 or not (x0 <= tx <= x1 and y0 <= ty <= y1):
+                continue
+            usable = inner
+            if cx_ is not None:
+                dy = abs(ty - cy_)
+                if dy >= (y1 - y0) / 2:
+                    continue
+                chord = 2.0 * math.sqrt(max(((x1 - x0) / 2) ** 2 - dy ** 2, 0.0))
+                usable = chord - 2 * MARGIN
+            if host is None or usable < host[1]:
+                host = (name, usable)
+        if host and tw > host[1]:
+            report("WARN", f"<text> '{body[:40]}' needs ~{tw:.0f}px but its {host[0]} "
+                           f"gives ~{host[1]:.0f}px - the label will draw through the shape")
+
     return tally(path, quiet)
 
 
