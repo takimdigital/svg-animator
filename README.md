@@ -315,9 +315,15 @@ Full discussion in `references/readme-diagrams.md` §4.
 ## Support this work
 
 This skill is MIT licensed, free, and has no telemetry, no account, and no upsell.
-It costs me nothing to run and nothing to share, so I'm not going to pretend
-otherwise. If it saved you an afternoon — or if you just liked the hand-drawn
-mark — you can buy me a coffee.
+You can read every line of it, fork it, change it, and use it commercially.
+
+It wasn't free to *make*, though. The code is free; the hours of building the
+linter, the diagrams that came out subtly wrong, the pull requests that had to be
+read and verified rather than trusted — that was my time and my API bill, and it
+doesn't come back.
+
+So if it saved you an afternoon, or if you just liked the hand-drawn mark, you
+can buy me a coffee. It's the only thing here that isn't free.
 
 <p align="center">
   <img src="docs/support.svg" alt="A coffee cup with rising steam, above the words buy me a coffee" width="420">
