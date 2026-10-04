@@ -316,16 +316,11 @@ mark — you can buy me a coffee.
   <img src="docs/support.svg" alt="A coffee cup with rising steam, above the words buy me a coffee" width="420">
 </p>
 
-<!-- TODO(maintainer): replace the link below with your real Buy Me a Coffee page.
-     Grab the button snippet from https://www.buymeacoffee.com/embed -->
 <p align="center">
-  <a href="https://www.buymeacoffee.com/YOUR_HANDLE">
+  <a href="https://www.buymeacoffee.com/takimdigital">
     <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy me a coffee" width="180">
   </a>
 </p>
-
-> **Maintainer:** the link above and in `docs/support.svg` are placeholders —
-> swap in your real page before making the repo public.
 
 **Other ways to help, if a coffee isn't your thing** — and these are worth more
 to me:
