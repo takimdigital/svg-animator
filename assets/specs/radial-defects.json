@@ -1,0 +1,40 @@
+{
+  "type": "radial",
+  "title": "three gaps, one shim",
+  "aria": "A central compatibility shim with three spokes. Each spoke names a gap in a legacy endpoint and the correction the shim applies: a non-standard stream envelope is re-emitted as chunked SSE, a dropped schema field is re-expressed as a text protocol, and oversized messages are split.",
+  "dur": 14,
+  "theme": "ocean",
+  "center": {
+    "label": "SHIM",
+    "sub": "fixes all 3"
+  },
+  "items": [
+    {
+      "title": "STREAM",
+      "count": "01",
+      "lines": [
+        "always SSE",
+        "no sentinel",
+        "-> chunked SSE"
+      ]
+    },
+    {
+      "title": "SCHEMA",
+      "count": "02",
+      "lines": [
+        "field dropped",
+        "no warning",
+        "-> text protocol"
+      ]
+    },
+    {
+      "title": "LIMITS",
+      "count": "03",
+      "lines": [
+        "> 24k = 400",
+        "yours = 40k",
+        "-> split messages"
+      ]
+    }
+  ]
+}
