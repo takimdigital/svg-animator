@@ -220,13 +220,16 @@ def resample(pts, step=1.0):
 
 
 # ----------------------------------------------------------------- main lint
-def main(argv):
-    if len(argv) < 2:
-        print(__doc__)
-        return 2
-    path = argv[1]
-    quiet = "--quiet" in argv
-    text = open(path, encoding="utf-8").read()
+def lint_one(path, quiet=False):
+    """Lint a single file. Returns (error_count, warning_count)."""
+    global problems
+    problems = []          # per-file state; see main() for why this is reset
+    try:
+        text = open(path, encoding="utf-8").read()
+    except OSError as e:
+        report("ERROR", f"cannot read file: {e}")
+        finish(path, quiet)
+        return 1, 0
 
     # 1. paste artifacts ------------------------------------------------
     if re.search(r"\\[<>:]", text):
@@ -241,10 +244,10 @@ def main(argv):
         root = ET.fromstring(text.encode("utf-8"))
     except ET.ParseError as e:
         report("ERROR", f"not well-formed XML: {e}")
-        return finish(path)
+        return tally(path, quiet)
     if local(root.tag) != "svg":
         report("ERROR", "root element is not <svg>")
-        return finish(path)
+        return tally(path, quiet)
 
     parent = {c: p for p in root.iter() for c in p}
     order = {el: i for i, el in enumerate(root.iter())}
@@ -777,7 +780,15 @@ def main(argv):
             report("WARN", f"<text> '{body[:40]}' needs ~{tw:.0f}px but its {host[0]} "
                            f"gives ~{host[1]:.0f}px - the label will draw through the shape")
 
-    return finish(path, quiet)
+    return tally(path, quiet)
+
+
+def tally(path, quiet=False):
+    """Print this file's summary and return its (errors, warnings)."""
+    finish(path, quiet)
+    errs = sum(1 for l, _ in problems if l == "ERROR")
+    warns = sum(1 for l, _ in problems if l == "WARN")
+    return errs, warns
 
 
 def finish(path, quiet=False):
@@ -792,6 +803,42 @@ def finish(path, quiet=False):
                 print(f"{level}: {m}")
     print(f"\n{path}: {len(errs)} error(s), {len(warns)} warning(s), {len(infos)} note(s)")
     return 1 if errs else 0
+
+
+def main(argv):
+    """Lint every file given on the command line.
+
+    Accepts many paths at once, because the documented workflow
+    (`lint_svg_anim.py $(git diff --name-only '*.svg')`) passes a list. An
+    earlier version read only argv[1] and silently ignored the rest while
+    still exiting 0, so a multi-file invocation appeared to pass having
+    checked one file.
+
+    Exit code is non-zero if ANY file has an error.
+    """
+    args = [a for a in argv[1:] if not a.startswith("-")]
+    quiet = "--quiet" in argv
+    if not args:
+        print(__doc__)
+        return 2
+
+    total_e = total_w = 0
+    failed = []
+    for path in args:
+        if len(args) > 1:
+            print(f"=== {path}")
+        e, w = lint_one(path, quiet)
+        total_e += e
+        total_w += w
+        if e:
+            failed.append(path)
+
+    if len(args) > 1:
+        print(f"\n{'-' * 60}")
+        print(f"{len(args)} file(s): {total_e} error(s), {total_w} warning(s) total")
+        if failed:
+            print("files with errors: " + ", ".join(failed))
+    return 1 if total_e else 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,30 @@
+{
+  "type": "terminal",
+  "title": "verified on the live API",
+  "dur": 16,
+  "theme": "mono",
+  "window_title": "verify_tool_loop.py",
+  "aria": "A terminal session running a two-turn tool loop against a live endpoint. The first turn emits a tool call to read a file, the tool runs, and the second turn returns the parsed contents. The run passes.",
+  "lines": [
+    {
+      "kind": "cmd",
+      "text": "python verify_tool_loop.py"
+    },
+    {
+      "kind": "out",
+      "text": "TURN 1  tool_call: read({'path': 'config.toml'})"
+    },
+    {
+      "kind": "out",
+      "text": "        executed -> '42 lines parsed'"
+    },
+    {
+      "kind": "out",
+      "text": "TURN 2  text: '42 lines parsed'"
+    },
+    {
+      "kind": "ok",
+      "text": "PASS  full tool loop against the live API"
+    }
+  ]
+}
