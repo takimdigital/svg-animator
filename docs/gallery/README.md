@@ -144,7 +144,7 @@ a logo has opinions a generator doesn't have.
 
 ## Not shown here
 
-There are 49 examples in `assets/examples/`, one per spec. The ones worth opening
+There are 52 examples in `assets/examples/`, one per spec. The ones worth opening
 next:
 
 | Spec | What it demonstrates |

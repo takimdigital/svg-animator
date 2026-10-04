@@ -148,7 +148,7 @@ maps symptom → cause → fix, and changes as little as possible.
 
 ## The gallery
 
-Ten of the 49 generator outputs, at thumbnail size. Every one is lint-clean
+Twelve of the 52 generator outputs, at uniform tile size. Every one is lint-clean
 (`0 errors, 0 warnings`) — click any for the full-size version and the spec behind it.
 
 <a href="docs/gallery/README.md">
@@ -225,6 +225,13 @@ SVG restate lint and frame results — never intentions.
 - CSS transforms missing `transform-box: fill-box` (they silently rotate around
   the wrong origin)
 - arrowheads that don't land on their target's edge
+- **a `<text>` label wider than the shape it sits in** — reported width against
+  the shape's usable width (for a circle, the chord at the label's baseline, not
+  the diameter)
+
+It takes many paths at once, checks **all** of them, and exits non-zero if any file
+has an error — so `lint_svg_anim.py $(git diff --name-only '*.svg')` really does
+verify every file you changed.
 
 And it tells you the *diagnostic*, not just the verdict — it prints each dot's
 enter/leave times per card so you can fix the cause instead of nudging a number.
@@ -258,8 +265,8 @@ svg-animator/
 │   └── render_frames.py           PNG frames at chosen timestamps
 ├── assets/
 │   ├── template.svg
-│   ├── specs/*.json               49 worked specs, one per type
-│   └── examples/*.svg             49 generated, lint-clean references
+│   ├── specs/*.json               52 worked specs, one per type
+│   └── examples/*.svg             52 generated, lint-clean references
 └── docs/                        README's own graphics + the full gallery
     ├── hero.svg · modes.svg · mark.svg · support.svg
     └── gallery/README.md          full-size gallery, every example annotated
