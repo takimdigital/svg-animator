@@ -1,0 +1,5 @@
+{"type":"sequence","title":"login flow","dur":10,"theme":"ocean",
+ "aria":"Sequence diagram of a login: the browser calls the API, which asks auth to verify, reads the user and returns a token.",
+ "actors":[{"id":"b","label":"Browser"},{"id":"api","label":"API","key":true},{"id":"auth","label":"Auth"},{"id":"db","label":"DB"}],
+ "messages":[{"from":"b","to":"api","label":"POST /login"},{"from":"api","to":"auth","label":"verify(creds)"},{"from":"auth","to":"db","label":"SELECT user"},
+             {"from":"db","to":"auth","label":"user row","kind":"return"},{"from":"auth","to":"api","label":"token","kind":"return"},{"from":"api","to":"b","label":"200 + cookie","kind":"return"}]}

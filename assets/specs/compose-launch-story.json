@@ -1,0 +1,7 @@
+{"type":"compose","layout":"stack","title":"launch day","dur":16,"theme":"sunset","gap":12,"margin":20,
+ "aria":"A launch story in three beats: a headline reveals, a rocket lifts off, then the counters roll.",
+ "parts":[
+  {"type":"text","variant":"reveal","text":"We are live","size":60,"width":900,"height":150,"window":[0,0.3]},
+  {"type":"scene","scene":"rocket","width":900,"height":380,"window":[0.28,0.72]},
+  {"type":"counter","items":[{"value":1200,"label":"signups","suffix":"+"},{"value":48,"label":"countries"},{"value":4,"label":"hours to ship"}],"window":[0.7,1]}
+ ]}

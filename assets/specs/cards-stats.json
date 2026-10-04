@@ -1,0 +1,4 @@
+{"type":"cards","title":"at a glance","dur":6,"theme":"ember","cols":4,
+ "aria":"Four stat tiles: 502 concepts, 354 craft terms, 26 skills and 0 dependencies.",
+ "items":[{"value":"502","label":"concepts","sub":"in the pool","key":true},{"value":"354","label":"craft terms","sub":"greppable"},
+          {"value":"26","label":"skills","sub":"composable"},{"value":"0","label":"runtime deps","sub":"static output"}]}

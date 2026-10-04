@@ -1,0 +1,7 @@
+{
+ "type": "loader",
+ "title": "loaders",
+ "theme": "ocean",
+ "period": 1.2,
+ "aria": "Eight looping loader animations: ring, dots, bars, orbit, pulse, dual, wave and progress."
+}

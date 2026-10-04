@@ -1,0 +1,17 @@
+{
+  "type": "flow",
+  "title": "design-atlas · system architecture",
+  "aria": "design-atlas system architecture: user intent flows into the atlas core, through a deterministic workflow into outputs, then to any LLM or Deckhand, with a maintainer loop publishing pool updates back into the core.",
+  "dur": 10,
+  "theme": "ember",
+  "arrows": true,
+  "columns": [
+    [{"id": "user", "label": "User", "sub": "intent · brief"}],
+    [{"id": "core", "label": "ATLAS CORE", "sub": "502 concepts · 354 terms", "key": true}],
+    [{"id": "flow", "label": "Workflow", "sub": "config → site"}],
+    [{"id": "out", "label": "Outputs", "sub": "contract · specs · site", "key": true}],
+    [{"id": "llm", "label": "Any LLM", "sub": "grep refs · zero-shot"},
+     {"id": "dh", "label": "Deckhand", "sub": "optional production"}]
+  ],
+  "feedback": {"id": "maint", "label": "Maintainer", "sub": "inbox → rebuild → release", "from": "out", "to": "core"}
+}

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="TODO: describe the graphic and its motion in one sentence">
+  <title>TODO title</title>
+  <desc>TODO: longer description of what the graphic shows and how it moves.</desc>
+
+  <!--
+    STORYBOARD (master clock = 8s loop)
+      0.00-0.10  fade in traveller
+      0.10-0.90  travel along rail A -> B
+      0.90-1.00  fade out, reset while invisible
+    Z-ORDER: traveller drawn UNDER nodes (visible only on rails). Move the group after the nodes to draw it OVER them.
+  -->
+
+  <style>
+    :root { --bg:#0B0E12; --surface:#141A21; --stroke:#2C3642; --accent:#E8C99A; --muted:#8A94A0; --text:#F0EAE0; }
+    @media (prefers-color-scheme: light) { :root { --bg:#F6F3EE; --surface:#FFFFFF; --stroke:#CFC8BC; --accent:#B5803A; --muted:#6B6560; --text:#1B1F24; } }
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .glow { transform-box: fill-box; transform-origin: center; }
+    @media (prefers-reduced-motion: reduce) { .glow { animation: none !important; } }
+  </style>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)" fill-opacity="0.85"/>
+    </marker>
+  </defs>
+
+  <!-- Layer 1: background -->
+  <rect width="800" height="400" fill="var(--bg)"/>
+
+  <!-- Layer 2: connectors (end 3-4px before the target edge) -->
+  <path d="M188 200 L296 200" fill="none" stroke="var(--accent)" stroke-opacity="0.45" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2b: traveller, UNDER the nodes. Base opacity 0 so nothing shows before the loop starts. -->
+  <g opacity="0">
+    <animateMotion dur="8s" repeatCount="indefinite" path="M188 200 H296"/>
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="8s" repeatCount="indefinite"/>
+    <circle r="10" fill="var(--accent)" fill-opacity="0.18"/>
+    <circle r="4" fill="var(--accent)"/>
+  </g>
+
+  <!-- Layer 3: nodes -->
+  <g>
+    <rect x="80" y="160" width="108" height="80" rx="12" fill="var(--surface)" stroke="var(--stroke)" stroke-width="1.5"/>
+    <text x="134" y="205" text-anchor="middle" fill="var(--text)" font-size="14" font-weight="600">Source</text>
+  </g>
+  <g>
+    <rect x="300" y="160" width="108" height="80" rx="12" fill="var(--surface)" stroke="var(--stroke)" stroke-width="1.5"/>
+    <text x="354" y="205" text-anchor="middle" fill="var(--text)" font-size="14" font-weight="600">Target</text>
+  </g>
+
+  <!-- Layer 4: labels -->
+  <text x="40" y="44" fill="var(--muted)" font-size="12" letter-spacing="3">TODO TITLE</text>
+</svg>

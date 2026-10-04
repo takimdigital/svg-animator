@@ -1,0 +1,9 @@
+{"type":"compose","layout":"stack","title":"how a request becomes a site","dur":14,"theme":"ocean","gap":14,"margin":20,
+ "aria":"Two diagrams that play one after the other: first the build pipeline flows, then the login sequence plays.",
+ "parts":[
+  {"type":"flow","title":"1 · build pipeline","arrows":true,"window":[0,0.48],
+   "columns":[[{"id":"s","label":"push","sub":"git","key":true}],[{"id":"b","label":"build","sub":"bundle"}],[{"id":"t1","label":"unit"},{"id":"t2","label":"e2e"}],[{"id":"r","label":"release","sub":"deploy","key":true}]]},
+  {"type":"sequence","title":"2 · runtime login","window":[0.52,1],
+   "actors":[{"id":"b","label":"Browser"},{"id":"api","label":"API","key":true},{"id":"db","label":"DB"}],
+   "messages":[{"from":"b","to":"api","label":"POST /login"},{"from":"api","to":"db","label":"SELECT user"},{"from":"db","to":"api","label":"row","kind":"return"},{"from":"api","to":"b","label":"200 + cookie","kind":"return"}]}
+ ]}

@@ -1,0 +1,23 @@
+{
+ "type": "counter",
+ "title": "by the numbers",
+ "theme": "forest",
+ "dur": 8,
+ "aria": "Odometer counters rolling to 12,840 stars, 502 concepts and 99 percent.",
+ "items": [
+  {
+   "value": 12840,
+   "label": "stars",
+   "suffix": "+"
+  },
+  {
+   "value": 502,
+   "label": "concepts"
+  },
+  {
+   "value": 99,
+   "label": "uptime",
+   "suffix": "%"
+  }
+ ]
+}

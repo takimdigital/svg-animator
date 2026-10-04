@@ -1,0 +1,11 @@
+{
+ "type": "backdrop",
+ "variant": "rain",
+ "theme": "mono",
+ "width": 1000,
+ "height": 340,
+ "heading": "Rain backdrop",
+ "subtitle": "ambient motion, static-first",
+ "dur": 12,
+ "aria": "Animated rain background."
+}

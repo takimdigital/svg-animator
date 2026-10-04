@@ -1,0 +1,13 @@
+{
+  "type": "phases",
+  "title": "delivery method · 4 phases",
+  "aria": "Four phase panels (plan, build, verify, ship) that light up in sequence with their steps.",
+  "dur": 8,
+  "theme": "forest",
+  "phases": [
+    {"name": "PLAN", "sub": "decide what & why", "chips": ["goal", "scope", "risks"]},
+    {"name": "BUILD", "sub": "make the change", "chips": ["spec·first", "implement", "review"]},
+    {"name": "VERIFY", "sub": "prove it works", "chips": ["tests", "lint", "frames"]},
+    {"name": "SHIP", "sub": "release + learn", "chips": ["release", "monitor"]}
+  ]
+}

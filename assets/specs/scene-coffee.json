@@ -1,0 +1,10 @@
+{
+ "type": "scene",
+ "scene": "coffee",
+ "theme": "ember",
+ "width": 900,
+ "height": 480,
+ "dur": 8,
+ "caption": "fuel for shipping",
+ "aria": "Illustrated coffee scene."
+}

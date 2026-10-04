@@ -1,0 +1,4 @@
+{"type":"terminal","title":"quick start","dur":12,"theme":"mono","window_title":"zsh — demo",
+ "aria":"A terminal session: install the package, run the build and see a success message.",
+ "lines":[{"kind":"cmd","text":"npm install design-atlas"},{"kind":"out","text":"added 214 packages in 3.1s"},
+          {"kind":"cmd","text":"npx atlas build --theme ember"},{"kind":"out","text":"compiling 502 concepts..."},{"kind":"ok","text":"✔ site ready in ./out (3.2s)"}]}

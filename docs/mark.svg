@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240"
+     role="img" aria-labelledby="m-title m-desc">
+  <title id="m-title">svg-animator mark</title>
+  <desc id="m-desc">A vector path drawn as an S-curve between two nodes, with a bright dot riding the path and a dashed ring turning slowly behind it.</desc>
+
+  <!--
+    Mode B (hand-build), 6s master clock. Geometry computed, not eyeballed.
+    Path: M 52 186 C 130 186, 96 54, 188 54
+      - start (52,186)  horizontal tangent -> first control shares y=186
+      - end   (188,54)  horizontal tangent -> last  control shares y=54
+      so the traveller arrives moving right and an arrowhead at the tip sits flat.
+    Static-first: the stroke, both nodes and the ring are the BASE state (frame 0
+    is the finished mark). Every animation below is an overlay that either rides
+    the existing path or starts and ends invisible.
+  -->
+
+  <defs>
+    <linearGradient id="gStroke" x1="52" y1="186" x2="188" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8B7BFF"/>
+      <stop offset="1" stop-color="#E879C8"/>
+    </linearGradient>
+    <linearGradient id="gBed" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#151130"/>
+      <stop offset="1" stop-color="#0A0A18"/>
+    </linearGradient>
+    <radialGradient id="gDot" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.55" stop-color="#C9B8FF"/>
+      <stop offset="1" stop-color="#C9B8FF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="fGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <path id="rail" d="M 52 186 C 130 186, 96 54, 188 54"/>
+  </defs>
+
+  <style>
+    /* Ambient rotation lives in CSS so prefers-reduced-motion can switch it off. */
+    .ring { transform-box: fill-box; transform-origin: center; animation: spin 12s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+  </style>
+
+  <!-- background -->
+  <rect x="0" y="0" width="240" height="240" rx="54" fill="url(#gBed)"/>
+
+  <!-- ambient deco: dashed ring, 12s = dur/2 so it stays a divisor of the master clock -->
+  <g class="ring">
+    <circle cx="120" cy="120" r="92" fill="none" stroke="#4A3F86" stroke-width="1.4"
+            stroke-dasharray="3 9" opacity="0.85"/>
+    <circle cx="120" cy="28" r="2.6" fill="#8B7BFF"/>
+  </g>
+
+  <!-- the rail itself: base state, always fully drawn -->
+  <use href="#rail" fill="none" stroke="url(#gStroke)" stroke-width="7"
+       stroke-linecap="round" opacity="0.28"/>
+
+  <!-- marching highlight on the same path: dash period 6+8=14, offset 0 -> -14 = one
+       full seamless period over 3s (dur/2) -->
+  <use href="#rail" fill="none" stroke="#C9B8FF" stroke-width="3"
+       stroke-linecap="round" opacity="0.5" stroke-dasharray="6 8">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="3s"
+             repeatCount="indefinite" calcMode="linear"/>
+  </use>
+
+  <!-- endpoint nodes -->
+  <g>
+    <circle cx="52" cy="186" r="8" fill="#151130" stroke="#8B7BFF" stroke-width="3"/>
+    <circle cx="188" cy="54" r="8" fill="#151130" stroke="#E879C8" stroke-width="3"/>
+    <!-- start node breathes on arrival of the dot (early window) -->
+    <circle cx="52" cy="186" r="8" fill="none" stroke="#8B7BFF" stroke-width="2" opacity="0">
+      <animate attributeName="r" values="8;8;19;8;8" keyTimes="0;0.02;0.09;0.17;1" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0;.85;0;0" keyTimes="0;0.02;0.06;0.17;1" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <!-- end node answers when the traveller lands (~0.85) -->
+    <circle cx="188" cy="54" r="8" fill="none" stroke="#E879C8" stroke-width="2" opacity="0">
+      <animate attributeName="r" values="8;8;19;8;8" keyTimes="0;0.82;0.88;0.95;1" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0;.85;0;0" keyTimes="0;0.82;0.86;0.95;1" dur="6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!--
+    Traveller. keyPoints/keyTimes (calcMode=linear) so it reaches the end node at
+    85% of the clock instead of racing there by arc length. It fades out at 0.9 and
+    back in at 0.02, so the teleport back to the start is never seen.
+  -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.02;0.85;0.9;1"
+             dur="6s" repeatCount="indefinite"/>
+    <circle r="13" fill="url(#gDot)" opacity="0.55" filter="url(#fGlow)"/>
+    <circle r="4.5" fill="#FFFFFF" filter="url(#fGlow)">
+      <animateMotion dur="6s" repeatCount="indefinite" calcMode="linear"
+                     keyPoints="0;0.88;1" keyTimes="0;0.78;0.88"
+                     path="M 52 186 C 130 186, 96 54, 188 54"/>
+    </circle>
+  </g>
+</svg>

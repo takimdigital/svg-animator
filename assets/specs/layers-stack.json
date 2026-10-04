@@ -1,0 +1,6 @@
+{"type":"layers","title":"request path · 4 layers","dur":10,"theme":"forest",
+ "aria":"A request travels down through client, API, services and data layers, and the response travels back up.",
+ "layers":[{"name":"CLIENT","sub":"browser · cli","chips":["web","cli","sdk"]},
+           {"name":"API","sub":"gateway","chips":["auth","rate-limit","route"],"key":true},
+           {"name":"SERVICES","sub":"business logic","chips":["orders","billing","search"]},
+           {"name":"DATA","sub":"storage","chips":["postgres","cache"]}]}

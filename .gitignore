@@ -1,0 +1,21 @@
+# pipeline output: run/, frames, contact sheets
+run/
+*.png
+!docs/**/*.png
+
+# scratch / authoring
+build/
+scratch/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

@@ -1,0 +1,11 @@
+{"type":"compose","layout":"stack","title":"system tour","dur":18,"theme":"ocean","gap":14,"margin":20,
+ "aria":"A three-part tour: what modules exist, how they talk, and which layer they run in.",
+ "parts":[
+  {"type":"radial","title":"1 · what exists","window":[0,0.33],"center":{"label":"core/","sub":"hub"},"radius":170,
+   "items":[{"title":"INGEST","lines":["crawl","parse"]},{"title":"INDEX","lines":["embed","store"]},{"title":"SERVE","lines":["api","stream"]},{"title":"OPS","lines":["metrics","alerts"]}]},
+  {"type":"sequence","title":"2 · how it talks","window":[0.34,0.66],
+   "actors":[{"id":"c","label":"Client"},{"id":"a","label":"API","key":true},{"id":"i","label":"Index"}],
+   "messages":[{"from":"c","to":"a","label":"query"},{"from":"a","to":"i","label":"search"},{"from":"i","to":"a","label":"hits","kind":"return"},{"from":"a","to":"c","label":"results","kind":"return"}]},
+  {"type":"layers","title":"3 · where it runs","window":[0.67,1],"width":900,
+   "layers":[{"name":"EDGE","sub":"cdn","chips":["cache"]},{"name":"APP","sub":"api","chips":["auth","route"],"key":true},{"name":"DATA","sub":"storage","chips":["index","db"]}]}
+ ]}

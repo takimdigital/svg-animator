@@ -1,0 +1,11 @@
+{
+ "type": "backdrop",
+ "variant": "bubbles",
+ "theme": "ember",
+ "width": 1000,
+ "height": 340,
+ "heading": "Bubbles backdrop",
+ "subtitle": "ambient motion, static-first",
+ "dur": 12,
+ "aria": "Animated bubbles background."
+}

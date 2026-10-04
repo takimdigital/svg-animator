@@ -1,0 +1,10 @@
+{
+ "type": "text",
+ "variant": "pop",
+ "text": "Pop pop pop",
+ "theme": "sunset",
+ "dur": 6,
+ "size": 64,
+ "subtitle": "animated text · pop",
+ "aria": "Animated text, pop variant."
+}

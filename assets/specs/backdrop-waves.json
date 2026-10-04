@@ -1,0 +1,11 @@
+{
+ "type": "backdrop",
+ "variant": "waves",
+ "theme": "ocean",
+ "width": 1000,
+ "height": 340,
+ "heading": "Waves backdrop",
+ "subtitle": "ambient motion, static-first",
+ "dur": 12,
+ "aria": "Animated waves background."
+}

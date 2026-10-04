@@ -1,0 +1,11 @@
+{
+ "type": "backdrop",
+ "variant": "mesh",
+ "theme": "sunset",
+ "width": 1000,
+ "height": 340,
+ "heading": "Mesh backdrop",
+ "subtitle": "ambient motion, static-first",
+ "dur": 12,
+ "aria": "Animated mesh background."
+}

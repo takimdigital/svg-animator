@@ -1,0 +1,8 @@
+{"type":"compose","layout":"grid","cols":2,"title":"release dashboard","dur":10,"theme":"violet","gap":20,"margin":20,
+ "aria":"A dashboard grid: weekly growth bars, latency line chart, a delivery cycle and a terminal session.",
+ "parts":[
+  {"type":"chart","kind":"bar","title":"weekly active repos","width":620,"height":300,"data":[{"label":"W1","value":120},{"label":"W2","value":180},{"label":"W3","value":260},{"label":"W4","value":340},{"label":"W5","value":450}]},
+  {"type":"chart","kind":"line","title":"latency p95 (ms)","theme":"forest","width":620,"height":300,"data":[{"label":"v1","value":480},{"label":"v2","value":330},{"label":"v3","value":240},{"label":"v4","value":150},{"label":"v5","value":120}]},
+  {"type":"terminal","title":"ship it","width":620,"window_title":"zsh","lines":[{"kind":"cmd","text":"atlas release"},{"kind":"out","text":"tests passed (214)"},{"kind":"ok","text":"✔ v1.4.0 published"}]},
+  {"type":"timeline","title":"next","card_w":120,"spacing":140,"items":[{"tag":"NOW","label":"1.4","key":true},{"tag":"Q4","label":"1.5"},{"tag":"2027","label":"2.0"}]}
+ ]}

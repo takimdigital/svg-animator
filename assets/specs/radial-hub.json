@@ -1,0 +1,18 @@
+{
+  "type": "radial",
+  "title": "agent platform · 8 module clusters",
+  "aria": "A central orchestrator broadcasting to 8 module clusters with expanding sonar pulses.",
+  "dur": 6,
+  "theme": "ocean",
+  "center": {"label": "core/", "sub": "orchestrator"},
+  "items": [
+    {"title": "INGEST", "count": "03", "lines": ["crawler", "parser", "dedupe"]},
+    {"title": "INDEX", "count": "03", "lines": ["embed", "chunk", "store"]},
+    {"title": "REASON", "count": "04", "lines": ["plan", "route", "critique", "recover"]},
+    {"title": "TOOLS", "count": "03", "lines": ["browser", "shell", "files"]},
+    {"title": "MEMORY", "count": "02", "lines": ["short-term", "long-term"]},
+    {"title": "SAFETY", "count": "03", "lines": ["policy", "sandbox", "audit"]},
+    {"title": "OUTPUT", "count": "03", "lines": ["report", "api", "stream"]},
+    {"title": "OPS", "count": "02", "lines": ["metrics", "alerts"]}
+  ]
+}

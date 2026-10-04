@@ -1,0 +1,10 @@
+{
+ "type": "text",
+ "variant": "glitch",
+ "text": "SYSTEM ONLINE",
+ "theme": "forest",
+ "dur": 6,
+ "size": 64,
+ "subtitle": "animated text · glitch",
+ "aria": "Animated text, glitch variant."
+}

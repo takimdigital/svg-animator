@@ -1,0 +1,10 @@
+{
+ "type": "scene",
+ "scene": "rocket",
+ "theme": "violet",
+ "width": 900,
+ "height": 480,
+ "dur": 8,
+ "caption": "liftoff",
+ "aria": "Illustrated rocket scene."
+}

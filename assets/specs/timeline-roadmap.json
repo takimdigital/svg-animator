@@ -1,0 +1,4 @@
+{"type":"timeline","title":"roadmap · 2026","dur":8,"theme":"violet",
+ "aria":"A roadmap timeline with five milestones from alpha to general availability.",
+ "items":[{"tag":"Q1","label":"Alpha","sub":"core engine"},{"tag":"Q2","label":"Beta","sub":"plugins + docs","key":true},
+          {"tag":"Q3","label":"Launch","sub":"public release"},{"tag":"Q4","label":"Scale","sub":"teams + SSO"},{"tag":"2027","label":"GA","sub":"stable API","key":true}]}

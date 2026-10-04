@@ -1,0 +1,58 @@
+{
+ "type": "gauge",
+ "title": "system health",
+ "theme": "ocean",
+ "cols": 3,
+ "dur": 8,
+ "aria": "Gauges for CPU, memory and disk, a ring for uptime, a bar for requests and a donut for traffic split.",
+ "items": [
+  {
+   "kind": "gauge",
+   "label": "CPU",
+   "value": 72
+  },
+  {
+   "kind": "gauge",
+   "label": "MEMORY",
+   "value": 48,
+   "color": "#5FD38D"
+  },
+  {
+   "kind": "ring",
+   "label": "UPTIME",
+   "value": 99,
+   "unit": "%"
+  },
+  {
+   "kind": "bar",
+   "label": "REQUESTS",
+   "value": 1840,
+   "max": 2400,
+   "unit": ""
+  },
+  {
+   "kind": "donut",
+   "label": "TRAFFIC",
+   "center": "3 regions",
+   "segments": [
+    {
+     "value": 52
+    },
+    {
+     "value": 31
+    },
+    {
+     "value": 17
+    }
+   ]
+  },
+  {
+   "kind": "ring",
+   "label": "ERRORS",
+   "value": 3,
+   "max": 10,
+   "unit": "/10",
+   "color": "#FF7B72"
+  }
+ ]
+}

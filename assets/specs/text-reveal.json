@@ -1,0 +1,10 @@
+{
+ "type": "text",
+ "variant": "reveal",
+ "text": "Hello world",
+ "theme": "ocean",
+ "dur": 6,
+ "size": 64,
+ "subtitle": "animated text · reveal",
+ "aria": "Animated text, reveal variant."
+}

@@ -1,0 +1,10 @@
+{
+ "type": "text",
+ "variant": "wave",
+ "text": "Ship faster",
+ "theme": "ember",
+ "dur": 6,
+ "size": 64,
+ "subtitle": "animated text · wave",
+ "aria": "Animated text, wave variant."
+}

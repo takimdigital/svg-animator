@@ -1,0 +1,10 @@
+{
+ "type": "scene",
+ "scene": "orbit",
+ "theme": "sunset",
+ "width": 900,
+ "height": 480,
+ "dur": 8,
+ "caption": "everything in motion",
+ "aria": "Illustrated orbit scene."
+}

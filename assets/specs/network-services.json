@@ -1,0 +1,5 @@
+{"type":"network","title":"service mesh · pulse spread","dur":9,"theme":"ocean","layout":"circle","start":["gw"],
+ "aria":"A gateway pulse spreads through auth, api, search and billing services to the database and cache.",
+ "nodes":[{"id":"gw","label":"gateway","key":true},{"id":"auth","label":"auth"},{"id":"api","label":"api","sub":"graphql"},
+          {"id":"search","label":"search"},{"id":"bill","label":"billing"},{"id":"db","label":"database","key":true}],
+ "edges":[["gw","auth"],["gw","api"],["api","search"],["api","bill"],["auth","db"],["search","db"]]}

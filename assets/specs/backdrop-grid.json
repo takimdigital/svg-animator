@@ -1,0 +1,11 @@
+{
+ "type": "backdrop",
+ "variant": "grid",
+ "theme": "forest",
+ "width": 1000,
+ "height": 340,
+ "heading": "Grid backdrop",
+ "subtitle": "ambient motion, static-first",
+ "dur": 12,
+ "aria": "Animated grid background."
+}

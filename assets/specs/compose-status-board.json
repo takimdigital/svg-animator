@@ -1,0 +1,8 @@
+{"type":"compose","layout":"grid","cols":2,"title":"status board","dur":10,"theme":"ocean","gap":16,"margin":20,
+ "aria":"A status board: gauges for system health, a radar comparison, loaders and the request path layers.",
+ "parts":[
+  {"type":"gauge","cols":2,"items":[{"kind":"gauge","label":"CPU","value":72},{"kind":"ring","label":"UPTIME","value":99}]},
+  {"type":"radar","radius":110,"axes":["speed","safety","docs","DX","size"],"series":[{"name":"v1","values":[55,60,40,50,70]},{"name":"v2","values":[88,82,75,90,60]}]},
+  {"type":"loader","variants":["ring","dots","bars","wave"],"cols":4,"cell":150},
+  {"type":"layers","width":720,"layers":[{"name":"API","chips":["auth"],"key":true},{"name":"DATA","chips":["db"]}]}
+ ]}

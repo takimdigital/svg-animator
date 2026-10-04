@@ -1,0 +1,7 @@
+{"type":"compose","layout":"stack","dur":14,"theme":"violet","gap":10,"margin":20,
+ "aria":"A product hero: logo reveal, odometer counters and a row of animated feature icons.",
+ "parts":[
+  {"type":"logo","mark":"hexagon","initials":"DA","wordmark":"design-atlas","tagline":"concept pool → sites","width":900,"height":240,"window":[0,0.55]},
+  {"type":"counter","items":[{"value":12840,"label":"stars","suffix":"+"},{"value":502,"label":"concepts"},{"value":99,"label":"uptime","suffix":"%"}],"window":[0.2,0.75]},
+  {"type":"icons","cols":6,"cell":150,"items":[{"name":"bolt","label":"fast"},{"name":"lock","label":"secure"},{"name":"gear","label":"configurable"},{"name":"wifi","label":"connected"},{"name":"star","label":"loved"},{"name":"check","label":"tested"}]}
+ ]}

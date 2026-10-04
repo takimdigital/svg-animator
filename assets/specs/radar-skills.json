@@ -1,0 +1,39 @@
+{
+ "type": "radar",
+ "title": "engine comparison",
+ "theme": "violet",
+ "dur": 8,
+ "aria": "Radar chart comparing two versions across six axes.",
+ "axes": [
+  "speed",
+  "safety",
+  "docs",
+  "DX",
+  "size",
+  "ecosystem"
+ ],
+ "series": [
+  {
+   "name": "v1",
+   "values": [
+    55,
+    60,
+    40,
+    50,
+    70,
+    45
+   ]
+  },
+  {
+   "name": "v2",
+   "values": [
+    88,
+    82,
+    75,
+    90,
+    60,
+    72
+   ]
+  }
+ ]
+}

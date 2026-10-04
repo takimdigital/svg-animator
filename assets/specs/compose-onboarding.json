@@ -1,0 +1,9 @@
+{"type":"compose","layout":"stack","title":"get started","dur":16,"theme":"sunset","gap":16,"margin":20,
+ "aria":"Onboarding: first a terminal installs and builds, then the daily delivery loop plays.",
+ "parts":[
+  {"type":"terminal","title":"1 · install","window_title":"zsh","width":900,"window":[0,0.5],
+   "lines":[{"kind":"cmd","text":"npm i -g design-atlas"},{"kind":"out","text":"added 1 package"},{"kind":"cmd","text":"atlas init && atlas build"},{"kind":"ok","text":"✔ ready"}]},
+  {"type":"cycle","title":"2 · your daily loop","window":[0.5,1],
+   "center":{"label":"daily","sub":"loop"},
+   "steps":[{"label":"edit"},{"label":"build"},{"label":"review","key":true},{"label":"ship"}]}
+ ]}

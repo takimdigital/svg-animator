@@ -1,0 +1,10 @@
+{
+ "type": "text",
+ "variant": "type",
+ "text": "npm run build",
+ "theme": "mono",
+ "dur": 6,
+ "size": 64,
+ "subtitle": "animated text · type",
+ "aria": "Animated text, type variant."
+}

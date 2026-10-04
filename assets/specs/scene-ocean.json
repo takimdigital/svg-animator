@@ -1,0 +1,10 @@
+{
+ "type": "scene",
+ "scene": "ocean",
+ "theme": "ocean",
+ "width": 900,
+ "height": 480,
+ "dur": 8,
+ "caption": "smooth sailing",
+ "aria": "Illustrated ocean scene."
+}

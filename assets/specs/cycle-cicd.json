@@ -1,0 +1,4 @@
+{"type":"cycle","title":"delivery loop","dur":9,"theme":"sunset",
+ "aria":"A continuous delivery loop: plan, code, build, test, release, monitor and back to plan.",
+ "center":{"label":"CI/CD","sub":"always shipping"},
+ "steps":[{"label":"plan","sub":"scope"},{"label":"code","sub":"branch"},{"label":"build","sub":"bundle"},{"label":"test","sub":"gate","key":true},{"label":"release","sub":"deploy"},{"label":"monitor","sub":"learn"}]}
