@@ -153,10 +153,39 @@ def build_logo(spec, th, idp=""):
     mx, my = x0 + R, H / 2
     d = _mark_path(mark, mx, my, R)
     cid, gid = f"{idp}lmc", f"{idp}lmg"
+    # Static-first for an intro animation (issue #5).
+    #
+    # A logo reveal is a timed intro: the outline has no dash and the wordmark is
+    # at opacity 0 until its cue, so at t=0 the canvas is empty. That is correct
+    # for a clean loop and wrong for principle 1 -- a viewer whose client does
+    # not run SMIL sees a blank rectangle.
+    #
+    # A negative `begin` pre-rolls the loop, so frame 0 lands wherever we choose.
+    # PRE sits inside the hold window (after the shine at 0.78, before the
+    # fade-out at 0.93), which means frame 0 shows the COMPLETED logo and the
+    # reveal still plays on from there. The loop stays seamless: pre-rolling a
+    # periodic animation does not change its period.
+    PRE = 0.85
+    begin = f' begin="{-PRE * dur:.3f}s"'
+
     sb = [f"type=logo  loop={dur:g}s  mark={mark}", tdesc("draw outline", 0.04, 0.30), tdesc("fill + initials", 0.30, 0.42),
           tdesc("wordmark", 0.38, 0.52), tdesc("tagline", 0.50, 0.62), tdesc("shine", 0.62, 0.78),
-          "whole lockup fades out at 0.93-0.98 so the loop restarts clean; base state = finished logo"]
-    ani = lambda a, v, kt, extra="": f'<animate attributeName="{a}" values="{v}" keyTimes="{kt}" dur="{dur:g}s" repeatCount="indefinite"{extra}/>'
+          "whole lockup fades out at 0.93-0.98 so the loop restarts clean; base state = finished logo",
+          f"loop pre-rolled by {PRE * dur:.2f}s so frame 0 lands in the hold window, fully drawn (static-first)"]
+
+    # Static-first for an intro animation (issue #5).
+    #
+    # A logo reveal is a timed intro: the outline has no dash and the wordmark is
+    # at opacity 0 until its cue, so at t=0 the canvas is empty. That is correct
+    # for a clean loop and wrong for principle 1 -- a viewer whose client does
+    # not run SMIL sees a blank rectangle.
+    #
+    # A negative `begin` pre-rolls the loop, so frame 0 lands wherever we choose.
+    # PRE is placed inside the hold window (after the shine at 0.78, before the
+    # fade-out at 0.93) which means frame 0 shows the COMPLETED logo, and the
+    # reveal still plays on from there. The loop stays seamless: pre-rolling a
+    # periodic animation does not change its period.
+    ani = lambda a, v, kt, extra="": f'<animate attributeName="{a}" values="{v}" keyTimes="{kt}" dur="{dur:g}s"{begin} repeatCount="indefinite"{extra}/>'
     body = [f'  <clipPath id="{cid}"><path d="{d}"/></clipPath>'
             f'<linearGradient id="{gid}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>\n',
             f'  <g id="{idp}logo">{ani("opacity", "1;1;0;0", "0;0.93;0.98;1")}',
@@ -166,7 +195,7 @@ def build_logo(spec, th, idp=""):
     if ini:
         body.append(f'<text x="{F(mx)}" y="{F(my + 14)}" text-anchor="middle" font-family="{SANS}" font-size="40" font-weight="800" fill="{th["text_key"]}">{esc(ini)}'
                     f'{ani("opacity", "0;0;1;1", "0;0.30;0.40;1")}</text>')
-    body.append(f'<g clip-path="url(#{cid})"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;{F(2 * R + 150)} 0;{F(2 * R + 150)} 0" keyTimes="0;0.62;0.78;1" dur="{dur:g}s" repeatCount="indefinite"/>'
+    body.append(f'<g clip-path="url(#{cid})"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;{F(2 * R + 150)} 0;{F(2 * R + 150)} 0" keyTimes="0;0.62;0.78;1" dur="{dur:g}s"{begin} repeatCount="indefinite"/>'
                 f'<rect x="{F(mx - R - 90)}" y="{F(my - R * 1.4)}" width="46" height="{F(R * 2.8)}" fill="url(#{gid})" transform="rotate(18 {F(mx)} {F(my)})"/></g></g>')
     if word:
         wx = mx + R + 40
