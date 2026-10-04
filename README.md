@@ -148,70 +148,33 @@ maps symptom → cause → fix, and changes as little as possible.
 
 ## The gallery
 
-Everything below is a real generator output from `assets/examples/`, lint-clean.
-These are not mockups pasted into a README — they're the artifacts.
+Ten of the 49 generator outputs, at thumbnail size. Every one is lint-clean
+(`0 errors, 0 warnings`) — click any for the full-size version and the spec behind it.
 
-### Diagrams
+<a href="docs/gallery/README.md">
+  <img src="docs/gallery/network-services.svg" alt="Service network with pulses spreading from a gateway" width="24%">
+  <img src="docs/gallery/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="24%">
+  <img src="docs/gallery/timeline-roadmap.svg" alt="Roadmap timeline" width="24%">
+  <img src="docs/gallery/terminal-demo.svg" alt="Terminal demo typing a command" width="24%">
+</a>
 
-<p align="center">
-  <img src="docs/gallery/network-services.svg" alt="Service network with pulses spreading from a gateway" width="100%">
-</p>
+<a href="docs/gallery/README.md">
+  <img src="docs/gallery/loader-sheet.svg" alt="Sheet of eight loading spinner variants" width="24%">
+  <img src="docs/gallery/gauge-dashboard.svg" alt="Dashboard of gauges, rings, bars and a donut" width="24%">
+  <img src="docs/gallery/radar-skills.svg" alt="Radar chart comparing skills" width="24%">
+  <img src="docs/gallery/counter-stats.svg" alt="Odometer counters" width="24%">
+</a>
 
-<p align="center">
-  <img src="docs/gallery/timeline-roadmap.svg" alt="Roadmap timeline with alternating milestone cards" width="100%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/terminal-demo.svg" alt="Terminal window typing a command and its output" width="88%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/chart-line.svg" alt="Line chart that draws on and reveals its area" width="88%">
-</p>
-
-### Things
-
-<p align="center">
-  <img src="docs/gallery/loader-sheet.svg" alt="Sheet of eight loading spinner variants" width="100%">
-</p>
+<a href="docs/gallery/README.md">
+  <img src="docs/gallery/icons-set.svg" alt="Twelve micro-animated icons" width="24%">
+  <img src="docs/gallery/logo-shield.svg" alt="Shield logo reveal" width="24%">
+  <img src="docs/gallery/art-mandala.svg" alt="Generative mandala" width="24%">
+  <img src="docs/gallery/backdrop-mesh.svg" alt="Animated mesh-gradient backdrop" width="24%">
+</a>
 
 <p align="center">
-  <img src="docs/gallery/gauge-dashboard.svg" alt="Dashboard of gauges, rings, bars and a donut" width="100%">
+  <sub>All twelve are real generator output. <a href="docs/gallery/README.md">See the full gallery →</a></sub>
 </p>
-
-<p align="center">
-  <img src="docs/gallery/radar-skills.svg" alt="Radar chart comparing skills across axes" width="70%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/logo-shield.svg" alt="Shield logo reveal animation" width="55%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/text-shimmer.svg" alt="Shimmer text effect" width="80%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/counter-stats.svg" alt="Odometer counters rolling up to their values" width="100%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/icons-set.svg" alt="Twelve micro-animated icons on a grid" width="100%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/scene-rocket.svg" alt="Rocket launch scene with shake and smoke" width="55%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/art-mandala.svg" alt="Generative mandala art" width="45%">
-</p>
-
-<p align="center">
-  <img src="docs/gallery/backdrop-mesh.svg" alt="Animated mesh-gradient backdrop" width="100%">
-</p>
-
----
 
 ## The seven principles
 
@@ -273,6 +236,7 @@ enter/leave times per card so you can fix the cause instead of nudging a number.
 ```
 svg-animator/
 ├── SKILL.md                     the pipeline, the rules, the routing
+├── CONTRIBUTING.md              how to submit a PR (human or agent)
 ├── references/                  read on demand, not upfront
 │   ├── diagram-types.md           12 diagram types + compose: every spec field
 │   ├── animated-things.md         10 non-diagram types
@@ -292,11 +256,26 @@ svg-animator/
 │   ├── diagram_common.py · diagram_extra.py · things_a.py · things_b.py
 │   ├── lint_svg_anim.py           the linter
 │   └── render_frames.py           PNG frames at chosen timestamps
-└── assets/
-    ├── template.svg
-    ├── specs/*.json               49 worked specs, one per type
-    └── examples/*.svg             49 generated, lint-clean references
+├── assets/
+│   ├── template.svg
+│   ├── specs/*.json               49 worked specs, one per type
+│   └── examples/*.svg             49 generated, lint-clean references
+└── docs/                        README's own graphics + the full gallery
+    ├── hero.svg · modes.svg · mark.svg · support.svg
+    └── gallery/README.md          full-size gallery, every example annotated
 ```
+
+### Contributing
+
+Whether you're a person or an agent: read **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+It specifies the exact shape a pull request should take — the hard rules, the
+six steps for a new generator type, a copy-paste PR description template, and
+what "verified" has to mean around it. Bug reports with a real broken SVG are
+the single most valuable contribution; fixing one is optional.
+
+**Reporting that the linter passed but the animation is still wrong is especially
+valuable** — it means the linter has a blind spot, and closing it improves the
+skill for everyone.
 
 Progressive disclosure: `SKILL.md` is the whole method in one page. The twelve
 reference files load only when the task touches them, so the skill stays cheap.
@@ -323,6 +302,96 @@ Three caveats worth knowing:
 - The static fallback is **frame 0**, which is why frame 0 must be complete.
 
 Full discussion in `references/readme-diagrams.md` §4.
+
+---
+
+## Support this work
+
+This skill is MIT licensed, free, and has no telemetry, no account, and no upsell.
+It costs me nothing to run and nothing to share, so I'm not going to pretend
+otherwise. If it saved you an afternoon — or if you just liked the hand-drawn
+mark — you can buy me a coffee.
+
+<p align="center">
+  <img src="docs/support.svg" alt="A coffee cup with rising steam, above the words buy me a coffee" width="420">
+</p>
+
+<!-- TODO(taakim): replace the two URLs below with your real Buy Me a Coffee
+     page and the matching button image from https://www.buymeacoffee.com/embed -->
+<p align="center">
+  <a href="https://www.buymeacoffee.com/YOUR_HANDLE">
+    <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy me a coffee" width="180">
+  </a>
+</p>
+
+> **Maintainer:** the link above and in `docs/support.svg` are placeholders —
+> swap in your real page before making the repo public.
+
+**Other ways to help, if a coffee isn't your thing** — and these are worth more
+to me:
+
+- **Open an issue** with a graphic that came out wrong. That's the highest-value
+  contribution there is; it tells me what to fix.
+- **Send a real example.** Paste the SVG, say what you expected, say what you got.
+- **Improve the references.** If a technique in `references/` is unclear or a
+  debugging entry is missing, that's a gift.
+- **Tell people.** The README only helps if it reaches someone who needs it.
+
+Contributions of any size are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)
+for the exact shape a pull request should take.
+
+---
+
+## Adding a generator type
+
+Six steps — **full detail, with working code, in [CONTRIBUTING.md](CONTRIBUTING.md)**.
+
+1. Write the emitter in `scripts/things_a.py`, `things_b.py` or `diagram_extra.py`.
+   Signature `(spec, th, pfx)`, returning the shared `part()` dict. Every colour
+   comes from the `th` theme; never hardcode one.
+2. Take `dur` from the spec. Never set a duration yourself — the master clock
+   belongs to the caller, and in a `compose` it's shared across all parts.
+3. Build the base shapes as the **finished** state first, lint, look at a frame.
+   *Then* add motion as overlays. Building both at once is how things go subtly wrong.
+4. Register the builder in `THINGS_A`, `THINGS_B` or `EXTRA_BUILDERS` and document
+   its spec fields in `references/`.
+5. Add a spec to `assets/specs/`, run the pipeline, **view the frames**.
+6. Commit the generated `.svg` to `assets/examples/`.
+
+## Support this work
+
+This skill is MIT licensed, free, and has no telemetry, no account, and no upsell.
+It costs me nothing to run and nothing to share, so I'm not going to pretend
+otherwise. If it saved you an afternoon — or if you just liked the hand-drawn
+mark — you can buy me a coffee.
+
+<p align="center">
+  <img src="docs/support.svg" alt="A coffee cup with rising steam, above the words buy me a coffee" width="420">
+</p>
+
+<!-- TODO(taakim): replace the two URLs below with your real Buy Me a Coffee
+     page and the matching button image from https://www.buymeacoffee.com/embed -->
+<p align="center">
+  <a href="https://www.buymeacoffee.com/YOUR_HANDLE">
+    <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy me a coffee" width="180">
+  </a>
+</p>
+
+> **Maintainer:** the link above and in `docs/support.svg` are placeholders —
+> swap in your real page before making the repo public.
+
+**Other ways to help, if a coffee isn't your thing** — and these are worth more
+to me:
+
+- **Open an issue** with a graphic that came out wrong. That's the highest-value
+  contribution there is; it tells me what to fix.
+- **Send a real example.** Paste the SVG, say what you expected, say what you got.
+- **Improve the references.** If a technique in `references/` is unclear or a
+  debugging entry is missing, that's a gift.
+- **Tell people.** The README only helps if it reaches someone who needs it.
+
+Contributions of any size are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)
+for the exact shape a pull request should take.
 
 ---
 
