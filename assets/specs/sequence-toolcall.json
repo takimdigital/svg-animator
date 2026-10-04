@@ -1,0 +1,72 @@
+{
+  "type": "sequence",
+  "title": "one tool call, end to end",
+  "aria": "Sequence diagram of a single tool call against a legacy endpoint. The client sends tools to the shim. The shim calls the endpoint with the tools field removed and the tool described in the system prompt. The endpoint replies with a stream of delta frames. The shim converts that into a tool call and returns it to the client, which runs the tool, sends the result back as the next turn, and receives a final answer.",
+  "dur": 16,
+  "theme": "ocean",
+  "actors": [
+    {
+      "id": "client",
+      "label": "Client"
+    },
+    {
+      "id": "shim",
+      "label": "Shim",
+      "key": true
+    },
+    {
+      "id": "upstream",
+      "label": "Upstream"
+    },
+    {
+      "id": "worker",
+      "label": "Worker"
+    }
+  ],
+  "messages": [
+    {
+      "from": "client",
+      "to": "shim",
+      "label": "tools[] + stream"
+    },
+    {
+      "from": "shim",
+      "to": "upstream",
+      "label": "no tools, text protocol"
+    },
+    {
+      "from": "upstream",
+      "to": "shim",
+      "label": "SSE delta frames",
+      "kind": "return"
+    },
+    {
+      "from": "shim",
+      "to": "client",
+      "label": "tool_calls",
+      "kind": "return"
+    },
+    {
+      "from": "client",
+      "to": "worker",
+      "label": "read(config.toml)"
+    },
+    {
+      "from": "worker",
+      "to": "client",
+      "label": "42 lines parsed",
+      "kind": "return"
+    },
+    {
+      "from": "client",
+      "to": "shim",
+      "label": "result as next turn"
+    },
+    {
+      "from": "shim",
+      "to": "client",
+      "label": "final answer",
+      "kind": "return"
+    }
+  ]
+}
