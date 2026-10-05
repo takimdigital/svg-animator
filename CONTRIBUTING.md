@@ -19,7 +19,30 @@ python scripts/lint_svg_anim.py <every .svg you touched or added>   # 0 errors, 
 python scripts/run_pipeline.py <your spec> --out-dir ./run           # RESULT: PASS
 ```
 
+If you touched a generator, also confirm the committed examples still match their
+specs — CI enforces this, and it is the check that catches a change you did not
+mean to make:
+
+```bash
+for spec in assets/specs/*.json; do
+  stem=$(basename "$spec" .json)
+  python scripts/gen_diagram.py "$spec" "/tmp/$stem.svg" >/dev/null
+  diff -q --strip-trailing-cr "assets/examples/$stem.svg" "/tmp/$stem.svg" || echo "DIFFERS: $stem"
+done
+```
+
 …and you have **looked at the rendered frames** and can describe what you saw.
+
+Optionally, quantify the static-first property across the whole gallery:
+
+```bash
+python scripts/measure_frame0.py assets/examples
+```
+
+This one is **advisory**. It reports how much is visible at frame 0 and how much
+of the canvas changes over the loop, but it does not gate — four attempts to turn
+it into a lint rule all failed, and the docstring records the measurements. Read it
+as a trend across your diff, not as a pass/fail.
 
 That last one is not optional and not a formality. `PASS` means the file is
 structurally sound. It does not mean it looks good. Two files can both be

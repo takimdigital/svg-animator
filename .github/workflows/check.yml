@@ -1,0 +1,104 @@
+name: check
+
+# Two gates and one report.
+#
+# The gates are only the things CI can decide on its own: the linter, and
+# byte-reproducibility. Both are exact - they either pass or they do not - and
+# both are already 52/52 clean, so they cost seconds and never cry wolf.
+#
+# There is deliberately no "frame 0 must be complete" gate. We tried to build one
+# four times and it failed every time; scripts/measure_frame0.py records the
+# attempts, the measurements and the reasons. That check runs here as a report,
+# not as a gate, so the numbers are visible in every run and a regression shows
+# up as a diff in the log.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint every example
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Lint assets/examples, docs and thumbs
+        run: |
+          set -o pipefail
+          python scripts/lint_svg_anim.py \
+            assets/examples/*.svg docs/*.svg docs/thumbs/*.svg
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "A non-zero exit means an ERROR, not a warning." >&2
+          echo "ERRORS are real defects: a malformed animation is discarded by the" >&2
+          echo "browser, so the file silently stops doing the thing it advertises." >&2
+          echo "Fix the generator or the spec, regenerate, and commit the result." >&2
+
+  reproducible:
+    name: examples regenerate byte-identically
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regenerate every example from its spec and diff
+        run: |
+          set -euo pipefail
+          fail=0
+          mkdir -p /tmp/regen
+          for spec in assets/specs/*.json; do
+            stem="$(basename "$spec" .json)"
+            [ -f "assets/examples/$stem.svg" ] || { echo "MISSING example for $stem"; fail=1; continue; }
+            python scripts/gen_diagram.py "$spec" "/tmp/regen/$stem.svg" >/dev/null
+            if ! diff -q --strip-trailing-cr "assets/examples/$stem.svg" "/tmp/regen/$stem.svg" >/dev/null; then
+              echo "DIFFERS: $stem.svg does not match what its spec generates"
+              fail=1
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo >&2
+            echo "Every file in assets/examples/ is generated and must be committed" >&2
+            echo "alongside the change that produced it. Either the example was" >&2
+            echo "hand-edited, or a generator change was not regenerated." >&2
+            echo "Run:  python scripts/gen_diagram.py assets/specs/<stem>.json assets/examples/<stem>.svg" >&2
+            exit 1
+          fi
+          echo "all examples reproduce byte-for-byte"
+
+  frame0-report:
+    name: frame-0 report (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet playwright && python -m playwright install --with-deps chromium
+      - name: Measure static-first compliance
+        run: python scripts/measure_frame0.py --csv assets/examples > frame0-report.csv
+      - name: Show the report
+        run: |
+          echo "Advisory only. Sorted by how little text is visible at frame 0."
+          echo "A file that jumps here without an intentional change is the signal."
+          echo
+          column -s, -t frame0-report.csv || cat frame0-report.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frame0-report
+          path: frame0-report.csv
