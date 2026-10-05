@@ -26,7 +26,7 @@ brief**, and report any drift in your reply before you start new work.
 | Scripts | 9 in `scripts/` (incl. `build_thumbs.py`) |
 | Open PRs | 0 |
 | Open issues | 0 |
-| CI | **none** — no `.github/workflows/` |
+| CI | `.github/workflows/check.yml` - lint + byte-reproducibility gate, plus an advisory frame-0 report |
 | Repo visibility | public |
 
 **Merged PRs:** #1 (three examples), #2 (label-width lint check), #3 (SKILL.md
@@ -151,36 +151,49 @@ the one-clock and static-first invariants it protects, and `references/diagrams.
 still lints-clean as prose (no broken relative links to files that do not exist —
 every path you mention must resolve).
 
-### C · Add CI — the repo has none
+### C · CI now exists — extend it, don't rebuild it
 
-This is the highest-value thing you can add, because every gate in this repo is
-currently only run by hand.
+`.github/workflows/check.yml` runs on push to `main`, on every pull request, and
+on demand. It has three jobs:
 
-Add `.github/workflows/ci.yml` running on push and pull_request:
+| job | gates? | what it does |
+|---|---|---|
+| `lint` | **yes** | `lint_svg_anim.py` over `assets/examples`, `docs`, `docs/thumbs` |
+| `reproducible` | **yes** | regenerates all 52 from their specs and requires a byte-identical match |
+| `frame0-report` | no (`continue-on-error`) | measures static-first compliance and uploads the CSV |
 
-```yaml
-- uses: actions/checkout@v4
-- uses: actions/setup-python@v5
-  with: { python-version: '3.11' }
-- run: python -m py_compile scripts/*.py
-- run: python scripts/lint_svg_anim.py assets/examples/*.svg docs/*.svg docs/thumbs/*.svg
-- run: python scripts/gen_diagram.py assets/specs/network-services.json /tmp/n.svg
-      && diff /tmp/n.svg assets/examples/network-services.svg
+The first two are exact, take seconds, and were already 52/52 clean, so they never
+cry wolf. Keep them that way: **a gate that cannot fail is worse than no gate.**
+
+The third is deliberately not a gate. We tried to build a static-first linter rule
+four times and measured every attempt against the real pre-fix files; all four
+failed. The measurements and the reasons are in `scripts/measure_frame0.py`'s
+docstring. The load-bearing one:
+
+```
+broken terminal (pre-#8)   2.1% of pixels differ between frame 0 and mid-loop
+fixed  terminal (now)      1.9%
 ```
 
-The last step is the important one: **regeneration must be byte-identical**, or
-a committed example has drifted from its spec.
+The broken file scores *higher*. Ambient motion — aurora blobs, shimmer, drifting
+backgrounds — dominates the pixel budget and swamps the one part that regressed.
+So the check reports numbers and a human reads the trend.
+
+**If you want to add a gate, prove it catches a real regression first.** Extract a
+known-bad file from history and show the rule fails on it and passes on the fixed
+version:
+
+```bash
+git show <ref-before-the-fix>:assets/examples/<name>.svg > /tmp/bad.svg
+python scripts/<your-check>.py /tmp/bad.svg    # must fail
+python scripts/<your-check>.py assets/examples/<name>.svg   # must pass
+```
 
 **Line-ending trap:** `.gitattributes` pins `* text=auto eol=lf`, so on Linux CI
-the `diff` above is exact. On Windows a checkout may still carry CRLF in the
-working tree while the generator writes LF, and a bare `diff` then reports a
-spurious difference. If you run this comparison locally and it "fails", re-run
-it as `diff --strip-trailing-cr /tmp/n.svg assets/examples/network-services.svg`
-before concluding anything is broken. Confirm which case you are in and say so
-in your report.
-
-**Do not** add a Playwright/Chromium step. Frame rendering needs a browser and
-would make CI flaky; it is a local tool by design.
+the diff is exact. On Windows a checkout may carry CRLF while the generator writes
+LF, and a bare `diff` then reports a spurious difference. Compare with
+`diff --strip-trailing-cr`, or normalise in your script. Confirm which case you
+are in and say so in your report.
 
 **Definition of done:** the workflow file is valid YAML, every command in it is
 one you have run locally and pasted real output from, and you state plainly

@@ -148,6 +148,29 @@ group that is itself at `opacity 0` outside the part's window, so a check that
 only reads each text node's own `opacity` reports a blank terminal as complete.
 Multiply down the chain, and compare `t=0` against `t=0.5·dur`.
 
+### There is no lint check for this, and that is deliberate
+
+`scripts/measure_frame0.py` reports the numbers. It does not gate, because four
+attempts to make it gate all failed against the real pre-fix files:
+
+| attempt | why it fails |
+|---|---|
+| no `<text>` invisible at frame 0 | `gauge-dashboard` legitimately hides 45 count-up labels and renders a complete graphic |
+| visible characters, frame 0 vs mid-loop | reads 1.00 even on broken files — opacity cannot see **occlusion**, and the pre-fix terminal hid its text under a cover *rect* |
+| absolute painted pixels | every example paints a full-canvas background rect, so ink saturates at ~100% either way |
+| pixels *differing* frame 0 vs mid-loop | works mechanically, useless as a gate: broken terminal **2.1%**, fixed terminal **1.9%** — ambient aurora motion swamps the signal |
+
+Separating "hidden until its cue" from "genuinely blank" needs per-type knowledge
+of intent. Use the measurement as a trend across your diff: a file whose numbers
+move when you did not touch it is the interesting signal. That is how the composed
+logo bug was found.
+
+If you want to add a real check, prove it on a known-bad file first:
+
+```bash
+git show <ref-before-the-fix>:assets/examples/<name>.svg > /tmp/bad.svg
+```
+
 ## Checklist
 
 - [ ] Frame 0 is the finished graphic, not an intro pose
