@@ -318,7 +318,7 @@ def build_compose(spec, th, cli_theme=None):
         pth = theme_for(ps, default_name=spec.get("theme", "ember"), cli_theme=cli_theme) if ps.get("theme") else th
         p = builders[ps["type"]](ps, pth, f"p{i}-")
         a, b = ps.get("window", [0, 1])
-        body = apply_window(p["body"], a, b)
+        body = apply_window(p["body"], a, b, p.get("preroll"), p.get("dur"))
         built.append(dict(spec=ps, part=p, body=body, win=(a, b), th=pth))
     if layout == "row":
         W = 2 * margin + sum(b["part"]["W"] for b in built) + gap * (len(built) - 1)
@@ -378,7 +378,12 @@ def assemble(spec, th, p):
     if spec.get("aurora", True):
         out.append("  " + aurora(W, H, th, spec.get("aurora_blur", 0)) + "\n")
     out.append("  " + eyebrow(spec, th) + "\n")
-    out.append(p["body"])
+    body = p["body"]
+    if p.get("preroll") is not None and p.get("dur"):
+        # Standalone part: the window is the whole loop, so the pre-roll offset is
+        # just -preroll*dur. build_compose does the windowed equivalent per part.
+        body = apply_window(body, 0.0, 1.0, p["preroll"], p["dur"])
+    out.append(body)
     out.append("</svg>\n")
     return "".join(out)
 

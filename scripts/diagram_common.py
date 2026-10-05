@@ -226,20 +226,29 @@ def eyebrow(spec, th, x=40, y=50):
     return f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="13" fill="{th["eyebrow"]}" letter-spacing="1.6">{esc(t.upper())}</text>'
 
 
-def part(body, W, H, sb, arrows=False, desc=""):
-    return dict(body=body, W=W, H=H, sb=sb, arrows=arrows, desc=desc)
+def part(body, W, H, sb, arrows=False, desc="", preroll=None, dur=None):
+    # `preroll` is a fraction of this part's own loop that frame 0 should land on,
+    # for types whose content is hidden until its reveal cue (see build_terminal).
+    # apply_window turns it into the negative `begin`, because only the composer
+    # knows the part's window -- a fixed offset chosen at build time overshoots a
+    # part that has been remapped into a short window.
+    return dict(body=body, W=W, H=H, sb=sb, arrows=arrows, desc=desc, preroll=preroll, dur=dur)
 
 
 # ------------------------------------------------------------- composition support
 _KT = re.compile(r'keyTimes="([^"]*)"')
 _AT = re.compile(r"at ([\d.]+)\.\.([\d.]+)")
+_ANI = re.compile(r"<animate\b[^>]*>")
 
 
-def apply_window(body, a, b):
-    """Remap every schedule keyTimes list of a part into the window [a,b] of the master loop (first stays 0, last 1)."""
-    if abs(a) < 1e-9 and abs(b - 1) < 1e-9:
-        return body
+def apply_window(body, a, b, preroll=None, dur=None):
+    """Remap every schedule keyTimes list of a part into the window [a,b] of the master loop (first stays 0, last 1).
 
+    When `preroll` is given (a fraction of the part's own loop that frame 0 should
+    land on), stamp every indefinite animation with a negative `begin` that puts
+    frame 0 there. The offset is scaled by the window so a part remapped into a
+    short window still starts inside that window rather than past its end.
+    """
     def rep(m):
         vals = [float(x) for x in m.group(1).split(";") if x.strip() != ""]
         out = []
@@ -255,7 +264,19 @@ def apply_window(body, a, b):
             out[i] = max(t, last)
             last = out[i]
         return 'keyTimes="' + ";".join(f"{x:.3f}" for x in out) + '"'
-    return _KT.sub(rep, body)
+
+    out = body if (abs(a) < 1e-9 and abs(b - 1) < 1e-9) else _KT.sub(rep, body)
+    if preroll is not None and dur:
+        begin = f' begin="{-((a + preroll * (b - a)) * dur):.3f}s"'
+
+        def stamp(m):
+            tag = m.group(0)
+            if 'begin=' in tag:
+                return tag
+            return tag.replace(' repeatCount="indefinite"', begin + ' repeatCount="indefinite"')
+
+        out = _ANI.sub(stamp, out)
+    return out
 
 
 def map_sb(lines, a, b):
