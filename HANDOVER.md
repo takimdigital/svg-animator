@@ -17,9 +17,9 @@ brief**, and report any drift in your reply before you start new work.
 
 | Fact | Value |
 |---|---|
-| HEAD | `afc105b` *fix(logo): frame 0 is now the finished logo (closes #5) (#6)* |
+| HEAD | `4485b19` *fix(terminal): frame 0 is now the finished session (#8)* |
 | Branch protection | `main` is **protected** — all changes go through a PR |
-| Commits on `main` | 11 |
+| Commits on `main` | 13 |
 | Generator types | 22 (`python -c "import sys;sys.path.insert(0,'scripts');import gen_diagram as g;print(len(g.registry()))"`) |
 | Examples | 52 in `assets/examples/`, 52 specs in `assets/specs/` |
 | Reference docs | 12 in `references/` |
@@ -30,7 +30,8 @@ brief**, and report any drift in your reply before you start new work.
 | Repo visibility | public |
 
 **Merged PRs:** #1 (three examples), #2 (label-width lint check), #3 (SKILL.md
-layout map), #6 (logo static-first fix). **Closed:** #4 (expression-layer
+layout map), #6 (logo static-first fix), #7 (this file), #8 (terminal
+static-first fix). **Closed:** #4 (expression-layer
 proposal — kept on `main` as `docs/PROPOSAL-expression-layer.md` with a
 **decided** status banner).
 
