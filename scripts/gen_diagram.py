@@ -42,9 +42,14 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from diagram_common import (FONT, THEMES, F, T, aurora, apply_window, card_w, common_defs, eyebrow, esc,  # noqa: E402
+from diagram_common import (DARK_THEMES, FONT, THEMES, F, T, aurora, apply_window, card_w, common_defs, eyebrow, esc,  # noqa: E402
                             glow_overlay, gradient_colors, header, make_slots, map_sb, node_card, part, rail,
                             relay_traveller, tdesc)
+
+PICTURE_TMPL = """<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="{dark}">
+  <img src="{light}" alt="{alt}" width="100%">
+</picture>"""
 
 
 # ------------------------------------------------------------------ FLOW
@@ -393,8 +398,42 @@ def main():
     ap.add_argument("spec")
     ap.add_argument("out")
     ap.add_argument("--theme", default=None)
+    ap.add_argument("--pair", nargs=2, metavar=("LIGHT", "DARK"), default=None,
+                    help="also write <stem>-light.svg and <stem>-dark.svg, and print the <picture> snippet")
     a = ap.parse_args()
     spec = json.load(open(a.spec, encoding="utf-8"))
+
+    if a.pair:
+        light_name, dark_name = a.pair
+        for nm in a.pair:
+            if nm not in THEMES:
+                sys.exit(f"unknown theme '{nm}'; choose from {sorted(THEMES)}")
+        if light_name in DARK_THEMES:
+            sys.exit(f"'{light_name}' is a dark theme, so it cannot be the light half of a pair "
+                     f"(an <img> SVG cannot see the page theme, so the two files must differ in polarity)")
+        if dark_name not in DARK_THEMES:
+            sys.exit(f"'{dark_name}' is a light theme, so it cannot be the dark half of a pair")
+        stem = a.out[:-4] if a.out.endswith(".svg") else a.out
+        base = os.path.basename(stem)
+        parent = os.path.dirname(stem)
+        written = []
+        for name, suffix in ((light_name, "-light"), (dark_name, "-dark")):
+            th = theme_for(spec, cli_theme=name)
+            p = build(spec, th, name)
+            svg = assemble(spec, th, p)
+            dest = os.path.join(parent, base + suffix + ".svg")
+            open(dest, "w", encoding="utf-8").write(svg)
+            written.append(dest)
+            print(f"wrote {dest} ({max(1, len(svg) // 1024)} KB)  theme={name}")
+        alt = spec.get("title") or spec.get("aria") or base
+        print("\nEmbed with (GitHub supports <picture> in Markdown since Aug 2022):\n")
+        print(PICTURE_TMPL.format(dark=os.path.basename(written[1]), light=os.path.basename(written[0]),
+                                  alt=str(alt).replace('"', "'")[:80]))
+        print("\nNote: an <img> SVG runs in secure animated mode and cannot read the page's colour")
+        print("scheme, which is why this is two files. Both loops are identical in length so the")
+        print("transition on theme switch is not a jump.")
+        return
+
     th = theme_for(spec, cli_theme=a.theme)
     p = build(spec, th, a.theme)
     svg = assemble(spec, th, p)

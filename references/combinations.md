@@ -73,10 +73,54 @@ When a spec nearly fits but the user wants custom art:
 Typical combos: banner + custom mascot; flow node replaced by an icon; chart + annotation arrows; radial with a logo in the hub.
 
 ## 5. Theme pairing
+
+Two different questions use the word "pairing". Both matter.
+
+### Light + dark for the reader's theme (use this for anything public)
+
+A single SVG **cannot** adapt to the reader's light/dark setting, and this is not a
+limitation we can code around. An SVG referenced by an `<img>` runs in the W3C's
+*secure animated mode*: it cannot see the page it is embedded in, so
+`prefers-color-scheme` inside the file has nothing to match against. Its own
+`@media` block evaluates against the *renderer's* preferences, not GitHub's.
+
+So light and dark must be **two files**, swapped by the host page:
+
+```bash
+python scripts/gen_diagram.py spec.json docs/hero --pair paper ocean
+```
+
+writes `docs/hero-light.svg` and `docs/hero-dark.svg` and prints the embed:
+
+```html
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="hero-dark.svg">
+  <img src="hero-light.svg" alt="…">
+</picture>
+```
+
+GitHub supports `<picture>` in Markdown (GA since Aug 2022) and `source` is on the
+sanitiser allowlist, so this works in a README, in an issue or a PR comment.
+
+Rules the generator enforces for you:
+
+- **The two files must differ in polarity.** `paper` is the only light theme;
+  `ember`, `ocean`, `forest`, `mono`, `violet`, `sunset` are dark. The tool rejects
+  `--pair ember violet` rather than shipping two dark files behind a light/dark
+  switch, which would look like a bug.
+- **The light file goes in the `<img>`,** the dark one in the `<source>`. Reversed,
+  you get a white flash on a dark page.
+- **Loop lengths are identical** across the pair, so switching theme mid-read is not
+  a visual jump.
+- **Ship both, or neither.** A lone dark diagram on a light page is the single most
+  common complaint about generated README graphics.
+
+### Two themes in one README (visual variety)
+
 - Same theme for everything in one README (consistency beats variety); use a second theme only to signal a *different domain* (e.g. forest charts inside an ember page) and only on whole parts.
 - Dark README images need their own background (the generator's rounded rect); don't rely on GitHub's page colour.
 - Pair accent + warm/cool text: `ember`+warm text, `ocean`/`violet` + cool text; `paper` only on light pages.
-- Override tokens via `colors` to match a brand: `accent`, `accent2`, `accent3`, `bg`.
+- Override tokens via `colors` to match a brand: `accent`, `accent2`, `accent3`, `bg`. Note `colors` applies to both halves of a `--pair` run, so override once and it holds in both.
 
 ## 6. What not to combine
 - Two heavy blur sources animating (aurora_blur + glow on many nodes).

@@ -10,7 +10,7 @@ Goal: ship animated SVGs that are **correct, self-contained and designed**, for 
 SVG animation fails silently — a wrong `keyTimes`, a `begin` delay or a line through a card still "runs" but looks wrong. So this skill works by **computing instead of guessing, and verifying by looking**.
 
 ## The seven principles (apply to every SVG)
-1. **Static-first.** Frame 0 must already be a complete, good-looking graphic. Base shapes are always visible; motion is added as *overlays* that start at `opacity="0"` (glows, dots, fills). If animation doesn't run (mobile app, preview, PDF) the viewer still sees the full picture.
+1. **Static-first.** Frame 0 must already be a complete, good-looking graphic. Base shapes are always visible; motion is added as *overlays* that start at `opacity="0"` (glows, dots, fills). If animation doesn't run (mobile app, preview, PDF) the viewer still sees the full picture. **The trap that breaks this most often: an animation has no effect before it begins, so anything gated behind a positive `begin` sits parked at its base value — for a traveller, that is the canvas origin, in the corner, in full view.** Fix with a negative `begin` inside the hold window, returned as `preroll=` rather than hardcoded. Full write-up, including the compose-window variant that silently blanks a composed part: `references/static-first.md`.
 2. **Compute, don't guess.** Layout, rail endpoints and every keyTime come from a spec/script or from `lint_svg_anim.py` output. Never type "0.46" because it feels right.
 3. **Motion follows drawn lines.** Dots travel on rails that exist; each rail touches its cards; nothing crosses a card or text unless that is the intended effect.
 4. **One master clock.** One loop length; every phase is a fraction of it; secondary pulses use `dur/2`, `dur/4`; leave ~10 % rest at the end of the loop.
@@ -101,10 +101,12 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 ## Deliver
 - Save as `<descriptive-name>.svg` in your outputs directory and attach/present it (use whichever mechanism your harness provides). Don't paste the whole SVG into chat.
 - For READMEs give the embed line: `![alt](docs/<name>.svg)` or `<img src="docs/<name>.svg" alt="…" width="100%">`, and the caveats that apply (no hover/JS in `<img>`; theme-independent background; static fallback = frame 0). Details in `references/readme-diagrams.md` §4.
+- **Public-facing diagram? Ship a light/dark pair.** A single SVG cannot adapt to the reader's theme — an `<img>` SVG runs in secure animated mode and cannot see the page. Build with `--pair paper ocean` (writes `-light.svg` + `-dark.svg`, prints the `<picture>` snippet) and embed that. Never hand-write a lone dark diagram for a README. Details in `references/combinations.md` §5.
 - Reply briefly: what moves, loop length, assumptions, 2–3 knobs to tweak (`dur`, theme/colours, label text). Mention anything not verified.
 
 ## Reference map
-- `references/diagram-types.md` — 12 diagram types + compose: when to use, every spec field, sizing rules
+- `references/static-first.md` - why frame 0 must be complete, the parked-traveller trap, `preroll` vs `begin`, the compose-window variant, reduced motion
+- `references/diagram-types.md` - 12 diagram types + compose: when to use, every spec field, sizing rules
 - `references/animated-things.md` — 10 non-diagram types (loader, logo, text, gauge, radar, backdrop, icons, scene, counter, art): spec fields, clock behaviour
 - `references/combinations.md` — effect recipes, compose recipes, choreography (sequential/cascade/call-response), theme pairing, what not to mix
 - `references/readme-diagrams.md` — the 12 techniques behind README-grade diagrams, README/GitHub destinations
