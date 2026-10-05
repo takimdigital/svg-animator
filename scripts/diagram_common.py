@@ -35,6 +35,14 @@ THEMES = {
                    rail="#4A2F3B", arrow="#C98A9A", accent="#FF7A59", accent2="#E0457B", accent3="#FFC2A8",
                    loop="#FFD166", text="#F3DDE0", text_key="#FFF4F2", muted="#B58C98", eyebrow="#8A6270", dot="#FFF4F2"),
 }
+
+# Theme polarity. An SVG referenced by an <img> runs in the W3C's "secure
+# animated mode": it cannot see the page, so it cannot see the page's colour
+# scheme, and no amount of cleverness inside one file adapts it. Light and dark
+# therefore have to be two files, paired by a <picture> element. This table is
+# what lets the generator refuse to emit a pair that is really two dark files.
+DARK_THEMES = {"ember", "ocean", "forest", "mono", "violet", "sunset"}
+
 FONT = "'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace"
 SANS = "ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"
 
