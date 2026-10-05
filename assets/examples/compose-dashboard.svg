@@ -20,7 +20,8 @@
       at 0.380..0.400 point 4
     part 2: terminal window 0.00..1.00 at (20,539)
       type=terminal  lines=3  fit_end=0.800  cps=22
-      static-first: all text is drawn; cover rects (window colour) hide the not-yet-typed part while the animation runs
+      loop pre-rolled so frame 0 lands at 0.85 of the part window (after the last line prints, before the fade) with the whole session visible (static-first)
+      cover rects (window colour) hide the not-yet-typed part while the animation runs
       at 0.040..0.099 type line 0
       at 0.323..0.343 print line 1
       at 0.561..0.581 print line 2
@@ -87,12 +88,12 @@
   <circle cx="62" cy="91.0" r="5" fill="#FFBD2E"/>
   <circle cx="82" cy="91.0" r="5" fill="#27C93F"/>
   <text x="310.0" y="95.0" text-anchor="middle" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="12" fill="#9A91C4">zsh</text>
-  <g id="p2-term"><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.90;0.96;1" dur="10s" repeatCount="indefinite"/>
+  <g id="p2-term"><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.90;0.96;1" dur="10s" begin="-8.500s" repeatCount="indefinite"/>
     <text x="42" y="134" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="14" fill="#A78BFA" xml:space="preserve">$ </text><text x="58.8" y="134" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="14" fill="#F8F5FF" xml:space="preserve">atlas release</text>
-    <rect x="168" y="120" width="0" height="20" fill="#1C1830"><animate attributeName="x" calcMode="discrete" keyTimes="0.000;0.045;0.049;0.054;0.058;0.063;0.067;0.072;0.076;0.081;0.085;0.090;0.095;0.099" values="58.8;67.2;75.6;84;92.4;100.8;109.2;117.6;126;134.4;142.8;151.2;159.6;168" dur="10s" repeatCount="indefinite"/><animate attributeName="width" calcMode="discrete" keyTimes="0.000;0.045;0.049;0.054;0.058;0.063;0.067;0.072;0.076;0.081;0.085;0.090;0.095;0.099" values="113.2;104.8;96.4;88;79.6;71.2;62.8;54.4;46;37.6;29.2;20.8;12.4;0" dur="10s" repeatCount="indefinite"/></rect>
-    <rect x="58.8" y="121" width="8" height="16" fill="#A78BFA" opacity="0"><animate attributeName="x" calcMode="discrete" keyTimes="0.000;0.045;0.049;0.054;0.058;0.063;0.067;0.072;0.076;0.081;0.085;0.090;0.095;0.099" values="58.8;67.2;75.6;84;92.4;100.8;109.2;117.6;126;134.4;142.8;151.2;159.6;168" dur="10s" repeatCount="indefinite"/><animate attributeName="opacity" keyTimes="0;0.035;0.040;0.119;0.129;1" values="0;0;1;1;0;0" dur="10s" repeatCount="indefinite"/></rect>
-    <text x="42" y="160" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="14" fill="#9A91C4" xml:space="preserve">tests passed (214)<animate attributeName="opacity" keyTimes="0;0.323;0.343;1" values="0;0;1;1" dur="10s" repeatCount="indefinite"/></text>
-    <text x="42" y="186" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="14" fill="#D4C5FF" xml:space="preserve">✔ v1.4.0 published<animate attributeName="opacity" keyTimes="0;0.561;0.581;1" values="0;0;1;1" dur="10s" repeatCount="indefinite"/></text>
+    <rect x="168" y="120" width="0" height="20" fill="#1C1830"><animate attributeName="x" calcMode="discrete" keyTimes="0.000;0.045;0.049;0.054;0.058;0.063;0.067;0.072;0.076;0.081;0.085;0.090;0.095;0.099" values="58.8;67.2;75.6;84;92.4;100.8;109.2;117.6;126;134.4;142.8;151.2;159.6;168" dur="10s" begin="-8.500s" repeatCount="indefinite"/><animate attributeName="width" calcMode="discrete" keyTimes="0.000;0.045;0.049;0.054;0.058;0.063;0.067;0.072;0.076;0.081;0.085;0.090;0.095;0.099" values="113.2;104.8;96.4;88;79.6;71.2;62.8;54.4;46;37.6;29.2;20.8;12.4;0" dur="10s" begin="-8.500s" repeatCount="indefinite"/></rect>
+    <rect x="58.8" y="121" width="8" height="16" fill="#A78BFA" opacity="0"><animate attributeName="x" calcMode="discrete" keyTimes="0.000;0.045;0.049;0.054;0.058;0.063;0.067;0.072;0.076;0.081;0.085;0.090;0.095;0.099" values="58.8;67.2;75.6;84;92.4;100.8;109.2;117.6;126;134.4;142.8;151.2;159.6;168" dur="10s" begin="-8.500s" repeatCount="indefinite"/><animate attributeName="opacity" keyTimes="0;0.035;0.040;0.119;0.129;1" values="0;0;1;1;0;0" dur="10s" begin="-8.500s" repeatCount="indefinite"/></rect>
+    <text x="42" y="160" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="14" fill="#9A91C4" xml:space="preserve">tests passed (214)<animate attributeName="opacity" keyTimes="0;0.323;0.343;1" values="0;0;1;1" dur="10s" begin="-8.500s" repeatCount="indefinite"/></text>
+    <text x="42" y="186" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="14" fill="#D4C5FF" xml:space="preserve">✔ v1.4.0 published<animate attributeName="opacity" keyTimes="0;0.561;0.581;1" values="0;0;1;1" dur="10s" begin="-8.500s" repeatCount="indefinite"/></text>
   </g>
   </g>
   <g id="p3-group" transform="translate(722 488)"><text x="40" y="50" font-family="'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace" font-size="13" fill="#6F66A0" letter-spacing="1.6">NEXT</text>

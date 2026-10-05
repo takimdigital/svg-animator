@@ -387,7 +387,26 @@ def build_terminal(spec, th, idp=""):
         f = (0.86 - 0.04) / (t - 0.04)
         t, plan = layout(0.0, f)
     colors = {"cmd": th["text_key"], "out": th["muted"], "ok": th["accent3"], "err": "#FF7B72", "dim": th["eyebrow"]}
-    sb = [f"type=terminal  lines={len(lines)}  fit_end={t:.3f}  cps={cps}", "static-first: all text is drawn; cover rects (window colour) hide the not-yet-typed part while the animation runs"]
+
+    # Static-first: the typing reveal is a timed intro, so at t=0 every command
+    # still sits under a full-width cover rect and every output line is at
+    # opacity 0 -- an empty terminal with two bare prompts. That is correct for
+    # a clean loop and wrong for principle 1, the same tension as the logo
+    # reveal (issue #5).
+    #
+    # We ask for a pre-roll rather than stamping one here: frame 0 should land
+    # in the hold window, after the last line has printed (t) and before the
+    # group fades out (0.90), so PRE is the midpoint of that window. The offset
+    # itself has to be scaled by the part's window, which only compose knows --
+    # a terminal remapped into window [0,0.5] has its fade at 0.45-0.48, so a
+    # fixed 0.85 offset would start the part *past* its own window, faded out.
+    # apply_window turns preroll into the negative `begin`; unwindowed parts
+    # (a=0, b=1) get exactly -PRE*dur.
+    PRE = (t + 0.90) / 2.0
+
+    sb = [f"type=terminal  lines={len(lines)}  fit_end={t:.3f}  cps={cps}",
+          f"loop pre-rolled so frame 0 lands at {PRE:.2f} of the part window (after the last line prints, before the fade) with the whole session visible (static-first)",
+          "cover rects (window colour) hide the not-yet-typed part while the animation runs"]
     body = [f'  <rect x="{wx}" y="{wy}" width="{ww}" height="{wh}" rx="12" fill="{th["surface"]}" stroke="{th["stroke_dim"]}" stroke-width="1.1"/>\n',
             f'  <path d="M{wx},{wy + 12} a12,12 0 0 1 12,-12 H{wx + ww - 12} a12,12 0 0 1 12,12 V{wy + bar} H{wx} Z" fill="{th["surface_key"]}"/>\n']
     for k, col in enumerate(("#FF5F56", "#FFBD2E", "#27C93F")):
@@ -426,7 +445,9 @@ def build_terminal(spec, th, idp=""):
                         f'<animate attributeName="opacity" keyTimes="{okt}" values="0;0;1;1" dur="{dur:g}s" repeatCount="indefinite"/></text>\n')
             sb.append(tdesc(f"print line {k}", ts, te))
     body.append("  </g>\n")
-    return part("".join(body), W, H, sb, False, "Terminal session: " + "; ".join(l["text"] for l in lines if l.get("kind") == "cmd"))
+    return part("".join(body), W, H, sb, False,
+               "Terminal session: " + "; ".join(l["text"] for l in lines if l.get("kind") == "cmd"),
+               preroll=PRE, dur=dur)
 
 
 # ------------------------------------------------------------------ CARDS

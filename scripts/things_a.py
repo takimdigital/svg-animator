@@ -173,18 +173,6 @@ def build_logo(spec, th, idp=""):
           "whole lockup fades out at 0.93-0.98 so the loop restarts clean; base state = finished logo",
           f"loop pre-rolled by {PRE * dur:.2f}s so frame 0 lands in the hold window, fully drawn (static-first)"]
 
-    # Static-first for an intro animation (issue #5).
-    #
-    # A logo reveal is a timed intro: the outline has no dash and the wordmark is
-    # at opacity 0 until its cue, so at t=0 the canvas is empty. That is correct
-    # for a clean loop and wrong for principle 1 -- a viewer whose client does
-    # not run SMIL sees a blank rectangle.
-    #
-    # A negative `begin` pre-rolls the loop, so frame 0 lands wherever we choose.
-    # PRE is placed inside the hold window (after the shine at 0.78, before the
-    # fade-out at 0.93) which means frame 0 shows the COMPLETED logo, and the
-    # reveal still plays on from there. The loop stays seamless: pre-rolling a
-    # periodic animation does not change its period.
     ani = lambda a, v, kt, extra="": f'<animate attributeName="{a}" values="{v}" keyTimes="{kt}" dur="{dur:g}s"{begin} repeatCount="indefinite"{extra}/>'
     body = [f'  <clipPath id="{cid}"><path d="{d}"/></clipPath>'
             f'<linearGradient id="{gid}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>\n',
