@@ -162,10 +162,24 @@ def build_mytype(spec, th, pfx=""):
     return part("".join(body), W, H, sb, False, "My type: " + ", ".join(names))
 ```
 
-`part(body, W, H, sb, arrows=False, desc="")` — `body` is the SVG fragment string,
+`part(body, W, H, sb, arrows=False, desc="", preroll=None, dur=None)` — `body` is the SVG fragment string,
 `W`/`H` the fragment's size, `sb` the list of per-frame state strings the renderer
 reports, `desc` a human summary. Don't return a raw tuple; `build_compose` and
 the registry both expect the dict from `part()`.
+
+**If your type hides its own content until an animation cue** — a typewriter, a
+draw-on reveal — it cannot be static-first by default, because at `t=0` everything
+sits in its entrance state. Do not stamp a negative `begin` in the builder. Return
+`preroll=<fraction of your own loop that frame 0 should land on>, dur=dur` and let
+`apply_window` turn it into the `begin`.
+
+That indirection is not ceremony. In a `compose` your keyTimes are remapped into
+the part's `window` *before* anything else happens, so an offset chosen against
+your own 0..1 loop can land past the end of a short window and start the part
+invisible — which is exactly how `logo` and `terminal` both shipped an empty
+frame 0 inside a compose while looking correct standalone. `apply_window` scales
+the offset by the window, so one number works everywhere. Pick a `preroll` inside
+your hold window: after the last cue has played, before the loop's fade-out.
 
 Use `pfx` on every `id` you emit. In a `compose`, the same type can appear several
 times, and unprefixed ids collide.
