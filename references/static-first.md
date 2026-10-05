@@ -109,28 +109,78 @@ This is a stronger statement than "frame 0 is complete", and it is the one that
 pays:
 
 - It is a **static** property. You can check it by parsing, with no browser.
-- It is what makes `prefers-reduced-motion` work for free (below).
+- It is what makes the reduced-motion fallback free to *generate* (below).
 - It is what makes the file safe in *secure static mode*, not merely at `t=0`.
 
-## Reduced motion, for free
+## Reduced motion: CSS inside the file cannot do this
 
-Because the base state is already complete, respecting
-`prefers-reduced-motion` is one line of CSS — hide the animation elements and the
-complete base state shows through:
+**There is no way to stop SMIL from CSS.** This is worth stating plainly, because
+the natural thing to write does not work and looks like it does:
 
 ```xml
+<!-- WRONG. Does absolutely nothing. -->
 <style>
   @media (prefers-reduced-motion: reduce){
-    animate, animateTransform, animateMotion { display: none }
+    svg * { animation: none !important }        /* CSS animation, not SMIL */
+    animate, animateTransform, animateMotion { display: none }   /* still animates */
   }
 </style>
 ```
 
-Verified on `terminal-demo` (7/7 lines visible) and `logo-shield` (5/5 elements
-visible) — identical content to their animated frame 0. No JavaScript, no
-`prefers-reduced-motion` media query needed inside the SVG (an image cannot see
-the page's preferences; this works because the *user's* renderer evaluates the
-SVG's own stylesheet).
+SMIL is a separate animation system from CSS animations. `animation:` and
+`display:` are CSS properties; an `<animate>` element's clock is not driven by
+either. Measured, by emulating `prefers-reduced-motion: reduce` and watching a
+traveller in real time:
+
+```
+reduce + svg * { animation: none !important }   bean x: 718 → 792 → 870 → 944   STILL MOVING
+reduce + display:none on animate*               bean x: 721 → 800 → 878 → 952   STILL MOVING
+reduce + animation-name:none                    bean x: 713 → 787 → 860 → 936   STILL MOVING
+no-preference (baseline)                        bean x: 718 → 792 → 870 → 944   STILL MOVING
+```
+
+Identical. A file that ships the block looks accessible and is not.
+
+### What actually works: ship a static twin
+
+Because the base state is already the finished graphic, the static twin is just
+**the same file with every animation element removed** — no second drawing to
+maintain, and the two cannot drift:
+
+```bash
+# one spec, two files
+python scripts/gen_diagram.py spec.json docs/hero.svg
+python scripts/static_twin.py docs/hero.svg docs/hero-static.svg
+```
+
+```html
+<picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="hero-static.svg">
+  <img src="hero.svg" alt="…" width="100%">
+</picture>
+```
+
+Verified: with `prefers-reduced-motion: no-preference` the browser served
+`flow.svg`; with `reduce` it served `flow-static.svg`, and the static one is the
+complete diagram. `<picture>` and `<source>` are on GitHub's sanitiser allowlist
+and `<picture>` in Markdown is GA since Aug 2022.
+
+This is the same mechanism as the light/dark pair, and the two compose:
+
+```html
+<picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="hero-dark-static.svg">
+  <source media="(prefers-color-scheme: dark)"     srcset="hero-dark.svg">
+  <img src="hero-light.svg" alt="…">
+</picture>
+```
+
+Order matters: the first `<source>` whose `media` matches wins, so put the
+reduced-motion one first.
+
+If you ship only one file, frame 0 is what a reduced-motion user gets anyway —
+which is the whole reason for the static-first rule. The twin is an upgrade, not
+a substitute.
 
 ## Verifying it
 

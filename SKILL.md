@@ -39,16 +39,34 @@ python scripts/run_pipeline.py INPUT --out-dir ./run --name <name> [--deliver ./
 ```
 `INPUT` = a JSON spec (builds, lints, renders) or a hand-written `.svg` (lints, renders). It prints each stage, picks the frame times itself, writes a contact sheet, and ends with `RESULT: PASS / PASS WITH WARNINGS / FAIL`. Delivery is skipped on FAIL. Omit `--deliver` to keep the file in `--out-dir`. A PASS only means the file is structurally sound: you still have to look at the frames.
 
-## Step 0 — Route the request
+## Step 0 — Decide what to draw, then how
 
-| The user wants… | Mode |
+**Do the brief first.** Five questions, in `references/intent-first.md`:
+
+1. What is this for (destination)? 2. Who reads it? 3. What is the ONE thing
+they must take away? 4. What should it *feel* like? 5. What does each moving
+thing *mean*?
+
+Answer them in one line each in your reply, then route. Choosing a type before
+the intent is choosing it for you — the catalog is a floor, not a menu.
+
+Then:
+
+| The content **is**… | Mode |
 |---|---|
-| Any of the generator types — **diagrams** (flow, radial, phases, timeline, network, layers, cycle, sequence, terminal, cards, chart, banner) or **things** (loader, logo, text, gauge, radar, backdrop, icons, scene, counter, art) — **or several together** | **A — generator** (`scripts/gen_diagram.py`, 22 types + `compose`; catalogs: `references/diagram-types.md`, `references/animated-things.md`) |
-| Anything the generator doesn't cover: a specific mascot/character, custom icon, bespoke scene, unusual shape or effect | **B — hand-build** from primitives + patterns |
-| An existing SVG that is broken or needs changes | **C — fix** |
-| A generator diagram plus custom art (mascot, logo, special shape) | **A then B** (`references/combinations.md` §4) |
+| structure the generator already expresses — a pipeline, hierarchy, timeline, sequence, numbers, or a set of relationships | **A — generator** (`scripts/gen_diagram.py`, 22 types + `compose`; catalogs: `references/diagram-types.md`, `references/animated-things.md`) |
+| a **thing with personality** — a mascot, a product, a bespoke scene, a specific logo/icon — or the brief leads with a feeling, or every node would need a `sub` label to make sense | **B — hand-build** from primitives + patterns |
+| something needing both | **A then B** (`references/combinations.md` §4) |
+| an existing SVG that is broken or needs changes | **C — fix** |
 
-If the request is vague ("make me something cool"), pick sensible defaults, state them in one line, and build; ask at most one question and only if the answer changes the build (destination, theme, content).
+Hand-build is not the fallback for "the generator can't do it". It is the right
+answer for a subject with character, and it is where the memorable detail comes
+from — the badge on the mug, the bean on the orbit. See
+`references/intent-first.md` § "When to leave the catalog".
+
+If the request is vague ("make me something cool"), pick sensible defaults, state
+them in one line, and build; ask at most one question and only if the answer
+changes the build (destination, theme, content).
 
 ## Mode A — Diagram from a spec (fastest, most reliable)
 1. **Pick the type**: diagrams → table in `references/diagram-types.md` §1 (`flow radial phases timeline network layers cycle sequence terminal cards chart banner`); things → `references/animated-things.md` §1 (`loader logo text gauge radar backdrop icons scene counter art`); several → `compose`.
@@ -62,7 +80,8 @@ If the request is vague ("make me something cool"), pick sensible defaults, stat
 1. **Brief.** Subject, mood/style, palette, canvas, loop vs one-shot, destination. Infer defaults.
 2. **Decompose** (`references/motion-vocabulary.md`): nouns → shapes, verbs → motion, clock, rest pose. Example: "coffee cup with steam" = cup/handle/saucer paths + 3 steam strands that *rise, fade, sway*, phased with negative `begin`.
 3. **Draw** the still first using `references/drawing-fundamentals.md` (canvas, primitives, paths, symmetry with `<use>`, gradients, recipes for common objects). Group by what moves together; draw pivots at (0,0).
-4. **Animate** with the cookbook (`references/motion-vocabulary.md`, `references/patterns.md`, `references/smil-cheatsheet.md`, `references/css-animation.md`). Default to SMIL + a small `<style>` block; use CSS for rotation/scale around the element's own centre, stagger and `prefers-reduced-motion`; SMIL for path motion, morphing and attribute animation.
+4. **Animate** with the cookbook (`references/motion-vocabulary.md`, `references/patterns.md`, `references/smil-cheatsheet.md`, `references/css-animation.md`). Default to SMIL + a small `<style>` block; use CSS for rotation/scale around the element's own centre and for stagger; SMIL for path motion, morphing and attribute animation. Every moving element must be justifiable in one sentence — "the ___ moves because ___" — otherwise cut it (`references/intent-first.md`).
+   **CSS cannot switch off SMIL.** `animation: none` and `display: none` on an `<animate*>` element do not stop its clock — measured, not assumed. For `prefers-reduced-motion`, ship a static twin and let the host pick it: `python scripts/static_twin.py hero.svg hero-static.svg`, then a `<picture>` with a `prefers-reduced-motion` `<source>`. Details in `references/static-first.md`.
 5. **Generate repetition** (particles, bars, stars, tiles) with a seeded script rather than typing coordinates.
 6. **Verify** (below). Start from `assets/template.svg` if useful.
 
@@ -105,7 +124,8 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - Reply briefly: what moves, loop length, assumptions, 2–3 knobs to tweak (`dur`, theme/colours, label text). Mention anything not verified.
 
 ## Reference map
-- `references/static-first.md` - why frame 0 must be complete, the parked-traveller trap, `preroll` vs `begin`, the compose-window variant, reduced motion
+- `references/intent-first.md` - **read before choosing a type**: the 5-question brief, when motion means something, when to leave the catalog, anti-patterns
+- `references/static-first.md` - why frame 0 must be complete, the parked-traveller trap, `preroll` vs `begin`, the compose-window variant, and why CSS cannot honour `prefers-reduced-motion` (ship a static twin instead)
 - `references/diagram-types.md` - 12 diagram types + compose: when to use, every spec field, sizing rules
 - `references/animated-things.md` — 10 non-diagram types (loader, logo, text, gauge, radar, backdrop, icons, scene, counter, art): spec fields, clock behaviour
 - `references/combinations.md` — effect recipes, compose recipes, choreography (sequential/cascade/call-response), theme pairing, what not to mix

@@ -33,6 +33,21 @@ done
 
 …and you have **looked at the rendered frames** and can describe what you saw.
 
+If you add or change an example, regenerate its reduced-motion twin — CI enforces this:
+
+```bash
+python scripts/static_twin.py assets/examples/mytype-demo.svg \
+                            assets/examples/mytype-demo-static.svg
+python scripts/static_twin.py --check assets/examples     # what CI runs
+```
+
+The twin is the same file with every animation element stripped, which only works
+because a good example is static-first. **CSS cannot switch SMIL off**, so a twin
+is the only honest way to honour `prefers-reduced-motion`; see
+`references/static-first.md`. If the script refuses with *"only N% of text nodes
+survive"*, the example is not static-first — fix the base state rather than
+forcing a twin that would be missing content.
+
 Optionally, quantify the static-first property across the whole gallery:
 
 ```bash
