@@ -154,16 +154,36 @@ every path you mention must resolve).
 ### C · CI now exists — extend it, don't rebuild it
 
 `.github/workflows/check.yml` runs on push to `main`, on every pull request, and
-on demand. It has three jobs:
+on demand. It has four jobs:
 
 | job | gates? | what it does |
 |---|---|---|
 | `lint` | **yes** | `lint_svg_anim.py` over `assets/examples`, `docs`, `docs/thumbs` |
 | `reproducible` | **yes** | regenerates all 52 from their specs and requires a byte-identical match |
+| `static-twins` | **yes** | every animated example has a current `-static.svg` twin (`scripts/static_twin.py --check`) |
 | `frame0-report` | no (`continue-on-error`) | measures static-first compliance and uploads the CSV |
 
-The first two are exact, take seconds, and were already 52/52 clean, so they never
-cry wolf. Keep them that way: **a gate that cannot fail is worse than no gate.**
+The first three are exact, take seconds, and are clean today, so they never cry
+wolf. Keep them that way: **a gate that cannot fail is worse than no gate.**
+
+**Why twins exist:** CSS cannot switch SMIL off — measured, not assumed:
+
+```
+prefers-reduced-motion: reduce + svg * { animation: none !important }
+    orbiting dot x: 718 -> 792 -> 870 -> 944    STILL MOVING
+prefers-reduced-motion: reduce + display:none on animate*
+    orbiting dot x: 721 -> 800 -> 878 -> 952    STILL MOVING
+no preference (baseline)
+    orbiting dot x: 718 -> 792 -> 870 -> 944    STILL MOVING
+```
+
+Identical. So `prefers-reduced-motion` is honoured by shipping a second file and
+letting `<picture>` choose it. `scripts/static_twin.py` produces it by stripping
+animation elements, which is only sound because a good example is static-first —
+so the twin cannot drift from the original.
+
+All 52 examples have a current twin and the gate is green. Getting there exposed
+one wrong test, which is written up as item 2 below because the lesson generalises.
 
 The third is deliberately not a gate. We tried to build a static-first linter rule
 four times and measured every attempt against the real pre-fix files; all four
@@ -203,34 +223,74 @@ that you could not execute the workflow itself — CI only proves itself on push
 
 ## 3 · Known open items — yours to decide, not to guess at
 
-**1 · A static-first lint check.** I attempted one and **reverted it.** The
-logic: "an element hidden at t=0" is true of almost every type, because most
+**1 · A static-first lint check — still not solved, and now better documented.**
+The logic: "an element hidden at t=0" is true of almost every type, because most
 animate *from* zero. Telling that apart from a genuinely empty canvas needs real
-layout, not XML inspection. My attempt produced **47 false positives across 68
-files**. A naive reimplementation will do the same.
+layout, not XML inspection. The first attempt produced **47 false positives
+across 68 files**.
 
-If you attempt it, the tractable version is **not** XML analysis — it is a
-headless-Chromium check that measures painted pixels at frame 0.
-`scripts/render_frames.py` already loads an SVG, calls `pauseAnimations()` and
-`setCurrentTime(0)`, and screenshots; a solid-colour pixel histogram at that
-point is the measurement. Keep it out of CI (§2C) for the flakiness reason.
-**If you decide not to build it, that is a perfectly good outcome** — say so
-explicitly rather than shipping something that cries wolf.
+Four approaches have now been built and measured against the real pre-fix files.
+All four fail; `scripts/measure_frame0.py`'s docstring has the table. The one that
+worked mechanically and still is not a gate:
 
-**2 · The stale local copy.** `C:\Users\Takim\.config\mimocode\skills\svg-animator`
+```
+broken terminal (pre-#8)   2.1% of pixels differ between frame 0 and mid-loop
+fixed  terminal (now)      1.9%
+```
+
+The **broken** file scores higher. Ambient motion (aurora, shimmer, drifting
+backgrounds) dominates the pixel budget and swamps the regression. Any future
+attempt should start there, and should prove itself on a known-bad file extracted
+from history before being proposed as a gate. **Not building it is a legitimate
+outcome** — say so rather than shipping something that cries wolf.
+
+**2 · ~~`gauge-dashboard` had no reduced-motion twin~~ — SOLVED in #12, and the
+"fix" was to the check, not the type.** Worth keeping as a lesson.
+
+The twin check originally reported:
+
+```
+FAIL: gauge-dashboard.svg: no static twin
+  not static-first - only 30% of its 57 text node(s) survive without animation
+```
+
+which reads like a defect in the `gauge` type. It was not. Rendering the twin
+showed it was **correct and complete**: 72%, 48%, 99%, 1840, 3 regions, 3/10, with
+every needle at its final angle. The gauge hides 40 of its 57 text nodes in the
+base state because a count-up draws nine numbers at the same anchor and shows one
+at a time — exactly as it should.
+
+The check was asking the wrong question. It counted *text nodes*, when the
+question that matters is whether any *text position* is missing content. Grouping
+by `(x, y)` anchor fixed it without weakening anything:
+
+```
+wrote gauge-dashboard-static.svg - 58 animation elements removed,
+       100% of 17 text positions still carry visible text
+```
+
+All 52 examples now have twins and the gate is green. The check still refuses a
+genuinely blank file (verified with a hand-made one: `0% of 1 text position`,
+exit 1, nothing written).
+
+Generalisable lesson, and it applies to every check here: **when a gate fires,
+confirm the file is actually broken before changing the file.** I nearly "fixed"
+a correct example to satisfy a wrong test.
+
+**3 · The stale local copy.** `C:\Users\Takim\.config\mimocode\skills\svg-animator`
 is an old snapshot of this skill from before it became a repo — no
 `README.md`, no `CONTRIBUTING.md`, no `docs/`, no `.gitattributes`, one commit
 of history. **Do not sync it, mirror it, or delete it without asking Takim.**
 Report it as an observation and let him decide. The GitHub repo is the source of
 truth.
 
-**3 · Label-width check calibration.** The check from PR #2 estimates width as
+**4 · Label-width check calibration.** The check from PR #2 estimates width as
 `chars × font-size × 0.63`. It is calibrated against the mono stack the
 generator emits. If anyone adds a proportional font to a type, that constant is
 wrong. Consider a comment or an issue; do not "fix" it by loosening the
 threshold without evidence.
 
-**4 · Buy Me a Coffee link.** The README links to
+**5 · Buy Me a Coffee link.** The README links to
 `buymeacoffee.com/takimdigital`. **I inferred that handle from the GitHub
 username — it is not confirmed.** Flag it to Takim in your report; do not guess
 a different one.

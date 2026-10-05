@@ -51,6 +51,8 @@ PICTURE_TMPL = """<picture>
   <img src="{light}" alt="{alt}" width="100%">
 </picture>"""
 
+from static_twin import main as static_twin_main  # noqa: E402
+
 
 # ------------------------------------------------------------------ FLOW
 def build_flow(spec, th, idp=""):
@@ -400,6 +402,8 @@ def main():
     ap.add_argument("--theme", default=None)
     ap.add_argument("--pair", nargs=2, metavar=("LIGHT", "DARK"), default=None,
                     help="also write <stem>-light.svg and <stem>-dark.svg, and print the <picture> snippet")
+    ap.add_argument("--static-twin", action="store_true",
+                    help="also write <stem>-static.svg, the animation-free twin for prefers-reduced-motion")
     a = ap.parse_args()
     spec = json.load(open(a.spec, encoding="utf-8"))
 
@@ -440,6 +444,15 @@ def main():
     open(a.out, "w", encoding="utf-8").write(svg)
     print("\n".join(p["sb"]))
     print(f"\nwrote {a.out} ({max(1, len(svg) // 1024)} KB). Next: python run_pipeline.py {a.out}")
+
+    if a.static_twin:
+        stem, ext = os.path.splitext(a.out)
+        twin_path = stem + "-static" + (ext or ".svg")
+        rc = static_twin_main(["static_twin.py", a.out, twin_path, "--quiet"])
+        if rc:
+            print("\nNo static twin written. CSS cannot switch SMIL off, so a reduced-motion")
+            print("fallback needs a separate file; see references/static-first.md.", file=sys.stderr)
+            sys.exit(rc)
 
 
 if __name__ == "__main__":

@@ -79,6 +79,34 @@ jobs:
           fi
           echo "all examples reproduce byte-for-byte"
 
+  static-twins:
+    name: reduced-motion twins are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Every animated example has a current -static.svg twin
+        run: python scripts/static_twin.py --check assets/examples
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo >&2
+          echo "SMIL cannot be switched off from CSS, so honouring" >&2
+          echo "prefers-reduced-motion means shipping a second, animation-free" >&2
+          echo "file and letting a <picture> element choose between them." >&2
+          echo >&2
+          echo "'no static twin'  -> run:  python scripts/static_twin.py \\" >&2
+          echo "                       assets/examples/<name>.svg \\" >&2
+          echo "                       assets/examples/<name>-static.svg" >&2
+          echo >&2
+          echo "'is stale'        -> the animated file changed; regenerate the twin." >&2
+          echo "'only N% of text nodes survive'" >&2
+          echo "                    -> the example is NOT static-first, so its twin" >&2
+          echo "                       would be missing content. Give the base state the" >&2
+          echo "                       finished drawing first. See references/static-first.md." >&2
+
   frame0-report:
     name: frame-0 report (advisory)
     runs-on: ubuntu-latest

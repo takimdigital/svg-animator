@@ -299,7 +299,15 @@ def build_text(spec, th, idp=""):
 
 # ------------------------------------------------------------------ GAUGE (gauge / ring / bar / donut)
 def _count(x, y, value, unit, size, col, anchor, dur, t0, t1, th, steps=8):
-    """Count-up using stacked texts with discrete visibility; the base state shows the final value."""
+    """Count-up using stacked texts with discrete visibility.
+
+    Static-first: the ghosts carry opacity="0" and the final value is written with
+    NO opacity attribute, so the base state - every animation element removed -
+    shows the finished number. That is what lets scripts/static_twin.py produce a
+    usable reduced-motion twin. The ghosts must stay hidden in the base state or
+    the fallback would show every count-up step at once, stacked on top of each
+    other; only the final text is the base state.
+    """
     fin = f"{value:g}"
     out = []
     for j in range(steps):
