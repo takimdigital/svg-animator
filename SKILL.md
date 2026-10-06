@@ -124,6 +124,8 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - Reply briefly: what moves, loop length, assumptions, 2–3 knobs to tweak (`dur`, theme/colours, label text). Mention anything not verified.
 
 ## Reference map
+- `references/physics.md` - **integrate, don't ease**: the damped-spring ODE, zeta/omega to personality, baking a simulation into static keyframes, gravity with restitution
+- `references/svg-filters.md` - filter pipelines, animated `feTurbulence`/`feDisplacementMap` with no JavaScript, the performance ceilings
 - `references/intent-first.md` - **read before choosing a type**: the 5-question brief, when motion means something, when to leave the catalog, anti-patterns
 - `references/static-first.md` - why frame 0 must be complete, the parked-traveller trap, `preroll` vs `begin`, the compose-window variant, and why CSS cannot honour `prefers-reduced-motion` (ship a static twin instead)
 - `references/diagram-types.md` - 12 diagram types + compose: when to use, every spec field, sizing rules

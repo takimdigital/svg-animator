@@ -13,6 +13,8 @@ Checks (ERROR = broken, WARN = probably wrong, INFO = useful fact):
   * connectors (paths with markers) that pass through, or end inside, a card
   * for each animateMotion: when it enters/leaves each rect (fractions of the
     loop) and whether the traveller is drawn above or below the rect
+  * filter cost: animated feTurbulence above 3 numOctaves, turbulence above 6 at
+    all, and feDisplacementMap on a filter with no region (which clips itself)
 Exit code 1 if any ERROR is found.
 """
 import math
@@ -779,6 +781,38 @@ def lint_one(path, quiet=False):
         if host and tw > host[1]:
             report("WARN", f"<text> '{body[:40]}' needs ~{tw:.0f}px but its {host[0]} "
                            f"gives ~{host[1]:.0f}px - the label will draw through the shape")
+
+    # 7. filter cost ------------------------------------------------------
+    # Animated turbulence is the most expensive thing an SVG can do, and the
+    # cost scales with numOctaves. Each octave is another Perlin evaluation per
+    # frame. A static filter is fine at any setting; an ANIMATED one is not.
+    for ft in [el for el in root.iter() if local(el.tag) == "filter"]:
+        fid = ft.get("id") or "?"
+        for turb in [el for el in ft.iter() if local(el.tag) == "feTurbulence"]:
+            try:
+                octaves = float(turb.get("numOctaves", 1))
+            except ValueError:
+                continue
+            animated = any(local(c.tag) in ("animate", "set")
+                           and c.get("attributeName") in ("baseFrequency", "seed", "numOctaves")
+                           for c in turb)
+            if animated and octaves > 3:
+                report("WARN", f"filter '{fid}': feTurbulence numOctaves={octaves:g} on an animated "
+                               f"node - each octave costs another noise evaluation per frame. Use 3 or fewer "
+                               f"for animated turbulence (references/svg-filters.md)")
+            elif octaves > 6:
+                report("WARN", f"filter '{fid}': feTurbulence numOctaves={octaves:g} - very expensive. "
+                               f"3 is enough for most effects, and 6+ is usually a mistake")
+
+        # The default filter region is the source's tight bounding box, so any
+        # effect that pushes pixels outward gets clipped by its own filter.
+        turb_any = [el for el in ft.iter() if local(el.tag) == "feTurbulence"]
+        disp_any = [el for el in ft.iter() if local(el.tag) == "feDisplacementMap"]
+        if (turb_any and disp_any
+                and all(ft.get(a) is None for a in ("x", "y", "width", "height"))):
+            report("WARN", f"filter '{fid}': feDisplacementMap with no x/y/width/height on the filter - the "
+                           f"region defaults to the source bbox, so the displacement will clip at the edges. "
+                           f'Use x="-30%" y="-30%" width="160%" height="160%"')
 
     return tally(path, quiet)
 
