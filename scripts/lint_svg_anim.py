@@ -702,7 +702,22 @@ def lint_one(path, quiet=False):
     # ~0.6 x font-size per char, cards add ~34px padding, subs <= 26 chars)
     # but nothing enforced it, so a long sub silently drew through its shape
     # while the linter reported 0 errors and 0 warnings.
-    CH_W = 0.63      # mean glyph advance / font-size for the mono stack
+    #
+    # CH_W is font-family aware. Measured in Chromium with getComputedTextLength
+    # on "CONCURRENCY 0% test-ship gjpqilW" at 15px:
+    #
+    #     mono stack (FONT)  281.2px / 32 chars / 15px  =  0.586
+    #     sans stack (SANS)  247.1px / 32 chars / 15px  =  0.515
+    #
+    # The ratios are exact for the mono stack (every glyph advances identically,
+    # confirmed across all-wide, all-narrow and mixed samples). The sans stack
+    # varies by string, so its value is a measured mean rounded UP to stay
+    # conservative - under-estimating would hide a real overflow, which is the
+    # failure mode this check exists to prevent.
+    #
+    # Do NOT loosen these to silence a warning. Fix the label or the shape.
+    CH_W_MONO = 0.63   # measured 0.586, rounded up
+    CH_W_SANS = 0.58   # measured 0.515 mean, rounded up
     MARGIN = 6.0     # breathing room required either side of a label
     MIN_W, MIN_H = 36.0, 20.0   # below this a shape is decoration, not a container
 
@@ -712,11 +727,18 @@ def lint_one(path, quiet=False):
             return fs
         return 18.0 if el.get("font-weight") in ("600", "700", "bold") else 12.0
 
+    def char_width(el):
+        """Per-glyph advance for this element's font-family, conservative."""
+        family = (el.get("font-family") or "").lower()
+        if "mono" in family or "consol" in family or "menlo" in family:
+            return CH_W_MONO
+        return CH_W_SANS
+
     def text_width(el):
         """Estimated rendered width of a <text>, honouring textLength."""
         if el.get("textLength"):
             return fnum(el.get("textLength"))
-        return len("".join(el.itertext()).strip()) * font_size(el) * CH_W
+        return len("".join(el.itertext()).strip()) * font_size(el) * char_width(el)
 
     # Shapes a label could sit inside, as (label, box, inner_width). Full-bleed
     # backgrounds and anything too small to be a card are excluded, matching the

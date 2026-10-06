@@ -217,26 +217,30 @@ that you could not execute the workflow itself — CI only proves itself on push
 
 ## 3 · Known open items — yours to decide, not to guess at
 
-**1 · A static-first lint check — still not solved, and now better documented.**
-The logic: "an element hidden at t=0" is true of almost every type, because most
-animate *from* zero. Telling that apart from a genuinely empty canvas needs real
-layout, not XML inspection. The first attempt produced **47 false positives
-across 68 files**.
+**1 · A static-first lint check - decided NOT to build it, and that is the
+answer.** The logic: "an element hidden at t=0" is true of almost every type,
+because most animate *from* zero. Telling that apart from a genuinely empty canvas
+needs real layout, not XML inspection. The first attempt produced **47 false
+positives across 68 files**.
 
-Four approaches have now been built and measured against the real pre-fix files.
-All four fail; `scripts/measure_frame0.py`'s docstring has the table. The one that
-worked mechanically and still is not a gate:
+Four approaches were built and measured against the real pre-fix files. All four
+fail; `scripts/measure_frame0.py`'s docstring has the full table. The one that
+worked mechanically and is still not a gate:
 
 ```
 broken terminal (pre-#8)   2.1% of pixels differ between frame 0 and mid-loop
 fixed  terminal (now)      1.9%
 ```
 
-The **broken** file scores higher. Ambient motion (aurora, shimmer, drifting
-backgrounds) dominates the pixel budget and swamps the regression. Any future
-attempt should start there, and should prove itself on a known-bad file extracted
-from history before being proposed as a gate. **Not building it is a legitimate
-outcome** — say so rather than shipping something that cries wolf.
+The **broken** file scores higher. Ambient motion - aurora, shimmer, drifting
+backgrounds - dominates the pixel budget and swamps the one part that regressed.
+
+**The decision is to stop.** Four failures is enough evidence that static analysis
+cannot separate "hidden until its cue" from "genuinely blank" without per-type
+knowledge of intent. `static_twin.py --check` gates the property that *is*
+decidable (does every example have a usable no-animation fallback), which is the
+part that actually bit us twice. Do not reopen this without a new approach, and
+make it prove itself on a known-bad file extracted from history first.
 
 **2 · ~~`gauge-dashboard` had no reduced-motion twin~~ — SOLVED in #12, and the
 "fix" was to the check, not the type.** Worth keeping as a lesson.
@@ -278,16 +282,53 @@ of history. **Do not sync it, mirror it, or delete it without asking Takim.**
 Report it as an observation and let him decide. The GitHub repo is the source of
 truth.
 
-**4 · Label-width check calibration.** The check from PR #2 estimates width as
-`chars × font-size × 0.63`. It is calibrated against the mono stack the
-generator emits. If anyone adds a proportional font to a type, that constant is
-wrong. Consider a comment or an issue; do not "fix" it by loosening the
-threshold without evidence.
+**4 · ~~Label-width check calibration~~ - SOLVED in #15, with measurements.**
+The check estimated every label at `chars x font-size x 0.63`, which is wrong for
+the proportional `SANS` stack. Measured in Chromium with `getComputedTextLength`
+on `"CONCURRENCY 0% test-ship gjpqilW"` at 15px:
 
-**5 · Buy Me a Coffee link.** The README links to
-`buymeacoffee.com/takimdigital`. **I inferred that handle from the GitHub
-username — it is not confirmed.** Flag it to Takim in your report; do not guess
-a different one.
+    mono stack (FONT)  281.2px / 32 chars / 15px  =  0.586
+    sans stack (SANS)  247.1px / 32 chars / 15px  =  0.515
+
+The mono ratio is exact - every glyph in that stack advances identically, confirmed
+across all-wide, all-narrow and mixed samples. The sans ratio varies by string, so
+its value is a measured mean rounded UP to stay conservative.
+
+`text_width()` is now font-family aware (`CH_W_MONO = 0.63`, `CH_W_SANS = 0.58`).
+Verified: **0 false positives across all 52 animated examples**, and it still
+catches a real overflow in either family (purpose-built cases for sans-fits,
+sans-overflow and mono-overflow). Under-estimating would hide an overflow, which
+is the failure mode the check exists to prevent - so both constants round up.
+
+**5 · Buy Me a Coffee link - UNCONFIRMED, needs Takim, still open.**
+
+The README links to `https://www.buymeacoffee.com/takimdigital`. **That handle
+was inferred from the GitHub username. Nobody has confirmed it exists.** If it is
+wrong, the support section of a public README 404s and the one thing the repo asks
+for money for is broken.
+
+This has been flagged twice and is still unconfirmed. I am not going to guess a
+different handle and I am not going to remove the button - removing it is Takim's
+call too.
+
+**Action for Takim: open `https://www.buymeacoffee.com/takimdigital` and confirm
+it lands on your page.** If it does not, replace the handle in `README.md` (one
+line, ~L333) and in `docs/support.svg` if that image names it.
+
+### Also still open, for the record
+
+- **`docs/thumbs/` + `scripts/build_thumbs.py`** - 12 uniform tiles (~236 KB) and
+  the 236-line script that builds them, referenced by **nothing**. The README never
+  used them; it embeds `assets/examples/` directly since #13. Either delete both, or
+  use the tiles to make the gallery rows align, since their uniform 480x360 ratio is
+  genuinely nicer than mixed aspect ratios in a `width="24%"` row. Taste, not a bug -
+  which is why it has survived three audits.
+- **No eval harness.** The skill claims it helps weaker models and that claim has
+  never been measured in-repo. Two A/B tests were run in temp directories and thrown
+  away. The interesting result, if it is ever repeated, was that a no-skill agent
+  reached 0 lint errors on a hard task when given equal tooling and an explicit
+  "verify your work" brief - so the linter and the verification loop are the value,
+  not the type catalogue.
 
 ---
 
