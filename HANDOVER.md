@@ -317,12 +317,29 @@ line, ~L333) and in `docs/support.svg` if that image names it.
 
 ### Also still open, for the record
 
-- **`docs/thumbs/` + `scripts/build_thumbs.py`** - 12 uniform tiles (~236 KB) and
-  the 236-line script that builds them, referenced by **nothing**. The README never
-  used them; it embeds `assets/examples/` directly since #13. Either delete both, or
-  use the tiles to make the gallery rows align, since their uniform 480x360 ratio is
-  genuinely nicer than mixed aspect ratios in a `width="24%"` row. Taste, not a bug -
-  which is why it has survived three audits.
+- **`docs/thumbs/` — RESOLVED in #16, used rather than deleted.** They were
+  unreferenced since #13 because the README moved to embedding `assets/examples/`
+  directly, which left a grid of mismatched aspect ratios. Measured across the 12
+  gallery tiles: **0.97 to 3.08, 69% height variance in one row**, so wide
+  graphics shrank to slivers while square ones towered. The tiles exist precisely to
+  fix that (`build_thumbs.py` docstring explains the approach). The README now
+  embeds `docs/thumbs/` in its `width="24%"` rows and keeps `assets/examples/` for
+  the full-width showcase.
+
+  Two things were wrong behind them:
+
+  1. **`logo-shield.svg` and `terminal-demo.svg` were stale** - built before #8/#9,
+     so their frame 0 was the blank/pre-roll-broken version. The other ten were fine.
+     Found only because the tile gate below now exists. Both verified by rendering:
+     each now lands on a finished frame at t=0.
+  2. **`build_thumbs.py`'s suggested markdown pointed at `../gallery/*.svg`**,
+     which #13 deleted. Silent dead link in a tool nobody was running, so it went
+     unnoticed for three PRs. Now points at `../assets/examples/`.
+
+  New gating job **`thumbs-current`** rebuilds all 12 tiles and fails if any differ,
+  for the same reason `static-twins` exists: everything the README renders is
+  generated and must not silently drift from its source.
+
 - **No eval harness.** The skill claims it helps weaker models and that claim has
   never been measured in-repo. Two A/B tests were run in temp directories and thrown
   away. The interesting result, if it is ever repeated, was that a no-skill agent

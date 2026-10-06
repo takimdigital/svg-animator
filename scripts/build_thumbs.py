@@ -268,7 +268,10 @@ def main():
         cells = []
         for name, kind, blurb in rows[r:r + args.cols]:
             cells.append(
-                '<a href="../gallery/%s.svg"><img src="thumbs/%s.svg" alt="%s — %s" width="100%%"></a>'
+                # The tile is the linked image and the click-through goes to the
+                # full-size example. docs/gallery/*.svg was deleted in #13, so the
+                # target is assets/examples/ -- do not point back at docs/gallery/.
+                '<a href="../assets/examples/%s.svg"><img src="thumbs/%s.svg" alt="%s — %s" width="100%%"></a>'
                 % (name, name, esc(kind), esc(blurb)))
         print("| " + " | ".join(cells) + " |")
     return 0

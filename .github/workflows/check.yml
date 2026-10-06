@@ -79,6 +79,41 @@ jobs:
           fi
           echo "all examples reproduce byte-for-byte"
 
+  thumbs-current:
+    name: gallery tiles are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - with:
+          python-version: '3.12'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regenerate every gallery tile and diff
+        run: |
+          set -euo pipefail
+          fail=0
+          mkdir -p /tmp/thumbs
+          for tile in docs/thumbs/*.svg; do
+            stem="$(basename "$tile" .svg)"
+            [ -f "$tile" ] || { fail=1; continue; }
+            python scripts/build_thumbs.py --only "$stem" >/dev/null
+            if ! git diff --quiet -- "$tile"; then
+              echo "DIFFERS: docs/thumbs/$stem.svg does not match a fresh build"
+              fail=1
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo >&2
+            echo "The README gallery embeds docs/thumbs/, so a stale tile shows a" >&2
+            echo "preview that no longer matches the example it came from. This" >&2
+            echo "happened for all 12 tiles when the static-first fixes landed and" >&2
+            echo "nothing noticed, because they were referenced by nothing." >&2
+            echo "Run:  python scripts/build_thumbs.py" >&2
+            exit 1
+          fi
+          echo "all gallery tiles are current"
+
   static-twins:
     name: reduced-motion twins are current
     runs-on: ubuntu-latest

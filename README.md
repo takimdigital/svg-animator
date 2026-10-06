@@ -152,24 +152,24 @@ Twelve of the 52 generator outputs, at uniform tile size. Every one is lint-clea
 (`0 errors, 0 warnings`) — click any for the full-size version and the spec behind it.
 
 <a href="docs/gallery/README.md">
-  <img src="assets/examples/network-services.svg" alt="Service network with pulses spreading from a gateway" width="24%">
-  <img src="assets/examples/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="24%">
-  <img src="assets/examples/timeline-roadmap.svg" alt="Roadmap timeline" width="24%">
-  <img src="assets/examples/terminal-demo.svg" alt="Terminal demo typing a command" width="24%">
+  <img src="docs/thumbs/network-services.svg" alt="Service network with pulses spreading from a gateway" width="24%">
+  <img src="docs/thumbs/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="24%">
+  <img src="docs/thumbs/timeline-roadmap.svg" alt="Roadmap timeline" width="24%">
+  <img src="docs/thumbs/terminal-demo.svg" alt="Terminal demo typing a command" width="24%">
 </a>
 
 <a href="docs/gallery/README.md">
-  <img src="assets/examples/loader-sheet.svg" alt="Sheet of eight loading spinner variants" width="24%">
-  <img src="assets/examples/gauge-dashboard.svg" alt="Dashboard of gauges, rings, bars and a donut" width="24%">
-  <img src="assets/examples/radar-skills.svg" alt="Radar chart comparing skills" width="24%">
-  <img src="assets/examples/counter-stats.svg" alt="Odometer counters" width="24%">
+  <img src="docs/thumbs/loader-sheet.svg" alt="Sheet of eight loading spinner variants" width="24%">
+  <img src="docs/thumbs/gauge-dashboard.svg" alt="Dashboard of gauges, rings, bars and a donut" width="24%">
+  <img src="docs/thumbs/radar-skills.svg" alt="Radar chart comparing skills" width="24%">
+  <img src="docs/thumbs/counter-stats.svg" alt="Odometer counters" width="24%">
 </a>
 
 <a href="docs/gallery/README.md">
-  <img src="assets/examples/icons-set.svg" alt="Twelve micro-animated icons" width="24%">
-  <img src="assets/examples/logo-shield.svg" alt="Shield logo reveal" width="24%">
-  <img src="assets/examples/art-mandala.svg" alt="Generative mandala" width="24%">
-  <img src="assets/examples/backdrop-mesh.svg" alt="Animated mesh-gradient backdrop" width="24%">
+  <img src="docs/thumbs/icons-set.svg" alt="Twelve micro-animated icons" width="24%">
+  <img src="docs/thumbs/logo-shield.svg" alt="Shield logo reveal" width="24%">
+  <img src="docs/thumbs/art-mandala.svg" alt="Generative mandala" width="24%">
+  <img src="docs/thumbs/backdrop-mesh.svg" alt="Animated mesh-gradient backdrop" width="24%">
 </a>
 
 <p align="center">
