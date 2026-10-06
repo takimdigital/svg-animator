@@ -26,6 +26,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  workflow-is-valid:
+    name: this workflow is itself valid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # Guards against the mistake this job exists because of: #16 shipped a step
+      # containing only `with:`, and GitHub rejected the whole file. No job ran,
+      # so the run failed with zero jobs and nothing said why. yaml.safe_load
+      # parses that happily -- only the per-step shape check catches it.
+      - name: Every step has a uses or a run
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys, yaml
+          d = yaml.safe_load(open(".github/workflows/check.yml", encoding="utf-8"))
+          bad = [
+              f"job {j} step {i}: keys={sorted(s)}"
+              for j, spec in d["jobs"].items()
+              for i, s in enumerate(spec.get("steps", []))
+              if not ("uses" in s or "run" in s)
+          ]
+          if bad:
+              print("Malformed step(s) -- GitHub will reject this entire file:", file=sys.stderr)
+              for b in bad:
+                  print("  " + b, file=sys.stderr)
+              sys.exit(1)
+          print(f"{len(d['jobs'])} jobs, every step valid")
+          PY
+
   lint:
     name: lint every example
     runs-on: ubuntu-latest
@@ -84,8 +116,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - with:
-          python-version: '3.12'
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
