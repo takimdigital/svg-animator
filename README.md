@@ -121,7 +121,7 @@ whole point. Themes: `ember ocean forest mono paper violet sunset`, or override
 any palette token.
 
 <p align="center">
-  <img src="docs/gallery/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="88%">
+  <img src="assets/examples/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="88%">
 </p>
 
 ### B · Hand-build — anything the generator can't
@@ -152,24 +152,24 @@ Twelve of the 52 generator outputs, at uniform tile size. Every one is lint-clea
 (`0 errors, 0 warnings`) — click any for the full-size version and the spec behind it.
 
 <a href="docs/gallery/README.md">
-  <img src="docs/gallery/network-services.svg" alt="Service network with pulses spreading from a gateway" width="24%">
-  <img src="docs/gallery/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="24%">
-  <img src="docs/gallery/timeline-roadmap.svg" alt="Roadmap timeline" width="24%">
-  <img src="docs/gallery/terminal-demo.svg" alt="Terminal demo typing a command" width="24%">
+  <img src="assets/examples/network-services.svg" alt="Service network with pulses spreading from a gateway" width="24%">
+  <img src="assets/examples/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="24%">
+  <img src="assets/examples/timeline-roadmap.svg" alt="Roadmap timeline" width="24%">
+  <img src="assets/examples/terminal-demo.svg" alt="Terminal demo typing a command" width="24%">
 </a>
 
 <a href="docs/gallery/README.md">
-  <img src="docs/gallery/loader-sheet.svg" alt="Sheet of eight loading spinner variants" width="24%">
-  <img src="docs/gallery/gauge-dashboard.svg" alt="Dashboard of gauges, rings, bars and a donut" width="24%">
-  <img src="docs/gallery/radar-skills.svg" alt="Radar chart comparing skills" width="24%">
-  <img src="docs/gallery/counter-stats.svg" alt="Odometer counters" width="24%">
+  <img src="assets/examples/loader-sheet.svg" alt="Sheet of eight loading spinner variants" width="24%">
+  <img src="assets/examples/gauge-dashboard.svg" alt="Dashboard of gauges, rings, bars and a donut" width="24%">
+  <img src="assets/examples/radar-skills.svg" alt="Radar chart comparing skills" width="24%">
+  <img src="assets/examples/counter-stats.svg" alt="Odometer counters" width="24%">
 </a>
 
 <a href="docs/gallery/README.md">
-  <img src="docs/gallery/icons-set.svg" alt="Twelve micro-animated icons" width="24%">
-  <img src="docs/gallery/logo-shield.svg" alt="Shield logo reveal" width="24%">
-  <img src="docs/gallery/art-mandala.svg" alt="Generative mandala" width="24%">
-  <img src="docs/gallery/backdrop-mesh.svg" alt="Animated mesh-gradient backdrop" width="24%">
+  <img src="assets/examples/icons-set.svg" alt="Twelve micro-animated icons" width="24%">
+  <img src="assets/examples/logo-shield.svg" alt="Shield logo reveal" width="24%">
+  <img src="assets/examples/art-mandala.svg" alt="Generative mandala" width="24%">
+  <img src="assets/examples/backdrop-mesh.svg" alt="Animated mesh-gradient backdrop" width="24%">
 </a>
 
 <p align="center">
