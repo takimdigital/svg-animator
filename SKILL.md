@@ -133,6 +133,7 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - `references/combinations.md` — effect recipes, compose recipes, choreography (sequential/cascade/call-response), theme pairing, what not to mix
 - `references/readme-diagrams.md` — the 12 techniques behind README-grade diagrams, README/GitHub destinations
 - `references/diagrams.md` — diagram rules, layout, arrows, glow windows, failure modes
+- `references/multi-step.md` - sequencing phases on one clock without drift, `keyPoints` dwell, syncbase `begin` when it is the right tool, and `textPath`
 - `references/motion-vocabulary.md` — effect → technique cookbook (40+ verbs), decomposition method, timing recipes
 - `references/drawing-fundamentals.md` — canvas, primitives, paths, composition, colour, filters, object recipes
 - `references/patterns.md` — copy-ready animated snippets
