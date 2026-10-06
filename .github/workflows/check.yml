@@ -26,6 +26,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  workflow-is-valid:
+    name: this workflow is itself valid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # Guards against the mistake this job exists because of: #16 shipped a step
+      # containing only `with:`, and GitHub rejected the whole file. No job ran,
+      # so the run failed with zero jobs and nothing said why. yaml.safe_load
+      # parses that happily -- only the per-step shape check catches it.
+      #
+      # pyyaml is NOT part of setup-python's image, hence the explicit install.
+      # A first attempt at this job inlined the check as a heredoc and failed
+      # with ModuleNotFoundError, which is the same class of error: a check that
+      # looks like it ran but did not.
+      - name: Install pyyaml
+        run: pip install --quiet pyyaml
+      - name: Every workflow is structurally valid
+        run: python scripts/check_workflow.py
+
   lint:
     name: lint every example
     runs-on: ubuntu-latest
@@ -78,6 +100,39 @@ jobs:
             exit 1
           fi
           echo "all examples reproduce byte-for-byte"
+
+  thumbs-current:
+    name: gallery tiles are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regenerate every gallery tile and diff
+        run: |
+          set -euo pipefail
+          fail=0
+          mkdir -p /tmp/thumbs
+          for tile in docs/thumbs/*.svg; do
+            stem="$(basename "$tile" .svg)"
+            [ -f "$tile" ] || { fail=1; continue; }
+            python scripts/build_thumbs.py --only "$stem" >/dev/null
+            if ! git diff --quiet -- "$tile"; then
+              echo "DIFFERS: docs/thumbs/$stem.svg does not match a fresh build"
+              fail=1
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo >&2
+            echo "The README gallery embeds docs/thumbs/, so a stale tile shows a" >&2
+            echo "preview that no longer matches the example it came from. This" >&2
+            echo "happened for all 12 tiles when the static-first fixes landed and" >&2
+            echo "nothing noticed, because they were referenced by nothing." >&2
+            echo "Run:  python scripts/build_thumbs.py" >&2
+            exit 1
+          fi
+          echo "all gallery tiles are current"
 
   static-twins:
     name: reduced-motion twins are current
