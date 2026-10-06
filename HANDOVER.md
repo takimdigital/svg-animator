@@ -84,42 +84,36 @@ one-master-clock · self-contained · verify-by-looking · report-honestly.
 If you run short of time, land **A** correctly and stop. B and C are worth more
 in order, but a half-done B is worse than no B.
 
-### A · Wire the gallery tiles into the README — **do this first**
+### A ~~Wire the gallery tiles into the README~~ - DONE in #13, differently
 
-**The problem.** `scripts/build_thumbs.py` builds 12 uniform 480×360 tiles in
-`docs/thumbs/`. They are committed. **The README does not use them.** It still
-has the old layout:
+Superseded. The tiles were never needed: the README's gallery rows point straight
+at `assets/examples/*.svg`, and the duplicated copies under `docs/gallery/` are
+gone.
 
-```html
-<a href="docs/gallery/README.md">
-  <img src="docs/gallery/network-services.svg" ... width="24%">
+That duplication was not harmless. Two of the fifteen copies had drifted, and they
+drifted into being the *broken* versions:
+
+```
+docs/gallery/logo-shield.svg    0 pre-rolls   (assets/examples/ has 6)
+docs/gallery/terminal-demo.svg  0 pre-rolls   (assets/examples/ has 12)
 ```
 
-That is why the gallery looks sparse with white gaps: the examples range from
-aspect 0.97 (`network-services`) to 3.08 (`timeline-roadmap`), and four
-`width="24%"` tags in a row only align when every image has the same aspect
-ratio. The wide ones shrink to a slivers while the square ones tower.
+So the README was showing every visitor the exact static-first bug that #8 and #9
+fixed - an empty terminal, an un-drawn logo - while `assets/examples/` held the
+repaired files. Anyone auditing the repo would have seen the bug and concluded the
+fix never landed.
 
-**The fix.** Replace the three `<a>` blocks with a markdown table using the
-tiles. `build_thumbs.py` prints the exact table when it runs:
+**What shipped:** README embeds `assets/examples/*.svg`; `docs/gallery/README.md`
+(annotations only, no copies) points at `../../assets/examples/`; the 15 duplicate
+files are deleted. 35 image references verified to resolve.
 
-```bash
-python scripts/build_thumbs.py          # prints the suggested 3-column table
-```
+**Do not reintroduce copies of generated files.** A generated artifact belongs in
+exactly one place; a second copy is a stale copy waiting to happen. If a doc needs
+a different framing, write prose about it, not a duplicate of the file.
 
-It prints a 3-column table (4 rows for 12 tiles; the last row may be short).
-Each cell links to the full-size example:
-
-```html
-<a href="docs/gallery/network-services.svg"><img src="docs/thumbs/network-services.svg" alt="network — pulses spread by graph depth" width="100%"></a>
-```
-
-Keep the link to `docs/gallery/README.md` for the full-size annotated gallery.
-
-**Definition of done:** the README contains a table, no `width="24%"` remains
-in the gallery section, every image path in the README resolves to a tracked
-file, and **you have looked at the rendered grid**. The last one is the whole
-point — see §4.
+`docs/thumbs/` and `scripts/build_thumbs.py` are still committed and still
+referenced by nothing. They are dead weight (~236 KB, 236 lines) and the next cut,
+but they are unrelated to this fix, so they were left alone deliberately.
 
 ### B · Document the visual grammar — accepted from PR #4
 

@@ -79,6 +79,16 @@ Ordered by value to the project:
 | **New spec / example** | `assets/specs/`, `assets/examples/` | A configuration that shows a capability the existing specs don't |
 | **Reference improvement** | `references/*.md` | Clearer technique, a missing debugging entry, a better worked example |
 | **Docs / README** | `README.md`, `docs/gallery/README.md` | Something that removes a question a first-time user would actually ask |
+
+**Never copy a generated file into `docs/`.** Embed `assets/examples/*.svg`
+directly. `docs/gallery/README.md` exists to annotate the examples, not to hold
+copies of them, and it points back at `assets/examples/`.
+
+This is not tidiness. Copies drifted: two of the fifteen under `docs/gallery/`
+were stale enough to be the *pre-fix* versions of `logo-shield` and
+`terminal-demo` — the exact static-first bugs #8 and #9 repaired. The README was
+showing visitors the bug while the repaired file sat in `assets/examples/`. A
+generated artifact belongs in exactly one place.
 | **Harness support** | skill layout, `SKILL.md` routing | Make it work in an agent environment you know about |
 
 **A bug report with a real broken SVG is worth more than most code contributions.**
