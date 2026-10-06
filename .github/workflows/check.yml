@@ -38,25 +38,15 @@ jobs:
       # containing only `with:`, and GitHub rejected the whole file. No job ran,
       # so the run failed with zero jobs and nothing said why. yaml.safe_load
       # parses that happily -- only the per-step shape check catches it.
-      - name: Every step has a uses or a run
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import sys, yaml
-          d = yaml.safe_load(open(".github/workflows/check.yml", encoding="utf-8"))
-          bad = [
-              f"job {j} step {i}: keys={sorted(s)}"
-              for j, spec in d["jobs"].items()
-              for i, s in enumerate(spec.get("steps", []))
-              if not ("uses" in s or "run" in s)
-          ]
-          if bad:
-              print("Malformed step(s) -- GitHub will reject this entire file:", file=sys.stderr)
-              for b in bad:
-                  print("  " + b, file=sys.stderr)
-              sys.exit(1)
-          print(f"{len(d['jobs'])} jobs, every step valid")
-          PY
+      #
+      # pyyaml is NOT part of setup-python's image, hence the explicit install.
+      # A first attempt at this job inlined the check as a heredoc and failed
+      # with ModuleNotFoundError, which is the same class of error: a check that
+      # looks like it ran but did not.
+      - name: Install pyyaml
+        run: pip install --quiet pyyaml
+      - name: Every workflow is structurally valid
+        run: python scripts/check_workflow.py
 
   lint:
     name: lint every example
