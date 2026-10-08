@@ -131,4 +131,4 @@ assembled, it was.
 - `references/drawing-fundamentals.md` — primitives and object recipes, for the "what"
 - `references/combinations.md` — generator + custom art, and light/dark pairs
 - `references/static-first.md` — the rule that makes frame 0 count
-- `assets/specs/` — 52 specs, all generated, all byte-reproducible
+- `assets/specs/` — 53 specs, all generated, all byte-reproducible

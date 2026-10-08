@@ -79,6 +79,11 @@ Names: `check cross heart bell gear download star playpause sun lock wifi bolt`.
 ### art
 `variant`: `mandala` (`petals`) · `lissajous` (`a`,`b`) · `spiral` (`turns`) · `orbits` · `flower` (`k`). `size` (520), `seed`. Decorative; combine with `text` or `logo` in a `compose` for covers.
 
+### morph
+`forms`: ordered list of named shapes, each morphing into the next, last wrapping to first — `star` `circle` `heart` `square` `bolt` `drop` `ring` `cross` `leaf` `wave` `arrow` `hexagon`. Also `cols` (2), `cell` (190), `gap`, `pad`, `samples` (34), `hold` (0.66).
+
+The point is that these forms share **no path-command structure**, which plain `<animate attributeName="d">` refuses to interpolate. `scripts/morph_path.py` resamples each pair to one uniform `M + n*C + Z` signature at build time, so it morphs with no library and no JavaScript. **Shapes with a hole (`ring`) are refused rather than rendered wrong** — see `morphing.md`.
+
 ## 4. Clock behaviour
 - **Follow `dur`** (and a compose `window`): `logo`, `text` (reveal/pop/type/glitch), `gauge`, `radar`, `counter`, `scene` rocket's launch, `art` draw-on.
 - **Loop on their own period** (ambient, independent of the master clock): `loader` (`period`), `icons` (`period`), `backdrop`, `art` rotations, `scene` ambient parts. Inside a compose they keep their own rhythm; the lint prints an INFO listing durations that are not whole divisors of the master clock — expected for these.

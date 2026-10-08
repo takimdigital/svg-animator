@@ -1,0 +1,21 @@
+{
+  "type": "morph",
+  "title": "One path, many shapes",
+  "subtitle": "morphing across forms that share no command structure",
+  "theme": "violet",
+  "dur": 13,
+  "cols": 3,
+  "cell": 176,
+  "gap": 22,
+  "samples": 24,
+  "hold": 0.66,
+  "forms": [
+    "star",
+    "circle",
+    "heart",
+    "bolt",
+    "drop",
+    "cross"
+  ],
+  "static_pose": "star"
+}

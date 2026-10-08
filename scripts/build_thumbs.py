@@ -69,7 +69,7 @@ TILES = [
     ("loader-sheet",       "loader",   "eight spinners, eight rhythms"),
     ("gauge-dashboard",    "gauge",    "counts up, holds, resets"),
     ("radar-skills",       "radar",    "polygons grow from the centre"),
-    ("counter-stats",      "counter",  "odometer digit columns roll"),
+    ("morph-shapes",       "morph",    "star to circle, no shared command structure"),
     ("icons-set",          "icons",    "each icon rests between actions"),
     ("logo-shield",        "logo",     "outline draws, then fills"),
     ("art-mandala",        "art",      "seeded, so output reproduces"),
