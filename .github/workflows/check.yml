@@ -26,6 +26,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  tests:
+    name: the machinery is tested, not just the output
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # Every other gate proves the *output* is clean: examples lint, verify,
+      # regenerate byte-identically, have current twins and tiles. Nothing
+      # proved the machinery that made them was correct - a resampler bug or a
+      # theme-polarity bug produces a file that lints clean and looks plausible.
+      #
+      # This suite already earned its keep: it found that morphing a closed
+      # shape against an open one yields mismatched command signatures, so the
+      # pair silently snapped. That is now a hard refusal.
+      #
+      # stdlib only, and it needs no Playwright - a suite that needs a browser is
+      # a suite people skip.
+      - name: Run the self-tests
+        run: python -m unittest discover -s tests -v
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "A failing self-test means the generator is wrong, not the example." >&2
+          echo "Fix the script. Do not weaken the assertion to make it pass -" >&2
+          echo "two checks have already been cut in this repo for crying wolf," >&2
+          echo "and the standard for keeping one is: prove it on a bad case." >&2
+
   workflow-is-valid:
     name: this workflow is itself valid
     runs-on: ubuntu-latest

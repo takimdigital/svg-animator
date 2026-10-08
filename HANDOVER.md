@@ -22,6 +22,7 @@ brief**, and report any drift in your reply before you start new work.
 | Commits on `main` | 13 |
 | Generator types | 22 (`python -c "import sys;sys.path.insert(0,'scripts');import gen_diagram as g;print(len(g.registry()))"`) |
 | Examples | 53 in `assets/examples/`, 53 specs in `assets/specs/` |
+| Tests | `tests/test_morph_path.py`, 33 cases, `python -m unittest discover -s tests`, gating CI job `tests` |
 | Gallery | `docs/gallery/README.md` is **generated** by `scripts/build_gallery.py` and gated; it lists all 53 plus a themes table |
 | Reference docs | 12 in `references/` |
 | Scripts | 9 in `scripts/` (incl. `build_thumbs.py`) |

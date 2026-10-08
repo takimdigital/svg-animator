@@ -389,6 +389,16 @@ def morph_pair(d_a, d_b, n=48, curve_steps=24, align=True):
 
     pa, ca = resample(d_a, n, curve_steps)
     pb, cb = resample(d_b, n, curve_steps)
+
+    # A closed shape ends with Z and an open one does not, so the two can never
+    # share a command signature, which is the only form SMIL interpolates. Found
+    # by tests/test_morph_path.py after a closed star was paired with an open
+    # wave: the pair came out "MCCCZ" against "MCCC" and silently snapped.
+    if ca != cb:
+        raise ValueError(
+            "one shape is closed (ends with Z) and the other is not, so they "
+            "cannot share a command signature and the morph would snap instead "
+            "of tween. Close the open path with Z, or open the closed one.")
     if align and ca == cb and len(pa) == len(pb):
         k, _ = _best_offset(pa, pb)
         if k:
