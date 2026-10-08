@@ -151,6 +151,8 @@ maps symptom → cause → fix, and changes as little as possible.
 Twelve of the 53 generator outputs, at uniform tile size. Every one is lint-clean
 (`0 errors, 0 warnings`) — click any for the full-size version and the spec behind it.
 
+GitHub will not render a raw `.svg` when you click one, so [**all 53** are on the gallery page](docs/gallery/README.md) — every spec, grouped by type, plus a themes table. That page is generated from `assets/specs/*.json`, so an example cannot exist without being listed there.
+
 <a href="docs/gallery/README.md">
   <img src="docs/thumbs/network-services.svg" alt="Service network with pulses spreading from a gateway" width="24%">
   <img src="docs/thumbs/flow-with-feedback.svg" alt="Flow diagram with a feedback loop" width="24%">
@@ -173,7 +175,7 @@ Twelve of the 53 generator outputs, at uniform tile size. Every one is lint-clea
 </a>
 
 <p align="center">
-  <sub>All twelve are real generator output. <a href="docs/gallery/README.md">See the full gallery →</a></sub>
+  <sub>All twelve are real generator output. <a href="docs/gallery/README.md">See all 53 →</a></sub>
 </p>
 
 ## Morphing shapes plain SMIL refuses to interpolate

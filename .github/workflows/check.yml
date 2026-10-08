@@ -159,6 +159,40 @@ jobs:
           echo "Fix at the root cause: give it opacity=\"0\" as a base value, or" >&2
           echo "pre-roll it with a negative begin and return that as preroll=." >&2
 
+  gallery-current:
+    name: gallery lists every example
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # GitHub will not render a raw .svg when a reader clicks one, so
+      # docs/gallery/README.md is the only place these can be seen. It was
+      # hand-written, and #18 shipped morph-shapes without adding it: 13 of 53
+      # shown, 30 never mentioned. Now it is generated and gated.
+      #
+      # Also fails on an .svg with no spec, which is how an example would
+      # otherwise exist, animate, and never be listed anywhere.
+      - name: Regenerate the gallery and diff
+        run: |
+          set -euo pipefail
+          python scripts/build_gallery.py
+          if ! diff -q --strip-trailing-cr docs/gallery/README.md <(git show HEAD:docs/gallery/README.md 2>/dev/null || true) >/dev/null 2>&1; then
+            echo "DIFFERS: docs/gallery/README.md does not match assets/specs/" >&2
+            echo >&2
+            echo "Every example must be listed. GitHub does not render a raw .svg," >&2
+            echo "so an unlisted one is invisible to a reader." >&2
+            echo "Run:  python scripts/build_gallery.py" >&2
+            exit 1
+          fi
+          echo "gallery lists every example"
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "Either a new spec has no entry, or an .svg has no spec at all." >&2
+          echo "Both are refused on purpose - see scripts/build_gallery.py." >&2
+
   static-twins:
     name: reduced-motion twins are current
     runs-on: ubuntu-latest
