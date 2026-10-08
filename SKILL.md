@@ -29,6 +29,7 @@ BRIEF → ROUTE → SPEC / STORYBOARD → BUILD → LINT → FRAMES → FIX LOOP
 | 3 Spec / storyboard | JSON spec (A) or a timeline comment: master clock, beats as fractions, which element moves when (B/C). | `assets/specs/`, `references/readme-diagrams.md`, `references/motion-vocabulary.md` |
 | 4 Build | Generate from the spec — one type or a `compose` (A) — or draw the still first, then animate (B). | `scripts/gen_diagram.py`, `references/drawing-fundamentals.md`, `references/patterns.md` |
 | 5 Lint | Structure, timing, rails touching cards, dot path = rail, glow windows. | `scripts/lint_svg_anim.py` |
+| 5b Verify | Load it in a real browser at frame 0 and catch what reading XML cannot: anything visible that has not been cued yet. | `scripts/verify.py` |
 | 6 Frames | PNGs at 0, every slot/phase midpoint, 95 %; **view them**. | `scripts/render_frames.py` |
 | 7 Fix loop | Repeat 4–6 until 0 lint errors, every warning fixed at its root cause or justified, frames look right. | `references/debugging.md` |
 | 8 Deliver | Save next to the user's project (or your outputs dir), README embed line, attach the file, honest summary. | below |
@@ -111,11 +112,12 @@ Build rules (each prevents a bug seen in practice):
 - **Rules**: one hero motion at a time; slow low-contrast ambient motion; same theme across a README; ≤ 4 parts per compose; raise `dur` (12–18 s) when parts play one after another.
 
 ## Verify (never skip)
-Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `lint_svg_anim.py`, `render_frames.py`).
+Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `lint_svg_anim.py`, `verify.py`, `render_frames.py`).
 1. Fix every ERROR; fix WARNs at the **root cause** (the lint also reports when each dot enters/leaves each card, whether rails touch cards, and whether dot paths equal rails).
-2. `view` frames at: 0 (the still looks complete), each slot/arrival, ~95 % (loop seam).
-3. Check: dots on rails, only the intended card glowing, arrows reaching targets, no overlap with text, rest pose good.
-4. If Playwright/Chromium is unavailable, say frames were not checked.
+2. `verify.py` answers the one question reading the file cannot: **is anything visible at frame 0 that should not be yet?** A positive `begin` means no effect until that moment, so such an element must carry base `opacity="0"`. It catches the parked-traveller trap that reading alone missed in #8 and #9.
+3. `view` frames at: 0 (the still looks complete), each slot/arrival, ~95 % (loop seam).
+4. Check: dots on rails, only the intended card glowing, arrows reaching targets, no overlap with text, rest pose good.
+5. If Playwright/Chromium is unavailable, say frames were not checked.
 
 ## Deliver
 - Save as `<descriptive-name>.svg` in your outputs directory and attach/present it (use whichever mechanism your harness provides). Don't paste the whole SVG into chat.
@@ -140,6 +142,7 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - `references/smil-cheatsheet.md`, `references/css-animation.md` — syntax and gotchas
 - `references/design-principles.md` — timing, easing, loops, palette, accessibility
 - `references/debugging.md` — symptom → cause → fix
+- `scripts/verify.py` - **run the file, don't just read it**: loads it in a real browser at frame 0 and reports anything visible that has not been cued yet. Two other checks were built and cut because they fired on known-good files; the docstring says which and why
 - `scripts/run_pipeline.py` (whole pipeline), `scripts/gen_diagram.py` (+ `diagram_common.py`, `diagram_extra.py`, `things_a.py`, `things_b.py`), `scripts/lint_svg_anim.py`, `scripts/render_frames.py`
 - `assets/template.svg`, `assets/specs/*.json`, `assets/examples/*.svg` (generated, lint-clean references)
 

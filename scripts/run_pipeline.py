@@ -105,6 +105,18 @@ def main():
         ok = False
     report.append(f"lint: {errs} error(s), {warns} warning(s)")
 
+    # 2b VERIFY - run the file, catch what XML reading cannot decide
+    rc, out = run([sys.executable, os.path.join(HERE, "verify.py"), svg])
+    print("== 2b VERIFY (verify.py, real browser)\n" + out.strip() + "\n")
+    verrs = len(re.findall(r"^\s*ERROR:", out, re.M))
+    if rc == 2:
+        report.append("verify: NOT run (Playwright unavailable) - say so in the final message")
+    elif rc != 0:
+        ok = False
+        report.append(f"verify: {verrs} error(s)")
+    else:
+        report.append("verify: 0 errors (parked-element check, frame 0)")
+
     # 3 FRAMES
     frames = []
     if not a.no_frames:
@@ -133,7 +145,7 @@ def main():
     elif a.deliver and not ok:
         print("== 5 DELIVER skipped: fix the lint ERRORs first")
     if not ok:
-        print("\nRESULT: FAIL (lint errors) - fix them and re-run")
+        print("\nRESULT: FAIL (lint or verify errors) - fix them and re-run")
     elif warns:
         print(f"\nRESULT: PASS WITH {warns} WARNING(S) - fix each at its root cause or justify it; re-run")
     else:
