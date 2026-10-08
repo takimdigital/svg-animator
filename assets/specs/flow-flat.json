@@ -1,0 +1,61 @@
+{
+  "type": "flow",
+  "title": "Pipeline, flat surface",
+  "aria": "Flat-surface flow diagram: a linear pipeline with a feedback return, drawn without the glow bed or rounded corners that every other example uses.",
+  "dur": 10,
+  "theme": "mono",
+  "arrows": true,
+  "columns": [
+    [
+      {
+        "id": "user",
+        "label": "User",
+        "sub": "intent \u00b7 brief"
+      }
+    ],
+    [
+      {
+        "id": "core",
+        "label": "ATLAS CORE",
+        "sub": "502 concepts \u00b7 354 terms",
+        "key": true
+      }
+    ],
+    [
+      {
+        "id": "flow",
+        "label": "Workflow",
+        "sub": "config \u2192 site"
+      }
+    ],
+    [
+      {
+        "id": "out",
+        "label": "Outputs",
+        "sub": "contract \u00b7 specs \u00b7 site",
+        "key": true
+      }
+    ],
+    [
+      {
+        "id": "llm",
+        "label": "Any LLM",
+        "sub": "grep refs \u00b7 zero-shot"
+      },
+      {
+        "id": "dh",
+        "label": "Deckhand",
+        "sub": "optional production"
+      }
+    ]
+  ],
+  "feedback": {
+    "id": "maint",
+    "label": "Maintainer",
+    "sub": "inbox \u2192 rebuild \u2192 release",
+    "from": "out",
+    "to": "core"
+  },
+  "surface": "flat",
+  "subtitle": "no glow bed, square corners, hairline blur"
+}

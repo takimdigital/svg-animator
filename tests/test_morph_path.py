@@ -30,7 +30,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
 import morph_path as mp  # noqa: E402
-from diagram_common import DARK_THEMES, THEMES  # noqa: E402
+from diagram_common import DARK_THEMES, SURFACES, THEMES  # noqa: E402
 
 GEN = os.path.join(ROOT, "scripts", "gen_diagram.py")
 
@@ -340,6 +340,103 @@ class TestMorphTypeEndToEnd(unittest.TestCase):
                                capture_output=True, text=True, cwd=ROOT)
             self.assertNotEqual(r.returncode, 0)
             self.assertIn("subpath", (r.stderr + r.stdout).lower())
+
+
+class TestSurfaces(unittest.TestCase):
+    """The visual grammar, which used to be hardcoded to one value.
+
+    Every one of the 53 shipped examples had the same surface - rounded opaque
+    background, three blurred radial blobs, generous glow blur - because
+    assemble() and common_defs() emitted them unconditionally. Not a theme
+    choice; a constant.
+    """
+
+    SPEC = {
+        "type": "radial", "theme": "ocean", "dur": 6,
+        "center": {"label": "core/", "sub": "hub"},
+        "items": [{"title": "A", "count": "01", "lines": ["one"]},
+                  {"title": "B", "count": "02", "lines": ["two"]},
+                  {"title": "C", "count": "03", "lines": ["three"]}],
+    }
+
+    def _gen(self, surface=None, extra=()):
+        import json
+        with tempfile.TemporaryDirectory() as td:
+            spec = dict(self.SPEC)
+            if surface:
+                spec["surface"] = surface
+            p = os.path.join(td, "s.json")
+            with open(p, "w", encoding="utf-8") as fh:
+                json.dump(spec, fh)
+            out = os.path.join(td, "o.svg")
+            r = subprocess.run([sys.executable, GEN, p, out] + list(extra),
+                               capture_output=True, text=True, cwd=ROOT)
+            body = ""
+            if r.returncode == 0 and os.path.exists(out):
+                with open(out, encoding="utf-8") as fh:
+                    body = fh.read()
+            return r, body
+
+    def test_glow_is_the_default(self):
+        r, implicit = self._gen(None)
+        r2, explicit = self._gen("glow")
+        self.assertEqual(r.returncode, 0, r.stderr[-300:])
+        self.assertEqual(implicit, explicit,
+                         "omitting `surface` must be identical to surface=glow")
+
+    def test_default_keeps_the_rounded_background_and_aurora(self):
+        _, svg = self._gen()
+        self.assertIn('rx="16"', svg)
+        self.assertIn("<ellipse", svg)          # the drifting gradient bed
+        self.assertIn('stdDeviation="3.6"', svg)
+
+    def test_flat_drops_the_aurora_and_the_rounding(self):
+        _, svg = self._gen("flat")
+        self.assertNotIn("<ellipse", svg, "flat must not emit the aurora bed")
+        self.assertNotIn('rx="16"', svg, "flat must not round the background")
+        self.assertIn("<rect width=", svg)
+
+    def test_bare_draws_no_background_at_all(self):
+        _, svg = self._gen("bare")
+        head = svg.split("</defs>")[-1]
+        first_rect = head.find("<rect")
+        # no full-bleed background rect before the content
+        self.assertNotRegex(head[:400], r'<rect width="\d+(\.\d+)?" height="\d+(\.\d+)?"\s+fill=')
+
+    def test_every_surface_still_defines_the_glow_filter(self):
+        # Builders reference url(#glow) from 11 inline sites. A surface that
+        # omitted the definition produced 9 dangling references and the linter
+        # correctly rejected the file - which is why there is no "line" surface.
+        for s in ("glow", "flat", "bare"):
+            r, svg = self._gen(s)
+            self.assertEqual(r.returncode, 0, "%s: %s" % (s, r.stderr[-300:]))
+            self.assertIn('id="glow"', svg, s)
+            self.assertIn("url(#glow)", svg, s)
+
+    def test_unknown_surface_is_refused(self):
+        r, _ = self._gen("chrome")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("surface", (r.stderr + r.stdout).lower())
+
+    def test_every_shipped_example_lints_under_its_own_surface(self):
+        for stem in ("flow-flat", "gauge-dashboard-flat"):
+            f = os.path.join(ROOT, "assets", "examples", stem + ".svg")
+            if not os.path.exists(f):
+                self.skipTest("%s not generated yet" % stem)
+            r = subprocess.run(
+                [sys.executable, os.path.join(ROOT, "scripts", "lint_svg_anim.py"), f],
+                capture_output=True, text=True, cwd=ROOT)
+            self.assertEqual(r.returncode, 0, "%s: %s" % (stem, r.stdout[-300:]))
+
+    def test_surfaces_table_is_small_and_documented(self):
+        # A surface that differs only by a blur amount is indistinguishable from
+        # its neighbour, so the set is kept short on purpose.
+        self.assertEqual(set(SURFACES), {"glow", "flat", "bare"})
+        for name, cfg in SURFACES.items():
+            self.assertEqual(set(cfg), {"bg", "aurora", "blur", "grad"}, name)
+            self.assertIn(cfg["bg"], ("rounded", "square", "none"), name)
+        self.assertTrue(SURFACES["glow"]["aurora"])
+        self.assertFalse(SURFACES["flat"]["aurora"])
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ and every one is **lint-clean**: `0 errors, 0 warnings`. They're not mockups - t
 the artifacts the skill ships, produced by `python scripts/run_pipeline.py <spec>`.
 
 **This page is generated** by `python scripts/build_gallery.py`, and CI fails
-if it drifts. All **53** of the 53 examples in `assets/examples/` are here.
+if it drifts. All **55** of the 55 examples in `assets/examples/` are here.
 
 That is deliberate. GitHub does not render a raw `.svg` when you click one, so
 this page is the only place any of them can actually be *seen*. An example that
@@ -20,7 +20,7 @@ python scripts/run_pipeline.py assets/specs/network-services.json --out-dir ./ru
 
 ---
 
-## Diagrams (16)
+## Diagrams (17)
 
 <p align="center">
   <img src="../../assets/examples/banner-readme.svg" alt="open source · MIT" width="100%">
@@ -61,6 +61,14 @@ The base attributes are the *finished* chart; the animation grows from zero. `hi
 `cycle` · theme `sunset` · `dur` 9s · [spec](../../assets/specs/cycle-cicd.json)
 
 A closed loop, so the end connects visibly to the start.
+
+<p align="center">
+  <img src="../../assets/examples/flow-flat.svg" alt="Pipeline, flat surface" width="100%">
+</p>
+
+`flow` · theme `mono` · `dur` 10s · [spec](../../assets/specs/flow-flat.json)
+
+Left-to-right stages on S-curve rails, with relay dots that dwell at each hop.
 
 <p align="center">
   <img src="../../assets/examples/flow-with-feedback.svg" alt="design-atlas · system architecture" width="100%">
@@ -150,7 +158,7 @@ Typed commands with cover rectangles sliding off to reveal real text.
 
 The progress dot walks segment by segment and each milestone lights *on arrival*, which is what makes it read as progress rather than ambience.
 
-## Things (29)
+## Things (30)
 
 <p align="center">
   <img src="../../assets/examples/art-flower.svg" alt="art flower" width="88%">
@@ -247,6 +255,14 @@ Ambient motion, slow and low contrast, meant to sit behind text. (`variant: wave
 `counter` · theme `forest` · `dur` 8s · [spec](../../assets/specs/counter-stats.json)
 
 Odometer digit columns roll rather than jump, which is the whole trick: each digit translates inside a clipped window.
+
+<p align="center">
+  <img src="../../assets/examples/gauge-dashboard-flat.svg" alt="Gauges, flat surface" width="88%">
+</p>
+
+`gauge` · theme `ocean` · `dur` 8s · [spec](../../assets/specs/gauge-dashboard-flat.json)
+
+Count up, hold, reset - the three phases of any gauge.
 
 <p align="center">
   <img src="../../assets/examples/gauge-dashboard.svg" alt="system health" width="88%">
@@ -454,24 +470,24 @@ Several types on one canvas and one master clock, each with its own window. (`st
 
 ## Themes (7)
 
-Six palettes across all 53 examples. Pick one with `"theme"` in the spec;
+Six palettes across all 55 examples. Pick one with `"theme"` in the spec;
 `--theme` on the command line overrides it.
 
 | theme | polarity | examples | representative |
 |---|---|---|---|
 | `ember` | dark | 9 | [![ember](../../assets/examples/cards-stats.svg)](../../assets/examples/cards-stats.svg) |
-| `ocean` | dark | 14 | [![ocean](../../assets/examples/network-services.svg)](../../assets/examples/network-services.svg) |
+| `ocean` | dark | 15 | [![ocean](../../assets/examples/network-services.svg)](../../assets/examples/network-services.svg) |
 | `forest` | dark | 8 | [![forest](../../assets/examples/counter-stats.svg)](../../assets/examples/counter-stats.svg) |
 | `violet` | dark | 11 | [![violet](../../assets/examples/radar-skills.svg)](../../assets/examples/radar-skills.svg) |
 | `sunset` | dark | 7 | [![sunset](../../assets/examples/compose-launch-story.svg)](../../assets/examples/compose-launch-story.svg) |
-| `mono` | dark | 4 | [![mono](../../assets/examples/terminal-demo.svg)](../../assets/examples/terminal-demo.svg) |
+| `mono` | dark | 5 | [![mono](../../assets/examples/flow-flat.svg)](../../assets/examples/flow-flat.svg) |
 | `paper` | light | 0 | _unused_ |
 
 `paper` is defined and available but no spec uses it - it is the only light
 palette, so light-theme output is untested by the examples. Build a pair with
 `--pair paper <dark>` and it works; nothing here proves it.
 
-**All 53 share one visual grammar** - a radial-gradient glow bed, a blur, and mono
+**All 55 share one visual grammar** - a radial-gradient glow bed, a blur, and mono
 type. That is deliberate consistency and it is also a limitation: six palettes is
 not six looks. It is the open visual-range item in `HANDOVER.md`.
 
@@ -506,7 +522,9 @@ not six looks. It is the open visual-range item in `HANDOVER.md`.
 | [`compose-system-tour`](../../assets/specs/compose-system-tour.json) | `compose` | `ocean` | 18s | Several types on one canvas and one master clock, each with its own window |
 | [`counter-stats`](../../assets/specs/counter-stats.json) | `counter` | `forest` | 8s | Odometer digit columns roll rather than jump, which is the whole trick: each digit translates inside a clipped window |
 | [`cycle-cicd`](../../assets/specs/cycle-cicd.json) | `cycle` | `sunset` | 9s | A closed loop, so the end connects visibly to the start |
+| [`flow-flat`](../../assets/specs/flow-flat.json) | `flow` | `mono` | 10s | Left-to-right stages on S-curve rails, with relay dots that dwell at each hop |
 | [`flow-with-feedback`](../../assets/specs/flow-with-feedback.json) | `flow` | `ember` | 10s | Columns left to right, S-curve rails, relay dots with `keyPoints` so a dot *pauses* at a node instead of racing past it |
+| [`gauge-dashboard-flat`](../../assets/specs/gauge-dashboard-flat.json) | `gauge` | `ocean` | 8s | Count up, hold, reset - the three phases of any gauge |
 | [`gauge-dashboard`](../../assets/specs/gauge-dashboard.json) | `gauge` | `ocean` | 8s | Count up, hold, reset - the three phases every dashboard gauge has, on one clock, with rings, bars and a donut |
 | [`icons-set`](../../assets/specs/icons-set.json) | `icons` | `ember` | - | Twelve icons, twelve actions, each resting between its own beats |
 | [`layers-stack`](../../assets/specs/layers-stack.json) | `layers` | `forest` | 10s | A request travels down one lane and the response back up the other |
