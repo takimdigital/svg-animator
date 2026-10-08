@@ -134,6 +134,31 @@ jobs:
           fi
           echo "all gallery tiles are current"
 
+  verify-examples:
+    name: no example parks a visible element at frame 0
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # verify.py loads each file in a real browser at t=0 and asks the one
+      # question XML reading cannot: is anything visible that should not be yet?
+      # It caught the terminal (#8) and logo (#9) trap by hand; this stops the
+      # next one landing. Two sibling checks were cut from it for crying wolf -
+      # see its module docstring before adding one back.
+      - run: pip install --quiet playwright
+      - run: python -m playwright install --with-deps chromium
+      - name: Every example runs without a parked element
+        run: python scripts/verify.py assets/examples/*.svg
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "A parked element has a positive begin, so it has no effect yet," >&2
+          echo "but it is visible - a traveller sitting at the canvas origin." >&2
+          echo "Fix at the root cause: give it opacity=\"0\" as a base value, or" >&2
+          echo "pre-roll it with a negative begin and return that as preroll=." >&2
+
   static-twins:
     name: reduced-motion twins are current
     runs-on: ubuntu-latest
