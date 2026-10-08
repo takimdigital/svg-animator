@@ -70,7 +70,7 @@ them in one line, and build; ask at most one question and only if the answer
 changes the build (destination, theme, content).
 
 ## Mode A — Diagram from a spec (fastest, most reliable)
-1. **Pick the type**: diagrams → table in `references/diagram-types.md` §1 (`flow radial phases timeline network layers cycle sequence terminal cards chart banner`); things → `references/animated-things.md` §1 (`loader logo text gauge radar backdrop icons scene counter art`); several → `compose`.
+1. **Pick the type**: diagrams → table in `references/diagram-types.md` §1 (`flow radial phases timeline network layers cycle sequence terminal cards chart banner`); things → `references/animated-things.md` §1 (`loader logo text gauge radar backdrop icons scene counter art morph`); several → `compose`.
 2. **Write a JSON spec** (examples for every type in `assets/specs/`; every field in `references/diagram-types.md` §3 and `references/animated-things.md`) with the user's real labels; choose a theme (`ember ocean forest mono paper violet sunset`) or override colours.
 3. **Run** `python scripts/run_pipeline.py spec.json --out-dir ./run --name <name>` → build + lint + frames.
 4. **View** the PNGs / contact sheet; fix the **spec** (not the SVG) and re-run until clean.
@@ -126,6 +126,7 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - Reply briefly: what moves, loop length, assumptions, 2–3 knobs to tweak (`dur`, theme/colours, label text). Mention anything not verified.
 
 ## Reference map
+- `references/morphing.md` - **morph shapes that share no command structure**, the one thing plain SMIL cannot do: arc-length resampling into one uniform `M + n*C + Z` signature, with rotation alignment, no library and no JavaScript
 - `references/physics.md` - **integrate, don't ease**: the damped-spring ODE, zeta/omega to personality, baking a simulation into static keyframes, gravity with restitution
 - `references/svg-filters.md` - filter pipelines, animated `feTurbulence`/`feDisplacementMap` with no JavaScript, the performance ceilings
 - `references/intent-first.md` - **read before choosing a type**: the 5-question brief, when motion means something, when to leave the catalog, anti-patterns
@@ -142,6 +143,7 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - `references/smil-cheatsheet.md`, `references/css-animation.md` — syntax and gotchas
 - `references/design-principles.md` — timing, easing, loops, palette, accessibility
 - `references/debugging.md` — symptom → cause → fix
+- `scripts/morph_path.py` - resample two paths to a shared signature so SMIL interpolates them; refuse shapes with holes rather than produce garbage
 - `scripts/verify.py` - **run the file, don't just read it**: loads it in a real browser at frame 0 and reports anything visible that has not been cued yet. Two other checks were built and cut because they fired on known-good files; the docstring says which and why
 - `scripts/run_pipeline.py` (whole pipeline), `scripts/gen_diagram.py` (+ `diagram_common.py`, `diagram_extra.py`, `things_a.py`, `things_b.py`), `scripts/lint_svg_anim.py`, `scripts/render_frames.py`
 - `assets/template.svg`, `assets/specs/*.json`, `assets/examples/*.svg` (generated, lint-clean references)

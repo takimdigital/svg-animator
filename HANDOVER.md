@@ -21,7 +21,7 @@ brief**, and report any drift in your reply before you start new work.
 | Branch protection | `main` is **protected** — all changes go through a PR |
 | Commits on `main` | 13 |
 | Generator types | 22 (`python -c "import sys;sys.path.insert(0,'scripts');import gen_diagram as g;print(len(g.registry()))"`) |
-| Examples | 52 in `assets/examples/`, 52 specs in `assets/specs/` |
+| Examples | 53 in `assets/examples/`, 53 specs in `assets/specs/` |
 | Reference docs | 12 in `references/` |
 | Scripts | 9 in `scripts/` (incl. `build_thumbs.py`) |
 | Open PRs | 0 |

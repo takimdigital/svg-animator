@@ -294,10 +294,12 @@ def registry():
     from diagram_extra import EXTRA_BUILDERS
     from things_a import THINGS_A
     from things_b import THINGS_B
+    from things_morph import EXTRA_MORPH
     b = {"flow": build_flow, "radial": build_radial, "phases": build_phases}
     b.update(EXTRA_BUILDERS)
     b.update(THINGS_A)
     b.update(THINGS_B)
+    b.update(EXTRA_MORPH)
     return b
 
 

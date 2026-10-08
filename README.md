@@ -148,7 +148,7 @@ maps symptom → cause → fix, and changes as little as possible.
 
 ## The gallery
 
-Twelve of the 52 generator outputs, at uniform tile size. Every one is lint-clean
+Twelve of the 53 generator outputs, at uniform tile size. Every one is lint-clean
 (`0 errors, 0 warnings`) — click any for the full-size version and the spec behind it.
 
 <a href="docs/gallery/README.md">
@@ -162,7 +162,7 @@ Twelve of the 52 generator outputs, at uniform tile size. Every one is lint-clea
   <img src="docs/thumbs/loader-sheet.svg" alt="Sheet of eight loading spinner variants" width="24%">
   <img src="docs/thumbs/gauge-dashboard.svg" alt="Dashboard of gauges, rings, bars and a donut" width="24%">
   <img src="docs/thumbs/radar-skills.svg" alt="Radar chart comparing skills" width="24%">
-  <img src="docs/thumbs/counter-stats.svg" alt="Odometer counters" width="24%">
+  <img src="docs/thumbs/morph-shapes.svg" alt="Six shapes morphing into each other despite sharing no path-command structure" width="24%">
 </a>
 
 <a href="docs/gallery/README.md">
@@ -175,6 +175,52 @@ Twelve of the 52 generator outputs, at uniform tile size. Every one is lint-clea
 <p align="center">
   <sub>All twelve are real generator output. <a href="docs/gallery/README.md">See the full gallery →</a></sub>
 </p>
+
+## Morphing shapes plain SMIL refuses to interpolate
+
+<img src="assets/examples/morph-shapes.svg" alt="Six shapes morphing into each other: star, circle, heart, bolt, drop and cross" width="100%">
+
+`<animate attributeName="d">` interpolates **only** when both paths have the same
+command structure — same commands, same order, same count. SVG 2 says so, and
+otherwise it falls back to *discrete*, which means the shape **snaps**. A square
+does not tween into a triangle; it jumps. The markup is well-formed, so a linter
+sees nothing wrong, and the file lints clean while quietly not moving.
+
+GSAP's MorphSVGPlugin solves it, and it is excellent — but it needs GSAP *and*
+JavaScript, and an SVG carrying `<script>` stops animating inside a README
+`<img>`.
+
+So this skill fixes it at author time instead. `scripts/morph_path.py` flattens
+both shapes to polylines, resamples them to the same number of points by arc
+length, and re-emits both as one uniform `M + n·C + Z` signature — the only form
+SMIL interpolates. No library, no JavaScript, works in `<img>`:
+
+```python
+from morph_path import morph_pair, signature
+
+a, b = morph_pair(star_d, circle_d, n=24)   # 5 commands vs an arc: no shared structure
+assert signature(a) == signature(b)         # M + 24 C's — now SMIL will interpolate
+```
+
+Two details that decide whether it looks deliberate or looks broken:
+
+**Align the correspondence.** Resampling pairs points by equal arc-length
+fraction, which fixes the correspondence wherever each path happens to start.
+A circle and a heart that both begin near the top still pair the circle's right
+side with the heart's left notch, and the shape collapses to a sliver crossing
+over. Trying every cyclic shift and keeping the cheapest cut total travel by
+**67%** across the six pairs above, and **99%** on circle → heart specifically.
+It is on by default; `align=False` turns it off.
+
+**Refuse shapes with holes.** A ring or a donut has two subpaths; flattening
+them into one polyline produces something wrong at *every* frame rather than
+obviously broken, so `morph_pair` raises instead of shipping garbage. The same
+reasoning is why `verify.py` ships with two checks cut — see its docstring.
+
+Honest limits: mid-morph aesthetics are approximate (`heart → bolt` above still
+pinches through a thin sliver), and cost grows linearly with `n` — the example
+is 39 KB, the gallery tile 80 KB. Full write-up, including the spec fields and
+the twelve named forms, in `references/morphing.md`.
 
 ## The seven principles
 
@@ -265,8 +311,8 @@ svg-animator/
 │   └── render_frames.py           PNG frames at chosen timestamps
 ├── assets/
 │   ├── template.svg
-│   ├── specs/*.json               52 worked specs, one per type
-│   └── examples/*.svg             52 generated, lint-clean references
+│   ├── specs/*.json               53 worked specs, one per type
+│   └── examples/*.svg             53 generated, lint-clean references
 └── docs/                        README's own graphics + the full gallery
     ├── hero.svg · modes.svg · mark.svg · support.svg
     └── gallery/README.md          full-size gallery, every example annotated
