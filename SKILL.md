@@ -143,6 +143,7 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - `references/smil-cheatsheet.md`, `references/css-animation.md` — syntax and gotchas
 - `references/design-principles.md` — timing, easing, loops, palette, accessibility
 - `references/debugging.md` — symptom → cause → fix
+- `tests/test_morph_path.py` - the machinery's own tests: path parsing, arc-length resampling, signature guarantees, the two refusal cases, and `--pair` light/dark end to end. `python -m unittest discover -s tests`. Not decoration: it found the closed-vs-open morph bug that had been shipping silently
 - `scripts/build_gallery.py` - regenerates `docs/gallery/README.md` from every spec and fails if an `.svg` has no spec, because GitHub will not render a raw `.svg` and an unlisted example is invisible
 - `scripts/morph_path.py` - resample two paths to a shared signature so SMIL interpolates them; refuse shapes with holes rather than produce garbage
 - `scripts/verify.py` - **run the file, don't just read it**: loads it in a real browser at frame 0 and reports anything visible that has not been cued yet. Two other checks were built and cut because they fired on known-good files; the docstring says which and why
