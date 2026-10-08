@@ -73,6 +73,7 @@ changes the build (destination, theme, content).
 1. **Pick the type**: diagrams → table in `references/diagram-types.md` §1 (`flow radial phases timeline network layers cycle sequence terminal cards chart banner`); things → `references/animated-things.md` §1 (`loader logo text gauge radar backdrop icons scene counter art morph`); several → `compose`.
 2. **Write a JSON spec** (examples for every type in `assets/specs/`; every field in `references/diagram-types.md` §3 and `references/animated-things.md`) with the user's real labels; choose a theme (`ember ocean forest mono paper violet sunset`) or override colours.
 3. **Run** `python scripts/run_pipeline.py spec.json --out-dir ./run --name <name>` → build + lint + frames.
+   Set `"surface"` while you are here: `flat` for anything that has to be *read* (diagrams, pipelines, gauges), `bare` only for embedding into a page whose background you control, `glow` otherwise (`references/surfaces.md`).
 4. **View** the PNGs / contact sheet; fix the **spec** (not the SVG) and re-run until clean.
 5. **Combine** when the request has several visuals: `type: "compose"` with `layout` (`stack` | `row` | `grid`) and per-part `window:[a,b]` so parts play together, one after another, or as a cascade (`references/combinations.md`).
 6. If no type expresses what the user needs, generate the closest one, hand-edit with `references/readme-diagrams.md` §1/§3, then run the pipeline on the edited `.svg`.
@@ -126,6 +127,7 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - Reply briefly: what moves, loop length, assumptions, 2–3 knobs to tweak (`dur`, theme/colours, label text). Mention anything not verified.
 
 ## Reference map
+- `references/surfaces.md` - **choose a grammar, not just a palette**: `glow` (default), `flat`, `bare`. Six palettes over one surface is not visual range, and the surface used to be hardcoded so no spec could change it
 - `references/morphing.md` - **morph shapes that share no command structure**, the one thing plain SMIL cannot do: arc-length resampling into one uniform `M + n*C + Z` signature, with rotation alignment, no library and no JavaScript
 - `references/physics.md` - **integrate, don't ease**: the damped-spring ODE, zeta/omega to personality, baking a simulation into static keyframes, gravity with restitution
 - `references/svg-filters.md` - filter pipelines, animated `feTurbulence`/`feDisplacementMap` with no JavaScript, the performance ceilings

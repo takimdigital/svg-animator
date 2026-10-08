@@ -46,6 +46,34 @@ DARK_THEMES = {"ember", "ocean", "forest", "mono", "violet", "sunset"}
 FONT = "'JetBrains Mono','Cascadia Mono','Menlo','Consolas',monospace"
 SANS = "ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"
 
+# Visual surfaces: the grammar a graphic is drawn in, as opposed to its palette.
+#
+# Why this exists: every one of the 53 examples shipped with the same surface -
+# a rounded opaque background, three blurred radial blobs drifting behind it,
+# and a generous blur on every glow. That was not a theme choice, it was
+# hardcoded in assemble() and common_defs(), so it applied to 100% of output and
+# no spec could change it. Six palettes over one surface is not visual range.
+#
+#   bg      "rounded" | "square" | "none"
+#   aurora  the drifting gradient bed, on or off
+#   blur    stdDeviation on the shared #glow filter
+#   grad    multiplier on the aurora gradient opacities
+#
+# "glow" is the default and must stay byte-for-byte identical to what shipped,
+# or every committed example stops reproducing.
+#
+# There is deliberately no fourth surface. A "line" variant with the glow
+# filter removed was tried and cut: builders reference `url(#glow)` from 11
+# inline sites, so omitting the definition leaves 9 dangling references and the
+# linter correctly rejected the output. Any further surface has to differ in the
+# bodies rather than the defs, which means editing every builder - worth doing
+# one day, not as a flag.
+SURFACES = {
+    "glow": {"bg": "rounded", "aurora": True,  "blur": 3.6, "grad": 1.0},
+    "flat": {"bg": "square",  "aurora": False, "blur": 1.0, "grad": 0.0},
+    "bare": {"bg": "none",    "aurora": False, "blur": 1.0, "grad": 0.0},
+}
+
 
 # ------------------------------------------------------------- small helpers
 def F(v):
@@ -204,13 +232,30 @@ def aurora(W, H, th, blur=0):
     return "".join(s)
 
 
-def common_defs(th, arrows, blur=0):
-    s = ["<defs>", '<filter id="glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="3.6"/></filter>']
-    if blur:
+def common_defs(th, arrows, blur=0, surface="glow"):
+    """Shared <defs>. `surface` decides how glowy they are - see SURFACES.
+
+    Every builder references these ids by name (`filter="url(#glow)"`,
+    `fill="url(#auWarm)"`) from 11 inline sites across four modules, so the
+    surface is applied by *redefining the defs here* rather than by editing
+    every call site. One place to change, and no builder has to know a surface
+    exists.
+    """
+    srf = SURFACES.get(surface, SURFACES["glow"])
+    dev = srf["blur"]
+    scale = srf["grad"]
+    s = ["<defs>"]
+    if dev > 0:
+        s.append(f'<filter id="glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="{dev}"/></filter>')
+    if blur and srf["aurora"]:
         s.append(f'<filter id="aurora" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="{blur}"/></filter>')
-    for gid, col, op in (("auWarm", th["accent"], 0.34), ("auEmber", th["accent2"], 0.28), ("auAmber", th["accent3"], 0.20)):
-        s.append(f'<radialGradient id="{gid}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="{col}" stop-opacity="{op}"/>'
-                 f'<stop offset="100%" stop-color="{col}" stop-opacity="0"/></radialGradient>')
+    if scale > 0:
+        for gid, col, op in (("auWarm", th["accent"], 0.34), ("auEmber", th["accent2"], 0.28), ("auAmber", th["accent3"], 0.20)):
+            # Plain str(), not a fixed precision: the shipped files contain
+            # "0.2" not "0.200", and reformatting them breaks byte-identity for
+            # every committed example in the repo.
+            s.append(f'<radialGradient id="{gid}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="{col}" stop-opacity="{op * scale}"/>'
+                     f'<stop offset="100%" stop-color="{col}" stop-opacity="0"/></radialGradient>')
     if arrows:
         s.append(f'<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto" markerUnits="userSpaceOnUse">'
                  f'<path d="M0,0 L10,5 L0,10 Z" fill="{th["arrow"]}"/></marker>')

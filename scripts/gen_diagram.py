@@ -42,7 +42,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from diagram_common import (DARK_THEMES, FONT, THEMES, F, T, aurora, apply_window, card_w, common_defs, eyebrow, esc,  # noqa: E402
+from diagram_common import (DARK_THEMES, FONT, SURFACES, THEMES, F, T, aurora, apply_window, card_w, common_defs, eyebrow, esc,  # noqa: E402
                             glow_overlay, gradient_colors, header, make_slots, map_sb, node_card, part, rail,
                             relay_traveller, tdesc)
 
@@ -381,10 +381,18 @@ def build(spec, th, cli_theme=None):
 
 def assemble(spec, th, p):
     W, H = p["W"], p["H"]
+    surface = spec.get("surface", "glow")
+    if surface not in SURFACES:
+        sys.exit("unknown surface %r; choose from %s" % (surface, sorted(SURFACES)))
+    srf = SURFACES[surface]
     out = [header(W, H, spec, p["sb"], p["desc"]),
-           "  " + common_defs(th, p["arrows"], spec.get("aurora_blur", 0)) + "\n",
-           f'  <rect width="{F(W)}" height="{F(H)}" rx="16" fill="{th["bg"]}"/>\n']
-    if spec.get("aurora", True):
+           "  " + common_defs(th, p["arrows"], spec.get("aurora_blur", 0), surface) + "\n"]
+    if srf["bg"] == "rounded":
+        out.append(f'  <rect width="{F(W)}" height="{F(H)}" rx="16" fill="{th["bg"]}"/>\n')
+    elif srf["bg"] == "square":
+        out.append(f'  <rect width="{F(W)}" height="{F(H)}" fill="{th["bg"]}"/>\n')
+    # "bare" draws no background at all, so the host page shows through
+    if spec.get("aurora", True) and srf["aurora"]:
         out.append("  " + aurora(W, H, th, spec.get("aurora_blur", 0)) + "\n")
     out.append("  " + eyebrow(spec, th) + "\n")
     body = p["body"]
