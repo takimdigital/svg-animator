@@ -17,9 +17,11 @@ chosen before the intent is a type chosen for you.
 
 ## The brief — five questions, answer before drawing
 
-1. **What is this for?** README hero · docs explainer · PR description · slide ·
-   social card. The destination sets the canvas, density and whether animation
-   runs at all.
+1. **What is this for?** A website hero · a docs explainer · a PR description ·
+   a slide · a social card. The destination sets the canvas, the density, and
+   whether animation runs at all. **Ask this first and do not assume.** The same
+   content needs a different graphic on a landing page than in a repository, and
+   a skill that only ever hears "README" will answer for both.
 2. **Who reads it, and what do they already know?** A stranger needs the nouns
    spelled out. A colleague does not.
 3. **What is the ONE thing they must take away?** One. Write it as a sentence.
@@ -32,6 +34,103 @@ chosen before the intent is a type chosen for you.
 
 State the answers in one line each, in your reply, before you build. It is four
 sentences and it prevents the most expensive kind of wrong.
+
+## Where will it actually live?
+
+Destination is not a formality. It changes what is even possible, and it is the
+one question whose answer you cannot guess from the content.
+
+| where | how to embed | hover / JS | `prefers-reduced-motion` | notes |
+|---|---|---|---|---|
+| **Website / landing page** | `<img src>` **or** inline `<svg>` | inline only | inline: a media query can gate CSS. `<img>`: ship a twin | inline needs **unique ids** per page |
+| **Docs site / blog** | `<img src>` | no | ship a static twin | same as a README |
+| **README in a repo** | `![alt](docs/x.svg)` | no | ship a static twin | GitHub's light/dark is invisible inside an `<img>`; use a light/dark pair |
+| **Slide / PDF / print** | none — export a still | no | n/a | render a PNG frame, or frames → GIF/MP4 |
+| **Email / Notion / social** | usually stripped | no | n/a | always ship a PNG fallback |
+
+Two rules that follow from the table and are worth knowing by heart:
+
+- **In an `<img>`, the file is isolated.** Its ids cannot collide with the page
+  and it cannot see the page — which is why light/dark pairing needs *two files*.
+- **Inline SVG gets more.** Hover states, focus rings, JS libraries
+  (`offset-path`, Motion, GSAP), and a real `prefers-reduced-motion` media query.
+  If the user says "on my website" and wants interactivity, ask whether they can
+  inline it, because that unlocks things this skill otherwise tells you to skip.
+
+## When the request is vague
+
+"Make me something cool." "I need a diagram for my project." "Something for the
+homepage." This is the **normal** case, not a failure of the user, and
+interrogating someone about it is worse than building a good default and showing
+them.
+
+The protocol:
+
+**1 · Read for signals, not nouns.** The nouns are the least informative part.
+Look for what they said about *feeling*, *audience* and *place*:
+
+> "my homepage feels boring" → the problem is **boring**, not the content
+> "something for the demo, needs to look impressive" → the goal is **impress**
+> "users keep not understanding our pricing" → the goal is **clarity**
+> "it's for a healthcare startup, should feel safe" → the goal is **safe**
+
+**2 · Infer the destination from where you are.** They said "my site" → website.
+They pasted a README → repository. They said "slides" → stills. This is usually
+right and worth stating rather than asking.
+
+**3 · Pick a default that is cheap to be wrong about.** Prefer the inference
+that takes one word to change. A `flow` diagram in the wrong theme costs one
+line to fix. A hand-built illustrated scene with the wrong feeling costs the
+whole piece. When unsure between two readings, **build the smaller one.**
+
+**4 · State the inferences, then build.** One line, three clauses, no question
+mark:
+
+> Going with: a website hero, because you said homepage. Flow diagram, because
+> the content is a sequence. `flat` surface and `mono` theme, because "boring"
+> reads as "too busy". 8s loop. Say the word and I'll make it warmer or busier.
+
+**5 · Offer one axis, not a menu.** "Warmer or busier?" is a useful question.
+Here are nine options in a bulleted list is not — it pushes the work back onto
+the person who asked you to do it.
+
+**6 · Ask at most one blocking question**, and only when the answers would
+produce genuinely different graphics: *"is this going in the repo or on the
+site?"* changes the surface and the light/dark strategy. *"should it feel
+warmer or colder?"* does not — just pick and offer to change it.
+
+The failure mode to avoid is not vagueness. It is **silently choosing** — picking
+an intent and never saying so, so the user cannot tell what you decided and
+therefore cannot correct it.
+
+## Situations: what a real request usually becomes
+
+Recognition is the skill. Keyed to what someone says, not to what exists.
+
+| they say something like | it usually is | reach for | surface |
+|---|---|---|---|
+| "explain how our system works" | architecture / data flow | `flow`, `layers`, `network` | `flat` |
+| "show the lifecycle / the phases" | ordered stages | `phases`, `timeline`, `cycle` | `flat` |
+| "what happens when X fires" | sequence with returns | `sequence`, `terminal` | `flat` |
+| "our homepage needs a hero" | one strong idea, big canvas | `banner`, `compose`, or hand-built | `glow` |
+| "the site feels boring" | motion + one accent, less chrome | anything, `flat` if busy, `glow` if flat | pick by their complaint |
+| "a spinner / loading state" | a loop that never resolves | `loader` | `bare` or `flat` |
+| "animate our logo" | the mark reveals itself | `logo`, or hand-built | `glow` |
+| "status icons for X" | small set, one behaviour each | `icons` | `bare`, or `flat` |
+| "a dashboard / KPIs" | numbers that count up | `cards`, `counter`, `gauge` | `flat` |
+| "compare skills / capabilities" | axes and polygons | `radar`, `chart` | `flat` |
+| "we hit 10k users" | one number, made to land | `counter` | `glow` |
+| "an illustration for X" | a thing with character | hand-built `scene` | `glow` |
+| "background for the hero section" | slow, low contrast, non-competing | `backdrop`, `art` | `bare` |
+| "a headline that types itself" | kinetic type | `text` | `glow` or `bare` |
+| "morph from icon to logo" | one shape becoming another | `morph` | `glow` |
+| "for the docs, show the API call" | literal, typed, reversible | `terminal`, `sequence` | `flat` |
+| "for slides" | a still frame | anything → PNG via `render_frames.py` | any |
+| "make me something cool" | see the protocol above; small, confident, `glow` | ask one axis | `glow` |
+
+**None of these are about repositories.** A landing page, a docs site and a README
+want the same file format and often the same graphic — the difference is the
+destination rules above, not a different skill.
 
 ## Motion must carry meaning
 

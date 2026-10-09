@@ -5,7 +5,7 @@ description: Design, build, combine, fix and verify animated SVGs on any topic �
 
 # SVG Animator
 
-Goal: ship animated SVGs that are **correct, self-contained and designed**, for GitHub READMEs, docs, sites and slides. One `.svg` file, no JavaScript, no external assets.
+Goal: ship animated SVGs that are **correct, self-contained and designed**, for whatever the user actually asked for — a website hero, a docs explainer, a repo README, a slide, a dashboard, an icon set, a background. One `.svg` file, no JavaScript, no external assets.
 
 SVG animation fails silently — a wrong `keyTimes`, a `begin` delay or a line through a card still "runs" but looks wrong. So this skill works by **computing instead of guessing, and verifying by looking**.
 
@@ -44,12 +44,21 @@ python scripts/run_pipeline.py INPUT --out-dir ./run --name <name> [--deliver ./
 
 **Do the brief first.** Five questions, in `references/intent-first.md`:
 
-1. What is this for (destination)? 2. Who reads it? 3. What is the ONE thing
-they must take away? 4. What should it *feel* like? 5. What does each moving
-thing *mean*?
+1. **Where will this actually live?** Website · docs site · repo · slides · email.
+   Do not assume it is a README. It sets the canvas, the density, and whether
+   hover, JS and a real `prefers-reduced-motion` query are available.
+2. Who reads it? 3. What is the ONE thing they must take away? 4. What should it
+*feel* like? 5. What does each moving thing *mean*?
 
 Answer them in one line each in your reply, then route. Choosing a type before
 the intent is choosing it for you — the catalog is a floor, not a menu.
+
+**The request will often be vague**, and that is the normal case. Do not
+interrogate. Read for signals in their *complaint* ("boring" is the real
+brief, not the content), infer the destination from context, build the smaller
+safe default, and **state the inferences in one line** so they can correct you.
+Offer one axis to adjust ("warmer or busier?"), not a menu. Full protocol and a
+situation→answer catalog in `references/intent-first.md`.
 
 Then:
 
