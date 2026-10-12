@@ -77,19 +77,23 @@ SURFACES = {
 
 # ------------------------------------------------------------- small helpers
 def F(v):
+    """F(v): format a number for SVG coordinates: one decimal place, trailing '.0' removed. Keep it: more digits only bloat the file."""
     s = f"{v:.1f}"
     return s[:-2] if s.endswith(".0") else s
 
 
 def T(v):
+    """T(v): format a keyTime. Clamps v to [0, 1] and prints 3 decimals. It does NOT reorder: keyTimes must already be non-decreasing and end at 1."""
     return f"{max(0.0, min(1.0, v)):.3f}"
 
 
 def esc(s):
+    """esc(s): XML-escape text and quotes. Every label and every spec string goes through it; an unescaped ampersand or quote breaks the whole SVG."""
     return escape(str(s), {'"': "&quot;"})
 
 
 def lerp_hex(a, b, t):
+    """lerp_hex(a, b, t): linear mix of two #RRGGBB colours. t is not clamped; keep it in [0, 1]."""
     a, b = a.lstrip("#"), b.lstrip("#")
     ca = [int(a[i:i + 2], 16) for i in (0, 2, 4)]
     cb = [int(b[i:i + 2], 16) for i in (0, 2, 4)]
@@ -97,6 +101,7 @@ def lerp_hex(a, b, t):
 
 
 def gradient_colors(th, n):
+    """gradient_colors(th, n): n colours running accent3 -> accent -> accent2, for palettes that need one colour per item."""
     out = []
     for i in range(n):
         t = i / max(1, n - 1)
@@ -105,10 +110,12 @@ def gradient_colors(th, n):
 
 
 def tdesc(label, a, b):
+    """tdesc(label, a, b): storyboard line 'at a..b label'. The format is parsed by run_pipeline.py and readme_page.py to choose frame times; do not change it."""
     return f"at {a:.3f}..{b:.3f} {label}"
 
 
 def card_w(label, sub="", lsz=18, pad=34, minw=120):
+    """card_w(label, sub, lsz, pad, minw): width estimate for a card: the wider of the label (characters x lsz x 0.6) and the sub (characters x 6.6), plus padding, rounded up to even, and at least minw. It assumes a monospace font; a wider fallback font can still overflow, which lint reports."""
     return max(minw, math.ceil((max(len(label) * lsz * 0.6, len(sub) * 6.6) + pad) / 2) * 2)
 
 
@@ -123,6 +130,7 @@ def rect_exit(w, h, dx, dy):
 
 
 def make_slots(n, start=0.02, dwell=0.03, tail=0.10, end=0.97):
+    """make_slots(n, start=0.02, dwell=0.03, tail=0.10, end=0.97): split the loop into n hop slots, returning ([(start, end), ...], slot_length). Refuses (SystemExit, 'too many hops for one loop') when a slot would be under 0.04 of the loop; warns on stderr under 0.07. The tail keeps the loop resting before it restarts."""
     h = (end - start - tail - (n - 1) * dwell) / n
     if h < 0.04:
         raise SystemExit("too many hops for one loop; increase dur or reduce steps")
@@ -158,6 +166,7 @@ def pulse_frames(arrivals, rise=0.05, decay=0.11, peak=0.95):
 
 
 def glow_overlay(x, y, w, h, rx, color, arrivals, dur, sw=2.6, rise=0.05, decay=0.11, peak=0.95):
+    """glow_overlay(...): an outline rect that lights when a dot arrives, built by pulse_frames. Invariant: its values start at 0 and end at 0 with keyTimes ending at 1, so the glow is fully off when the loop restarts. Base opacity is 0."""
     vals, kts = pulse_frames(arrivals, rise, decay, peak)
     return (f'<rect x="{F(x)}" y="{F(y)}" width="{F(w)}" height="{F(h)}" rx="{rx}" fill="none" stroke="{color}" '
             f'stroke-width="{sw}" filter="url(#glow)" opacity="0">'
@@ -165,6 +174,7 @@ def glow_overlay(x, y, w, h, rx, color, arrivals, dur, sw=2.6, rise=0.05, decay=
 
 
 def glow_dot(cx, cy, r, color, arrivals, dur, rise=0.04, decay=0.10, peak=0.9):
+    """glow_dot(...): the circle version of glow_overlay, with the same keyTimes invariant. Base opacity is 0."""
     vals, kts = pulse_frames(arrivals, rise, decay, peak)
     return (f'<circle cx="{F(cx)}" cy="{F(cy)}" r="{F(r + 1.5)}" fill="{color}" filter="url(#glow)" opacity="0">'
             f'<animate attributeName="opacity" dur="{dur:g}s" repeatCount="indefinite" keyTimes="{kts}" values="{vals}"/></circle>')
@@ -187,6 +197,7 @@ def relay_traveller(path, ts, te, color, dot, dur):
 
 
 def rail(d, th, loop=False, arrows=False, dash=False, color=None, sw=1.5):
+    """rail(d, th, loop, arrows, dash, color, sw): one connector path. loop or dash draws it dashed. arrows=True adds marker-end='url(#arrow)', which only exists if common_defs(..., arrows=True) was added to the same SVG (lint reports the missing reference otherwise)."""
     col = color or (th["loop"] if loop else th["rail"])
     dsh = ' stroke-dasharray="5 6"' if (loop or dash) else ""
     mk = ' marker-end="url(#arrow)"' if arrows else ""
@@ -264,6 +275,7 @@ def common_defs(th, arrows, blur=0, surface="glow"):
 
 
 def header(W, H, spec, storyboard, default_desc):
+    """header(W, H, spec, storyboard, default_desc): the <svg> opening, title, desc and a storyboard comment. The storyboard lines are part of the file; keep them short and in the at-a..b format."""
     aria = esc(spec.get("aria") or spec.get("heading") or spec.get("title") or "animated diagram")
     title = esc(spec.get("title_text") or spec.get("heading") or spec.get("title") or "Diagram")
     desc = esc(spec.get("desc") or default_desc)
@@ -273,6 +285,7 @@ def header(W, H, spec, storyboard, default_desc):
 
 
 def eyebrow(spec, th, x=40, y=50):
+    """eyebrow(spec, th, x, y): the small letter-spaced label at the top left, from spec['title']. Returns '' when there is no title, so builders can always call it."""
     t = spec.get("title")
     if not t:
         return ""
@@ -285,6 +298,7 @@ def part(body, W, H, sb, arrows=False, desc="", preroll=None, dur=None):
     # apply_window turns it into the negative `begin`, because only the composer
     # knows the part's window -- a fixed offset chosen at build time overshoots a
     # part that has been remapped into a short window.
+    """part(body, W, H, sb, arrows, desc, preroll, dur): the return value every builder must produce. body is the SVG fragment without <svg>, W and H are its size (they must match its coordinates), sb holds the storyboard lines, arrows says whether common_defs must define the arrow marker, and preroll and dur are read by apply_window for compose windows."""
     return dict(body=body, W=W, H=H, sb=sb, arrows=arrows, desc=desc, preroll=preroll, dur=dur)
 
 
@@ -333,6 +347,7 @@ def apply_window(body, a, b, preroll=None, dur=None):
 
 
 def map_sb(lines, a, b):
+    """map_sb(lines, a, b): remap storyboard 'at x..y' times into the compose window [a, b], so a composed part reports its times on the whole loop."""
     def rep(m):
         return f"at {a + float(m.group(1)) * (b - a):.3f}..{a + float(m.group(2)) * (b - a):.3f}"
     return [_AT.sub(rep, ln) for ln in lines]

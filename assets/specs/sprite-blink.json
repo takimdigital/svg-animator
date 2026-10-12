@@ -1,0 +1,14 @@
+{
+ "type": "sprite",
+ "fps": 4,
+ "width": 240,
+ "height": 200,
+ "theme": "mono",
+ "aria": "A small face that blinks: open eyes, closed eyes, and a short smile.",
+ "frames": [
+  "<circle cx=\"120\" cy=\"100\" r=\"70\" fill=\"#F5E6C8\"/><circle cx=\"96\" cy=\"86\" r=\"8\" fill=\"#111\"/><circle cx=\"144\" cy=\"86\" r=\"8\" fill=\"#111\"/><path d=\"M92,128 Q120,150 148,128\" stroke=\"#111\" stroke-width=\"4\" fill=\"none\"/>",
+  "<circle cx=\"120\" cy=\"100\" r=\"70\" fill=\"#F5E6C8\"/><path d=\"M88,86 H104\" stroke=\"#111\" stroke-width=\"4\"/><path d=\"M136,86 H152\" stroke=\"#111\" stroke-width=\"4\"/><path d=\"M92,128 Q120,150 148,128\" stroke=\"#111\" stroke-width=\"4\" fill=\"none\"/>",
+  "<circle cx=\"120\" cy=\"100\" r=\"70\" fill=\"#F5E6C8\"/><circle cx=\"96\" cy=\"86\" r=\"8\" fill=\"#111\"/><circle cx=\"144\" cy=\"86\" r=\"8\" fill=\"#111\"/><path d=\"M92,128 Q120,150 148,128\" stroke=\"#111\" stroke-width=\"4\" fill=\"none\"/>",
+  "<circle cx=\"120\" cy=\"100\" r=\"70\" fill=\"#F5E6C8\"/><circle cx=\"96\" cy=\"86\" r=\"8\" fill=\"#111\"/><circle cx=\"144\" cy=\"86\" r=\"8\" fill=\"#111\"/><path d=\"M92,128 Q120,150 148,128\" stroke=\"#111\" stroke-width=\"4\" fill=\"none\"/>"
+ ]
+}

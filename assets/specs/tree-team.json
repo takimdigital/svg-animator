@@ -1,0 +1,46 @@
+{
+ "type": "tree",
+ "dur": 8,
+ "theme": "forest",
+ "title": "team structure",
+ "aria": "A team tree: a lead with two managers, each with their own engineers and a designer.",
+ "root": {
+  "label": "Lead",
+  "sub": "owns the roadmap",
+  "key": true,
+  "children": [
+   {
+    "label": "Platform",
+    "sub": "infra + tooling",
+    "children": [
+     {
+      "label": "Build",
+      "sub": "CI, releases"
+     },
+     {
+      "label": "Runtime",
+      "sub": "SRE"
+     }
+    ]
+   },
+   {
+    "label": "Product",
+    "sub": "features",
+    "children": [
+     {
+      "label": "Web",
+      "sub": "frontend"
+     },
+     {
+      "label": "API",
+      "sub": "backend"
+     },
+     {
+      "label": "Design",
+      "sub": "UX"
+     }
+    ]
+   }
+  ]
+ }
+}

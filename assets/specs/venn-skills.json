@@ -1,0 +1,19 @@
+{
+ "type": "venn",
+ "dur": 8,
+ "theme": "violet",
+ "title": "where skills overlap",
+ "overlap": 0.35,
+ "both": "both",
+ "aria": "Two overlapping circles: design skills and code skills, with a shared part labelled both.",
+ "sets": [
+  {
+   "label": "Design",
+   "size": 60
+  },
+  {
+   "label": "Code",
+   "size": 80
+  }
+ ]
+}

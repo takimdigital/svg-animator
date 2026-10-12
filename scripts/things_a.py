@@ -93,6 +93,18 @@ LOADERS = {"ring": _l_ring, "dots": _l_dots, "bars": _l_bars, "orbit": _l_orbit,
 
 
 def build_loader(spec, th, idp=""):
+    """loader: spinner and loading-state variants, as a sheet or a single one.
+
+    Fields: variant (one name) or variants (list); period (1.2 s, each loader's own period);
+        cols (min(variants, 4)); cell (170); label.
+    Refuses: an unknown variant: 'loader variant <name> unknown; choose from [...]'.
+    Base state: each variant fully drawn; loaders loop on their own period, not on the master
+        clock.
+    Timing: independent of dur: each variant runs its own period.
+    Alternatives: period is per variant because spinners look right at different speeds.
+    Breaks if changed: variant names are used as ids and labels; keep them plain words.
+    Example: loader-sheet.json   Tests: tests/test_type_coverage.py.
+    """
     names = spec.get("variants") or ([spec["variant"]] if spec.get("variant") else list(LOADERS))
     for n in names:
         if n not in LOADERS:
@@ -141,6 +153,20 @@ def _mark_path(mark, cx, cy, R):
 
 
 def build_logo(spec, th, idp=""):
+    """logo: a logo reveal: mark outline draws on, fills, initials and wordmark appear, a shine passes.
+
+    Fields: mark ('hexagon', 'diamond', 'triangle', 'pentagon', 'circle', 'shield'; anything
+        else gives a rounded square); initials (up to 3 characters); wordmark; tagline;
+        wordmark_size (46); dur (8); width (860); height (280).
+    Refuses: none. An unknown mark is drawn as a rounded square, not refused.
+    Base state: the finished logo is the base state; the draw-on runs over 0.04-0.30 of the loop
+        and the lockup fades at 0.93-0.98.
+    Timing: the reveal is a fixed sequence inside the loop; the pre-roll puts frame 0 in the
+        hold window, fully drawn.
+    Breaks if changed: the initials must stay inside the mark; long wordmarks widen the lockup,
+        so check the width.
+    Example: logo-hexagon.json; logo-shield.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     W, H = spec.get("width", 860), spec.get("height", 280)
     mark = spec.get("mark", "hexagon")
@@ -208,6 +234,22 @@ def _burst(b):
 
 
 def build_text(spec, th, idp=""):
+    """text: kinetic text in six variants.
+
+    Fields: text (required); variant ('wave', 'reveal', 'pop', 'type', 'shimmer', 'glitch');
+        size (72); font ('mono' or sans); subtitle; subtitle_size (20); width; height; dur (6).
+    Refuses: an unknown variant: 'text variant must be one of
+        wave|reveal|pop|type|shimmer|glitch'.
+    Base state: the finished text is the base state (letters visible); type and reveal start
+        their letters hidden and step them in.
+    Timing: letter variants use a monospace grid (0.6 em per character); shimmer and glitch use
+        the sans stack unless font is mono.
+    Alternatives: type reveals one letter per step with no cover, so it works on any background.
+    Breaks if changed: letter spacing assumes 0.6 em; keep text under about 24 characters for
+        the layouts to fit.
+    Example: text-wave.json; text-reveal.json; text-pop.json; text-type.json; text-shimmer.json;
+        text-glitch.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 6))
     txt = str(spec["text"])
     var = spec.get("variant", "wave")
@@ -323,6 +365,20 @@ def _count(x, y, value, unit, size, col, anchor, dur, t0, t1, th, steps=8):
 
 
 def build_gauge(spec, th, idp=""):
+    """gauge: gauges, rings, bars and donuts with numbers that count up.
+
+    Fields: items (required; list of {kind: gauge|ring|bar|donut, label, value, max (100), unit,
+        color, segments (donut: list of {value,color}), center (donut centre text)}); cols
+        (min(items, 3)); dur (8).
+    Refuses: an unknown kind: 'gauge kind must be gauge|ring|bar|donut'.
+    Base state: finished values and arcs are the base state; count-up numbers are discrete
+        texts; everything resets at the end of the loop.
+    Timing: values count up and arcs sweep between 0.05 and 0.45 of the loop, hold, then reset
+        at 0.90-1.00.
+    Breaks if changed: the count-up numbers are discrete steps; changing their keyTimes must
+        keep them in order and ending at 1.
+    Example: gauge-dashboard.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     items = spec["items"]
     cols = spec.get("cols", min(len(items), 3))
@@ -401,6 +457,18 @@ def build_gauge(spec, th, idp=""):
 
 # ------------------------------------------------------------------ RADAR
 def build_radar(spec, th, idp=""):
+    """radar: a spider chart with one or more series; polygons grow from the centre.
+
+    Fields: axes (required; at least 3 labels); series (required; list of {name,values,max
+        (100),color}); radius (150); dur (8); title.
+    Refuses: fewer than 3 axes: 'radar needs at least 3 axes'.
+    Base state: finished polygons are the base state; each series grows in its own step.
+    Timing: each series starts 0.06 of the loop after the previous one; its vertex dots pop
+        after its polygon.
+    Breaks if changed: every series must have one value per axis, or the polygon has the wrong
+        shape.
+    Example: radar-skills.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     axes = spec["axes"]
     series = spec["series"]

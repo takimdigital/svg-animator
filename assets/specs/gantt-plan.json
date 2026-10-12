@@ -1,0 +1,40 @@
+{
+ "type": "gantt",
+ "dur": 9,
+ "theme": "ocean",
+ "title": "release plan",
+ "unit": "weeks",
+ "aria": "A gantt chart of a release plan: research, build, test, docs and launch, with progress on each task.",
+ "tasks": [
+  {
+   "name": "Research",
+   "start": 0,
+   "end": 2,
+   "progress": 100
+  },
+  {
+   "name": "Build",
+   "start": 2,
+   "end": 7,
+   "progress": 60
+  },
+  {
+   "name": "Test",
+   "start": 6,
+   "end": 9,
+   "progress": 20
+  },
+  {
+   "name": "Docs",
+   "start": 5,
+   "end": 8,
+   "progress": 10
+  },
+  {
+   "name": "Launch",
+   "start": 9,
+   "end": 10,
+   "progress": 0
+  }
+ ]
+}

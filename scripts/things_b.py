@@ -25,6 +25,21 @@ def _wave_path(W, H, y0, amp, L):
 
 
 def build_backdrop(spec, th, idp=""):
+    """backdrop: ambient background: waves, stars, grid ripple, bubbles, rain or mesh.
+
+    Fields: variant ('waves', 'stars', 'grid', 'bubbles', 'rain', 'mesh'); width (1200); height
+        (400); seed (7); count (per variant); layers (waves: 4); heading; heading_size (56);
+        subtitle; dur (12).
+    Refuses: an unknown variant: 'backdrop variant must be one of
+        waves|stars|grid|bubbles|rain|mesh'.
+    Base state: the complete backdrop is the base state; all motion is slow and ambient.
+    Timing: ambient: every element loops on its own period; the static frame is already
+        finished.
+    Breaks if changed: the seed fixes the layout; changing the seed moves every element.
+    Example: backdrop-waves.json; backdrop-stars.json; backdrop-grid.json;
+        backdrop-bubbles.json; backdrop-rain.json; backdrop-mesh.json   Tests:
+        tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 12))
     var = spec.get("variant", "waves")
     W, H = spec.get("width", 1200), spec.get("height", 400)
@@ -199,6 +214,17 @@ ICONS = {"check": _i_check, "cross": _i_cross, "heart": _i_heart, "bell": _i_bel
 
 
 def build_icons(spec, th, idp=""):
+    """icons: small micro-animated icons from a fixed set of twelve.
+
+    Fields: items (list of {name,label}; default: all twelve); size (56); cols (min(items, 6));
+        cell (120); period (2.4 s).
+    Refuses: an unknown name: 'icon <name> unknown; choose from [...]'.
+    Base state: each icon is fully drawn in its rest pose; the action runs in its own period.
+    Timing: each icon rests between actions, so frame 0 is a clean icon.
+    Breaks if changed: names are a closed list: a new icon needs a new function in the icon
+        table.
+    Example: icons-set.json   Tests: tests/test_type_coverage.py.
+    """
     items = spec.get("items") or [{"name": n, "label": n} for n in ICONS]
     for it in items:
         if it["name"] not in ICONS:
@@ -222,6 +248,19 @@ def build_icons(spec, th, idp=""):
 
 # ------------------------------------------------------------------ COUNTER (odometer)
 def build_counter(spec, th, idp=""):
+    """counter: odometer counters that roll their digits up to the value.
+
+    Fields: items (required; list of {value,label,prefix,suffix}); size (48); dur (8).
+    Refuses: none explicit.
+    Base state: the final digits are the base state: each digit column's group is translated to
+        its final digit.
+    Timing: each column rolls from 0.05 of the loop, staggered by 0.03 per column, over about
+        0.42 of the loop; the digits hold, then reset at 0.90-1.00.
+    Alternatives: stacked digits in a clip, not text replacement, so the roll looks mechanical.
+    Breaks if changed: the final-digit translate must match the base state exactly, or the still
+        frame shows the wrong number.
+    Example: counter-stats.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     items = spec["items"]
     size = spec.get("size", 48)
@@ -376,6 +415,19 @@ SCENES = {"rocket": _scene_rocket, "coffee": _scene_coffee, "ocean": _scene_ocea
 
 
 def build_scene(spec, th, idp=""):
+    """scene: an illustrated scene: rocket, coffee, ocean or orbit.
+
+    Fields: scene (required: 'rocket', 'coffee', 'ocean' or 'orbit'); width (900); height (480);
+        seed (7); caption; dur (8).
+    Refuses: an unknown scene: 'scene must be one of [...]'.
+    Base state: each scene's still is the base state (rocket on the pad, cup at rest, boat at
+        its mark, planets at their start points).
+    Timing: ambient parts loop on their own periods; the rocket lifts off once per loop.
+    Breaks if changed: a scene's colours come from the theme, so changing the theme re-skins
+        every part.
+    Example: scene-rocket.json; scene-coffee.json; scene-ocean.json; scene-orbit.json   Tests:
+        tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     name = spec.get("scene", "rocket")
     if name not in SCENES:
@@ -391,6 +443,20 @@ def build_scene(spec, th, idp=""):
 
 # ------------------------------------------------------------------ ART (generative)
 def build_art(spec, th, idp=""):
+    """art: generative art: mandala, lissajous, spiral, orbits or flower.
+
+    Fields: variant ('mandala', 'lissajous', 'spiral', 'orbits', 'flower'); size (520); dur
+        (14); petals (mandala: 12); a (lissajous: 3); b (lissajous: 2); turns (spiral: 5); k
+        (flower: 5).
+    Refuses: an unknown variant: 'art variant must be one of
+        mandala|lissajous|spiral|orbits|flower'.
+    Base state: the complete drawing is the base state; all motion is ambient.
+    Timing: ambient: rotations and pulses at periods set from dur.
+    Breaks if changed: the drawing parameters are the design: changing k or petals changes the
+        figure, not only the motion.
+    Example: art-mandala.json; art-lissajous.json; art-spiral.json; art-orbits.json;
+        art-flower.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 14))
     var = spec.get("variant", "mandala")
     S = spec.get("size", 520)

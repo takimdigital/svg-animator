@@ -1,0 +1,44 @@
+{
+ "type": "table",
+ "dur": 8,
+ "theme": "violet",
+ "title": "plans at a glance",
+ "aria": "A comparison table of three plans across price, seats, storage and support, with rows highlighted in turn.",
+ "columns": [
+  "Plan",
+  "Price",
+  "Seats",
+  "Storage",
+  "Support"
+ ],
+ "rows": [
+  [
+   "Free",
+   "0",
+   "1",
+   "2 GB",
+   "Community"
+  ],
+  [
+   "Team",
+   "12 / mo",
+   "10",
+   "100 GB",
+   "Email"
+  ],
+  [
+   "Business",
+   "40 / mo",
+   "Unlimited",
+   "1 TB",
+   "24/7"
+  ]
+ ],
+ "align": [
+  "l",
+  "r",
+  "c",
+  "r",
+  "l"
+ ]
+}

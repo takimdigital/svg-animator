@@ -1,0 +1,39 @@
+{
+  "type": "typing",
+  "dur": 13,
+  "theme": "ember",
+  "aurora": false,
+  "window_title": "zsh — manifesto",
+  "aria": "Terminal manifesto: Do not trust the Hype, trust your Hardwork. GET SHIT DONE.",
+  "desc": "A terminal types a sentence. The word ware is deleted and work is typed in its place, then GET SHIT DONE. is typed. The still frame is the finished message.",
+  "colors": {
+    "bg": "#0B0907",
+    "surface": "#120F0C",
+    "surface_key": "#1B1611",
+    "text_key": "#EFE6D6",
+    "accent": "#C9A06A",
+    "accent2": "#C0462C",
+    "accent3": "#E8B559",
+    "stroke_dim": "#3A2F25",
+    "muted": "#7D7163"
+  },
+  "lines": [
+    {
+      "text": "Do not trust the Hype, trust your Hardware...",
+      "prompt": "$",
+      "swap": {
+        "from": "ware",
+        "to": "work"
+      }
+    },
+    {
+      "text": "GET SHIT DONE.",
+      "prompt": ">",
+      "emphasis": [
+        "GET"
+      ]
+    }
+  ],
+  "scanlines": true,
+  "glow": true
+}

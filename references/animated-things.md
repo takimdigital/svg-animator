@@ -61,6 +61,26 @@ Variants: `ring dots bars orbit pulse dual wave progress`. Loops run on their ow
 ### radar
 `axes:[labels]` (3–10), `series:[{name,values:[…],max?,color?}]` (1–4), `radius`. Polygons grow from the centre (SMIL `points` animation), vertex dots pop, legend appears when there are several series.
 
+## 3b. typing
+
+A terminal that types lines, one character at a time, and can swap one word for another **in place**: the word is
+backspaced letter by letter, and the new word is typed into the same cells, so nothing else on the line moves.
+
+```json
+{"type": "typing", "dur": 13, "window_title": "zsh — manifesto",
+ "lines": [
+   {"text": "Do not trust the Hype, trust your Hardware...", "prompt": "$", "swap": {"from": "ware", "to": "work"}},
+   {"text": "GET SHIT DONE.", "prompt": ">", "emphasis": ["GET"]}]}
+```
+
+- `lines`: strings, or objects with `text`, `prompt` (drawn at the start of the line), `emphasis` (words drawn in the emphasis colour), `swap`.
+- `swap`: `{"from", "to"}`. **The two words must have the same length** (the swap is in place; a different length would reflow the line and is refused). `from` must occur **exactly once** in its line. Both are refused with a message that names the fix.
+- Colours: `text_key` (text), `accent` (prompt), `accent3` (emphasis and the new word), `accent2` (the word being removed), all overridable in `colors`.
+- Still frame: the finished text. A renderer without animation shows "Hardwork…", not overlapping letters.
+- Looks: `"scanlines": true` (fine dark lines over the text, a CRT terminal) and `"glow": true` (a soft warm light in the centre). Both default off; the manifesto example uses both.
+
+Example: `assets/specs/typing-manifesto.json` → `assets/examples/typing-manifesto.svg`. Decisions and checks: `references/learned/typing.md`.
+
 ## 3. backdrop · icons · scene · counter · art
 
 ### backdrop

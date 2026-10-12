@@ -32,6 +32,19 @@ def _tz(spec, with_title=84, without=28):
 
 # ------------------------------------------------------------------ TIMELINE
 def build_timeline(spec, th, idp=""):
+    """timeline: dated milestones on a spine, cards alternating above and below.
+
+    Fields: items (required; list of {tag,label,sub,key}); alternate (true); card_w (168);
+        spacing (card_w + 28); dur (loop seconds, default 8); title.
+    Refuses: fewer than 2 items: 'timeline needs at least 2 items'. Too many hops: make_slots.
+    Base state: spine, stems, milestones and cards fully drawn; the progress dot and milestone
+        glows are overlays.
+    Timing: the progress dot travels one segment per hop; each milestone lights when the dot
+        arrives.
+    Breaks if changed: card_w must fit the longest label at 15 px and the longest sub at 11 px,
+        or lint warns about overflow.
+    Example: timeline-roadmap.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     items = spec["items"]
     n = len(items)
@@ -67,6 +80,21 @@ def build_timeline(spec, th, idp=""):
 
 # ------------------------------------------------------------------ NETWORK
 def build_network(spec, th, idp=""):
+    """network: any graph; a pulse spreads from the start nodes wave by wave.
+
+    Fields: nodes (required; list of {id,label,sub,key,x,y}); edges (required; [[a,b],...]);
+        start (default: first node id); layout ('circle' default, 'grid' with cols, or explicit
+        x,y on every node); cols; radius; arrows (true); dur.
+    Refuses: none explicit. Warned, not refused: nodes not reachable from the start nodes (they
+        never receive a pulse); an edge that crosses another node.
+    Base state: graph fully drawn; pulses are overlays.
+    Timing: one wave per BFS depth from the start nodes (make_slots).
+    Alternatives: a pair of opposite edges is drawn as two lines offset by 7 px, so both stay
+        visible.
+    Breaks if changed: an edge that crosses a node is a warning, not an error: reorder nodes or
+        give explicit x,y.
+    Example: network-services.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     nodes_in, edges = spec["nodes"], [tuple(e) for e in spec["edges"]]
     arrows = spec.get("arrows", True)
@@ -170,6 +198,18 @@ def build_network(spec, th, idp=""):
 
 # ------------------------------------------------------------------ LAYERS
 def build_layers(spec, th, idp=""):
+    """layers: stacked tiers; a request dot goes down and a response dot comes back up.
+
+    Fields: layers (required; list of {name,sub,chips,key}); width (960); gap_y (44); arrows
+        (true); dur; title.
+    Refuses: fewer than 2 layers: 'layers needs at least 2 layers'.
+    Base state: layers and chips fully drawn; request and response dots are overlays.
+    Timing: a request dot goes down over the first half of the hops, a response dot comes back
+        up; each layer lights when a dot reaches it.
+    Breaks if changed: the request lane and the response lane must stay on opposite sides of the
+        layers.
+    Example: layers-stack.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 10))
     layers = spec["layers"]
     L = len(layers)
@@ -229,6 +269,18 @@ def build_layers(spec, th, idp=""):
 
 # ------------------------------------------------------------------ CYCLE
 def build_cycle(spec, th, idp=""):
+    """cycle: steps on a ring, joined by arcs; one dot orbits the loop.
+
+    Fields: steps (required; list of {label,sub,key}); center ({label,sub}); radius (auto); deco
+        (true: a slow dashed ring); arrows (true); dur.
+    Refuses: fewer than 3 steps: 'cycle needs at least 3 steps'. Cards too close for the arc:
+        'cycle: cards too close; increase radius or shorten labels'.
+    Base state: ring of arcs and cards fully drawn; the orbiting dot and glows are overlays.
+    Timing: one hop per arc; the loop closes from the last step back to the first.
+    Breaks if changed: an arc must end outside the next card; if the radius is too small the arc
+        shrinks to nothing and the builder refuses.
+    Example: cycle-cicd.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     steps = spec["steps"]
     N = len(steps)
@@ -301,6 +353,19 @@ def build_cycle(spec, th, idp=""):
 
 # ------------------------------------------------------------------ SEQUENCE
 def build_sequence(spec, th, idp=""):
+    """sequence: actors with lifelines; messages in order; a packet travels each message.
+
+    Fields: actors (required; list of {id,label,sub,key}); messages (required; list of
+        {from,to,label,kind:'call' or 'return'}); spacing (max(actor width + 70, 200)); pitch
+        (54); dur (loop seconds, default 10); title.
+    Refuses: a self-message (from == to): 'sequence: self-messages are not supported (from ==
+        to)'.
+    Base state: lifelines and messages fully drawn; packets and arrival glows are overlays.
+    Timing: one packet per message, in order (make_slots, dwell 0.02, tail 0.08). Return
+        messages are dashed.
+    Breaks if changed: every message's endpoints must sit on lifelines (lint checks this).
+    Example: sequence-login.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 10))
     actors, msgs = spec["actors"], spec["messages"]
     n, m = len(actors), len(msgs)
@@ -352,6 +417,22 @@ def build_sequence(spec, th, idp=""):
 
 # ------------------------------------------------------------------ TERMINAL
 def build_terminal(spec, th, idp=""):
+    """terminal: a command session that types commands and prints output.
+
+    Fields: lines (required; list of {kind: cmd|out|ok|err|dim, text}); window_title; cps (22,
+        typing speed in characters per second); width (fitted to the longest line); dur; title.
+    Refuses: none explicit.
+    Base state: all text visible (the static fallback shows the whole session); window-coloured
+        cover rectangles hide the text not yet typed while the animation runs.
+    Timing: pacing is stretched so the session ends at 0.80-0.86 of the loop; the whole body
+        fades at 0.90-0.96 so the loop restarts clean.
+    Alternatives: cover rectangles instead of per-character elements, because it keeps one
+        element per line.
+    Breaks if changed: a cover rectangle must have exactly the window colour; text width assumes
+        a 0.6 em monospace font, so a different fallback font can misalign the cover by a pixel
+        or two.
+    Example: terminal-demo.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 10))
     lines = spec["lines"]
     fs, pitch, bar, padx = 14, 26, 38, 22
@@ -452,6 +533,18 @@ def build_terminal(spec, th, idp=""):
 
 # ------------------------------------------------------------------ CARDS
 def build_cards(spec, th, idp=""):
+    """cards: stat or feature tiles with a glow wave that moves across them in reading order.
+
+    Fields: items (required; list of {value,label,sub,key}); cols (min(items, 4)); tile_w (220);
+        tile_h (118); dur; title.
+    Refuses: none explicit.
+    Base state: tiles fully drawn; the glow wave is an overlay.
+    Timing: each tile's glow starts one step after the previous tile, step = min(0.1, 0.8 /
+        items) of the loop.
+    Breaks if changed: labels must fit their tile (lint checks). The page kit may shrink tile_w
+        to fit a section; the builder itself does not.
+    Example: cards-stats.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 6))
     items = spec["items"]
     n = len(items)
@@ -494,6 +587,20 @@ def _nice_max(v):
 
 
 def build_chart(spec, th, idp=""):
+    """chart: bar or line chart that grows in and highlights one value.
+
+    Fields: data (required; list of {label,value}); kind ('bar' or 'line'); highlight ('max', or
+        an index); unit (''); width (860); height (340); dur; title.
+    Refuses: none explicit.
+    Base state: bars drawn at full height and lines drawn in full; the grow-in starts from zero
+        because the animation begins at 0.
+    Timing: bars grow with a spline ease; a line draws on and its area reveals; values pop in
+        after their bar or point.
+    Alternatives: the highlight defaults to the maximum value so the eye lands on the result.
+    Breaks if changed: axis labels must not overlap; the y maximum is rounded up to a nice
+        number from the data.
+    Example: chart-bars.json; chart-line.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8))
     data = spec["data"]
     n = len(data)
@@ -557,6 +664,19 @@ def build_chart(spec, th, idp=""):
 
 # ------------------------------------------------------------------ BANNER
 def build_banner(spec, th, idp=""):
+    """banner: a README header with a shimmering title, a subtitle, tag chips and drifting particles.
+
+    Fields: heading (required); subtitle; tags (list); width (1200); height (360); font ('sans'
+        or 'mono'); title_size (64, or 48 if the heading is long); subtitle_size (20); x (80);
+        particles (24); seed (7); dur (loop seconds, default 12); title (eyebrow label).
+    Refuses: none explicit.
+    Base state: title, subtitle, tags and rings fully drawn; the shimmer, rotation and particles
+        are ambient overlays.
+    Timing: ambient: the shimmer repeats seamlessly over dur; rings rotate at their own periods.
+    Breaks if changed: the particle seed fixes the layout; changing particles or seed changes
+        every particle position.
+    Example: banner-readme.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 12))
     W, H = spec.get("width", 1200), spec.get("height", 360)
     heading = spec["heading"]

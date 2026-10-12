@@ -1,0 +1,336 @@
+{
+ "style": "blueprint",
+ "name": "svg-animator",
+ "tagline": "Animated SVGs that are correct, verified, and built for READMEs.",
+ "description": "A skill that teaches an AI agent to make animated SVGs that are checked, not just plausible: 38 generator types, a structural linter, a browser verifier, a frame renderer, and a whole-README page kit.",
+ "badges": [
+  "MIT",
+  "38 types",
+  "70 examples",
+  "0 lint errors",
+  "stdlib only"
+ ],
+ "dur": 24,
+ "themes": {
+  "dark": "ocean",
+  "light": "paper"
+ },
+ "hero": {
+  "eyebrow": "skill · svg animation",
+  "href": "https://github.com/takimdigital/svg-animator",
+  "cta": [
+   {
+    "label": "Install the skill"
+   },
+   {
+    "label": "Read the docs"
+   }
+  ],
+  "visual": {
+   "type": "art",
+   "variant": "orbits"
+  }
+ },
+ "nav": true,
+ "sections": [
+  {
+   "id": "why",
+   "nav": "Why",
+   "title": "Why this exists",
+   "lede": "Animated SVG fails silently. A wrong keyTime still runs, it just runs wrong, and a model cannot see that by reading the XML. So this skill checks what it builds.",
+   "part": {
+    "type": "cards",
+    "cols": 3,
+    "items": [
+     {
+      "value": "23",
+      "label": "generator types",
+      "sub": "diagrams + things",
+      "key": true
+     },
+     {
+      "value": "55",
+      "label": "examples",
+      "sub": "spec-backed"
+     },
+     {
+      "value": "0",
+      "label": "lint errors",
+      "sub": "on every example"
+     }
+    ]
+   }
+  },
+  {
+   "id": "install",
+   "nav": "Install",
+   "title": "Install",
+   "lede": "Copy the folder where your agent looks for skills. Python 3.9 or newer; the core needs nothing else.",
+   "copy": [
+    "cp -r svg-animator ~/.claude/skills/",
+    "python scripts/run_pipeline.py assets/specs/flow-with-feedback.json --out-dir run --name my-diagram"
+   ],
+   "part": {
+    "type": "terminal",
+    "window_title": "zsh — svg-animator",
+    "lines": [
+     {
+      "kind": "cmd",
+      "text": "cp -r svg-animator ~/.claude/skills/"
+     },
+     {
+      "kind": "cmd",
+      "text": "python scripts/run_pipeline.py spec.json --out-dir run"
+     },
+     {
+      "kind": "out",
+      "text": "== 2 LINT  0 error(s), 0 warning(s)"
+     },
+     {
+      "kind": "ok",
+      "text": "RESULT: PASS (0 errors, 0 warnings)"
+     }
+    ]
+   }
+  },
+  {
+   "id": "how",
+   "nav": "How",
+   "title": "Brief to verified animation",
+   "lede": "The same steps for every graphic. Lint and the browser check run before you look at the frames.",
+   "part": {
+    "type": "flow",
+    "arrows": true,
+    "gap_x": 44,
+    "columns": [
+     [
+      {
+       "id": "b",
+       "label": "Brief",
+       "sub": "intent"
+      }
+     ],
+     [
+      {
+       "id": "r",
+       "label": "Route",
+       "sub": "type"
+      }
+     ],
+     [
+      {
+       "id": "s",
+       "label": "Spec",
+       "sub": "JSON",
+       "key": true
+      }
+     ],
+     [
+      {
+       "id": "f",
+       "label": "Frames",
+       "sub": "look",
+       "key": true
+      }
+     ]
+    ]
+   }
+  },
+  {
+   "id": "modes",
+   "nav": "Modes",
+   "title": "Three ways in",
+   "lede": "Generator for structure, hand-build for character, fix for an SVG that already exists.",
+   "part": {
+    "type": "cards",
+    "cols": 3,
+    "items": [
+     {
+      "value": "A",
+      "label": "generator",
+      "sub": "38 types, one spec",
+      "key": true
+     },
+     {
+      "value": "B",
+      "label": "hand-build",
+      "sub": "mascots, bespoke art"
+     },
+     {
+      "value": "C",
+      "label": "fix",
+      "sub": "a broken SVG"
+     }
+    ]
+   }
+  },
+  {
+   "id": "types",
+   "nav": "Types",
+   "title": "Things it can draw",
+   "lede": "Thirty-eight generator types, grouped by family. Each one is a JSON spec, and compose puts any of them on one clock.",
+   "part": {
+    "type": "table",
+    "columns": [
+     "Family",
+     "Types"
+    ],
+    "rows": [
+     [
+      "Diagrams",
+      "flow, radial, phases, tree"
+     ],
+     [
+      "",
+      "gantt, timeline, network, layers"
+     ],
+     [
+      "",
+      "cycle, sequence, terminal"
+     ],
+     [
+      "Charts & data",
+      "chart, cards, table, pie, scatter"
+     ],
+     [
+      "",
+      "heatmap, funnel, venn, gauge, radar"
+     ],
+     [
+      "Things",
+      "loader, logo, text, morph"
+     ],
+     [
+      "",
+      "typing, sprite, icons"
+     ],
+     [
+      "Scenes & motion",
+      "backdrop, scene, art, marquee, banner"
+     ],
+     [
+      "Time & signals",
+      "counter, clock, calendar, waveform, code"
+     ]
+    ],
+    "align": [
+     "l",
+     "l"
+    ]
+   }
+  },
+  {
+   "id": "checks",
+   "nav": "Checks",
+   "title": "Checked, not just drawn",
+   "lede": "The linter, the browser check and the tests run on this repository itself. These numbers are the current ones.",
+   "part": {
+    "type": "counter",
+    "items": [
+     {
+      "value": 70,
+      "label": "examples"
+     },
+     {
+      "value": 0,
+      "label": "runtime deps"
+     },
+     {
+      "value": 0,
+      "label": "lint errors"
+     }
+    ]
+   }
+  },
+  {
+   "id": "adding",
+   "nav": "Adding",
+   "title": "Adding a generator type",
+   "lede": "Six steps, in order. Working code and the full rules are in CONTRIBUTING.md.",
+   "part": {
+    "type": "timeline",
+    "items": [
+     {
+      "tag": "1",
+      "label": "Emit",
+      "sub": "emitter"
+     },
+     {
+      "tag": "2",
+      "label": "Clock",
+      "sub": "from spec"
+     },
+     {
+      "tag": "3",
+      "label": "Still",
+      "sub": "base first"
+     },
+     {
+      "tag": "4",
+      "label": "Wire up",
+      "sub": "dict entry"
+     },
+     {
+      "tag": "5",
+      "label": "Spec",
+      "sub": "pipeline"
+     },
+     {
+      "tag": "6",
+      "label": "Commit",
+      "sub": "example",
+      "key": true
+     }
+    ]
+   }
+  }
+ ],
+ "footer": {
+  "closing": "Build something worth reading.",
+  "text": "MIT © takimdigital · made with svg-animator",
+  "links": [
+   {
+    "label": "Repository",
+    "href": "https://github.com/takimdigital/svg-animator"
+   },
+   {
+    "label": "Contributing",
+    "href": "CONTRIBUTING.md"
+   },
+   {
+    "label": "Gallery",
+    "href": "docs/gallery/README.md"
+   },
+   {
+    "label": "License",
+    "href": "LICENSE"
+   }
+  ],
+  "rev": "1.0 · README"
+ },
+ "prose": [
+  "## Quick start",
+  "```bash\ngit clone https://github.com/takimdigital/svg-animator.git\ncp -r svg-animator ~/.claude/skills/        # or symlink it so updates land everywhere\n\n# build + lint + render frames, from any spec\npython scripts/run_pipeline.py assets/specs/flow-with-feedback.json --out-dir run --name my-diagram\n```\n\nThen **look at `run/frames/*.png` before you ship anything.** `RESULT: PASS` means the file is\nstructurally sound. Whether it looks good is a separate question, answered by looking.\n\nFrame rendering needs `pip install playwright && python -m playwright install chromium`. Linting and\ngeneration work without it.",
+  "## Three ways in",
+  "**A · Generator.** Thirty-eight types, one JSON spec. You write data; the geometry and every keyTime\nare computed. Themes: `ember ocean forest mono paper violet sunset`, or override any colour token.\n\n```json\n{\"type\": \"flow\", \"dur\": 10, \"arrows\": true,\n \"columns\": [\n   [{\"id\": \"u\", \"label\": \"User\", \"sub\": \"intent\"}],\n   [{\"id\": \"c\", \"label\": \"CORE\", \"sub\": \"pool\", \"key\": true}],\n   [{\"id\": \"x\", \"label\": \"Client\"}, {\"id\": \"y\", \"label\": \"Server\"}]],\n \"edges\": \"auto\"}\n```\n\n<p align=\"center\"><img src=\"assets/examples/flow-with-feedback.svg\" alt=\"Flow diagram with a feedback loop\" width=\"88%\"></p>\n\n**B · Hand-build.** For what the generator can't do: a mascot, a bespoke logo, a scene with an opinion.\nDecompose it into nouns (shapes) and verbs (motion), draw the still first, then animate it.\n`references/drawing-fundamentals.md` and `references/motion-vocabulary.md` cover the method.\n\n**C · Fix.** Paste in an SVG that is already broken. The skill cleans paste artifacts (`\\<svg`,\n`xlink\\:href`, smart quotes), inventories every animation before touching anything, maps the symptom to\na cause (`references/debugging.md`), and changes as little as possible.",
+  "## The 38 types\n\n| Family | Types |\n|---|---|\n| Diagrams | flow, radial, phases, tree, gantt, timeline, network, layers, cycle, sequence, terminal |\n| Charts & data | chart, cards, table, pie, scatter, heatmap, funnel, venn, gauge, radar |\n| Things | loader, logo, text, morph, typing, sprite, icons |\n| Scenes & motion | backdrop, scene, art, marquee, banner |\n| Time & signals | counter, clock, calendar, waveform, code |",
+  "## What the linter checks",
+  "`scripts/lint_svg_anim.py` reads the file and reports:\n\n- `keyTimes`, `values` and `keySplines` counts and ordering\n- glow and opacity windows that stay lit after their window has ended\n- whether each dot's path is geometrically the rail it rides\n- whether each rail touches the cards it connects\n- when each dot enters and leaves each card, and whether it crosses one it should not\n- `url(#id)` and `href=\"#id\"` references that do not resolve, and duplicate ids\n- a `<text>` label wider than the shape it sits in\n- an element that is visible before its `begin` time\n- more than 150 SMIL animation nodes, or a file over 200 KB\n- arrow tips that end inside a card, or float away from every card (as a note)\n\nReading XML cannot catch everything. `scripts/verify.py` runs the file in a real browser and reports\nanything visible at frame 0 that should not be yet. The linter's exit code is non-zero only for errors;\nwarnings are for you to read and justify.",
+  "## Morphing shapes",
+  "<p align=\"center\"><img src=\"assets/examples/morph-shapes.svg\" alt=\"Six shapes morphing into each other: star, circle, heart, bolt, drop and cross\" width=\"100%\"></p>\n\n`<animate attributeName=\"d\">` interpolates only when both paths have the same command structure: the same\ncommands, in the same order, with the same count. Otherwise SVG falls back to discrete, and the shape\nsnaps. A square does not tween into a triangle; it jumps. The markup is well-formed, so the linter sees\nnothing wrong.\n\n`scripts/morph_path.py` fixes this at author time. It flattens both shapes to polylines, resamples them to\nthe same number of points by arc length, and re-emits both as one uniform `M + n·C + Z` signature, the only\nform SMIL interpolates. No library, no JavaScript, and it works inside an `<img>`:\n\n```python\nfrom morph_path import morph_pair, signature   # scripts/ on the path\n\na, b = morph_pair(star_d, circle_d, n=24)      # five commands vs an arc: no shared structure\nassert signature(a) == signature(b)            # M + 24 C's: SMIL will interpolate\n```\n\nTwo details decide whether it looks deliberate. Resampling pairs points by arc-length fraction, which fixes\nthe correspondence wherever each path happens to start, so a circle and a heart can still pair the wrong\nsides. Trying every cyclic shift and keeping the cheapest cut total travel; `align=False` turns that off.\nShapes with holes (a ring, a donut) are refused, because flattening them into one polyline is wrong at every\nframe. Figures and limits are in `references/morphing.md`.",
+  "## The seven principles",
+  "Every graphic this skill produces follows these:\n\n1. **Static-first.** Frame 0 is already a complete graphic. Motion is an overlay that starts at `opacity=\"0\"`.\n2. **Compute, don't guess.** Layout, rail endpoints and every `keyTime` come from a spec or the linter.\n3. **Motion follows drawn lines.** Dots travel on rails that exist, and nothing crosses a card unless that is the point.\n4. **One master clock.** Every phase is a fraction of one loop; secondary pulses are `dur/2` or `dur/4`.\n5. **Self-contained.** System fonts, everything inlined, no scripts, no external assets.\n6. **Verify by looking.** Lint, render frames, view them, and say what you saw.\n7. **Report honestly.** State what was verified and what was not.",
+  "## Layout",
+  "```\nsvg-animator/\n├── SKILL.md                    the pipeline, the rules, the routing\n├── CONTRIBUTING.md             how to propose a change (human or agent)\n├── references/                 read on demand, not upfront (20 files)\n├── scripts/\n│   ├── run_pipeline.py         the whole thing, one entry point\n│   ├── gen_diagram.py          38 types + compose\n│   ├── lint_svg_anim.py        the linter\n│   ├── verify.py               the browser check at frame 0\n│   ├── render_frames.py        PNG frames at chosen timestamps\n│   ├── morph_path.py           shape morphing without a library\n│   ├── things_a.py             loader, logo, text, gauge, radar\n│   ├── things_b.py             backdrop, icons, scene, counter, art\n│   ├── things_morph.py         morph: shapes that turn into each other\n│   ├── things_c.py             typing: type, swap a word in place\n│   ├── things_d.py             tree, table, pie, gantt, code\n│   ├── things_e.py             scatter, heatmap, funnel, venn, waveform, clock, calendar, marquee, sprite\n│   ├── diagram_extra.py        timeline, network, layers, cycle, sequence, terminal, cards, chart, banner\n│   ├── readme_page.py          a whole README page from one JSON spec\n│   └── readme_blueprint.py     the blueprint page style\n├── assets/\n│   ├── specs/*.json            70 worked specs, one per example\n│   ├── examples/*.svg          70 generated, lint-clean references\n│   └── readme/*.json           this README's own spec, plus a spine template\n├── docs/\n│   ├── readme/                 this page's graphics (generated from assets/readme)\n│   └── gallery/README.md       the full gallery, generated from assets/specs\n└── tests/                      stdlib self-tests (python -m unittest discover -s tests)\n```",
+  "## Teaching an AI to use this skill\n\nAn agent that reads this repository for the first time should do three things, in order:\n\n1. Read **`references/CAPABILITIES.md`**: every type, variant and route, and what the skill cannot do.\n2. Run **`python scripts/doctor.py`**: which checks can run here, and whether the repository passes them.\n3. When a request matches nothing, follow **`references/learning.md`** to add a capability, and record it in **`references/learned/`** so the next agent can see the decision and its evidence.\n\nThe `SKILL.md` file carries the same steps for agents that load it as a skill.",
+  "## Gallery",
+  "Twelve of the 70 generator outputs, at a uniform tile size. Every one is lint-clean. Click any\ntile for the example, or open the full gallery.\n\n<a href=\"docs/gallery/README.md\">\n  <img src=\"docs/thumbs/network-services.svg\" alt=\"Service network with pulses spreading from a gateway\" width=\"24%\">\n  <img src=\"docs/thumbs/flow-with-feedback.svg\" alt=\"Flow diagram with a feedback loop\" width=\"24%\">\n  <img src=\"docs/thumbs/timeline-roadmap.svg\" alt=\"Roadmap timeline\" width=\"24%\">\n  <img src=\"docs/thumbs/terminal-demo.svg\" alt=\"Terminal demo typing a command\" width=\"24%\">\n</a>\n\n<a href=\"docs/gallery/README.md\">\n  <img src=\"docs/thumbs/loader-sheet.svg\" alt=\"Sheet of eight loading spinner variants\" width=\"24%\">\n  <img src=\"docs/thumbs/gauge-dashboard.svg\" alt=\"Dashboard of gauges, rings, bars and a donut\" width=\"24%\">\n  <img src=\"docs/thumbs/radar-skills.svg\" alt=\"Radar chart comparing skills\" width=\"24%\">\n  <img src=\"docs/thumbs/morph-shapes.svg\" alt=\"Six shapes morphing into each other\" width=\"24%\">\n</a>\n\n<a href=\"docs/gallery/README.md\">\n  <img src=\"docs/thumbs/icons-set.svg\" alt=\"Twelve micro-animated icons\" width=\"24%\">\n  <img src=\"docs/thumbs/logo-shield.svg\" alt=\"Shield logo reveal\" width=\"24%\">\n  <img src=\"docs/thumbs/art-mandala.svg\" alt=\"Generative mandala\" width=\"24%\">\n  <img src=\"docs/thumbs/backdrop-mesh.svg\" alt=\"Animated mesh-gradient backdrop\" width=\"24%\">\n</a>\n\n**[All 70 examples are on the gallery page →](docs/gallery/README.md)**. GitHub does not render a raw `.svg`\nwhen you click one, so the gallery page links each example's spec and shows it at full size.",
+  "## Embedding in your README",
+  "```markdown\n![architecture](docs/hero.svg)\n```\n\nor, to control the width:\n\n```html\n<img src=\"docs/hero.svg\" alt=\"architecture\" width=\"100%\">\n```\n\nThree caveats:\n\n- Inside `<img>`, hover and JavaScript do nothing. Design for the loop alone.\n- Give dark graphics their **own** background rectangle, rather than inheriting GitHub's page colour.\n  Every generated file ships with a rounded one.\n- The static fallback is **frame 0**, which is why frame 0 must be complete.\n\nFor a light and dark pair, `--pair paper ocean` writes both files and prints the `<picture>` snippet.\nDetails: `references/combinations.md` §5.",
+  "## Contributing",
+  "Read **[CONTRIBUTING.md](CONTRIBUTING.md)** first. It sets out the hard rules, the six steps for a new\ngenerator type (summarised on this page), a PR description template, and what \"verified\" has to mean.\n\nThe most valuable contribution is a **bug report with a real broken SVG**: paste it, say what you expected at\nwhich timestamp, and say what you got. If the linter passed but the animation is still wrong, say so. That\nmeans the linter has a blind spot, and closing it improves the skill for everyone.",
+  "## Support this work\n\nThis skill is MIT licensed, free, and has no telemetry, no account, and no upsell.\nYou can read every line of it, fork it, change it, and use it commercially.\n\nIt wasn't free to *make*, though. The code is free; the hours of building the\nlinter, the diagrams that came out subtly wrong, the pull requests that had to be\nread and verified rather than trusted — that was my time and my API bill, and it\ndoesn't come back.\n\nSo if it saved you an afternoon, or if you just liked the hand-drawn mark, you\ncan buy me a coffee. It's the only thing here that isn't free.\n\n<p align=\"center\">\n  <img src=\"docs/support.svg\" alt=\"A coffee cup with rising steam, above the words buy me a coffee\" width=\"420\">\n</p>\n\n<p align=\"center\">\n  <a href=\"https://www.buymeacoffee.com/takimdigital\">\n    <img src=\"https://cdn.buymeacoffee.com/buttons/default-orange.png\" alt=\"Buy me a coffee\" width=\"180\">\n  </a>\n</p>\n\n**Other ways to help, if a coffee isn't your thing** — and these are worth more\nto me:\n\n- **Open an issue** with a graphic that came out wrong. That's the highest-value\n  contribution there is; it tells me what to fix.\n- **Send a real example.** Paste the SVG, say what you expected, say what you got.\n- **Improve the references.** If a technique in `references/` is unclear or a\n  debugging entry is missing, that's a gift.\n- **Tell people.** The README only helps if it reaches someone who needs it.\n\nContributions of any size are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)\nfor the exact shape a pull request should take.\n\n---\n",
+  "## License",
+  "MIT. See [LICENSE](LICENSE)."
+ ]
+}

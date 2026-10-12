@@ -1,0 +1,14 @@
+{
+ "type": "marquee",
+ "dur": 16,
+ "theme": "sunset",
+ "width": 1000,
+ "size": 34,
+ "aria": "A scrolling ticker of four short statements that repeats without a seam.",
+ "items": [
+  "Ship small",
+  "Check everything",
+  "Measure, then claim",
+  "Build it again"
+ ]
+}

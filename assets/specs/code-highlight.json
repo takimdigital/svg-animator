@@ -1,0 +1,21 @@
+{
+ "type": "code",
+ "dur": 10,
+ "theme": "mono",
+ "language": "python",
+ "caption": "the four steps of a request",
+ "aria": "A short Python function with the four key lines highlighted in order.",
+ "lines": [
+  "def handle(request):",
+  "    user = authenticate(request.token)",
+  "    data = load(user, request.params)",
+  "    result = transform(data)",
+  "    return respond(result)"
+ ],
+ "highlight": [
+  2,
+  3,
+  4,
+  5
+ ]
+}

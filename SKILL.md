@@ -9,6 +9,17 @@ Goal: ship animated SVGs that are **correct, self-contained and designed**, for 
 
 SVG animation fails silently — a wrong `keyTimes`, a `begin` delay or a line through a card still "runs" but looks wrong. So this skill works by **computing instead of guessing, and verifying by looking**.
 
+## If you are an AI reading this for the first time
+
+Work through these in order. Each one is a command or a file, not a memory.
+
+1. **Know what exists.** Read `references/CAPABILITIES.md`. It maps every type, variant and route to the file that does the work and to an example you can open.
+2. **Know what works here.** Run `python scripts/doctor.py`. It reports Python, whether the browser tools are available, and runs every gate. A gate that cannot run is reported as SKIP, never as a pass.
+3. **Pick a route.** Use the table in *Step 0* below. A type or variant that already exists is always the first choice.
+4. **Build, check, look.** Lint, tests, then the frames. Lint cannot tell you a graphic looks right; you look at the frames.
+5. **Learn a new capability** when no route fits and the request will come back. Follow `references/learning.md`: break the request down, build a type, prove it with tests that can fail, and record it in `references/learned/`.
+6. **Report honestly.** Say what you built, what you verified, and what you did not. Do not claim a frame you did not look at.
+
 ## The seven principles (apply to every SVG)
 1. **Static-first.** Frame 0 must already be a complete, good-looking graphic. Base shapes are always visible; motion is added as *overlays* that start at `opacity="0"` (glows, dots, fills). If animation doesn't run (mobile app, preview, PDF) the viewer still sees the full picture. **The trap that breaks this most often: an animation has no effect before it begins, so anything gated behind a positive `begin` sits parked at its base value — for a traveller, that is the canvas origin, in the corner, in full view.** Fix with a negative `begin` inside the hold window, returned as `preroll=` rather than hardcoded. Full write-up, including the compose-window variant that silently blanks a composed part: `references/static-first.md`.
 2. **Compute, don't guess.** Layout, rail endpoints and every keyTime come from a spec/script or from `lint_svg_anim.py` output. Never type "0.46" because it feels right.
@@ -64,9 +75,11 @@ Then:
 
 | The content **is**… | Mode |
 |---|---|
-| structure the generator already expresses — a pipeline, hierarchy, timeline, sequence, numbers, or a set of relationships | **A — generator** (`scripts/gen_diagram.py`, 22 types + `compose`; catalogs: `references/diagram-types.md`, `references/animated-things.md`) |
+| structure the generator already expresses — a pipeline, hierarchy, timeline, sequence, numbers, or a set of relationships | **A — generator** (`scripts/gen_diagram.py`, 38 types + `compose`; catalogs: `references/diagram-types.md`, `references/animated-things.md`) |
+| a terminal typing a line, with one word swapped for another in place (a manifesto, a command session, a line that changes) | **A — generator**, type `typing` (`assets/specs/typing-manifesto.json`) |
 | a **thing with personality** — a mascot, a product, a bespoke scene, a specific logo/icon — or the brief leads with a feeling, or every node would need a `sub` label to make sense | **B — hand-build** from primitives + patterns |
 | something needing both | **A then B** (`references/combinations.md` §4) |
+| a **whole GitHub README** — hero, sections, footer — as one seamless page of animated blocks, dark and light | **D — README page** (`scripts/readme_page.py`; `references/readme-kit.md`) |
 | an existing SVG that is broken or needs changes | **C — fix** |
 
 Hand-build is not the fallback for "the generator can't do it". It is the right
@@ -146,6 +159,11 @@ Run `python scripts/run_pipeline.py file.svg --out-dir ./run` (or its parts: `li
 - `references/animated-things.md` — 10 non-diagram types (loader, logo, text, gauge, radar, backdrop, icons, scene, counter, art): spec fields, clock behaviour
 - `references/combinations.md` — effect recipes, compose recipes, choreography (sequential/cascade/call-response), theme pairing, what not to mix
 - `references/readme-diagrams.md` — the 12 techniques behind README-grade diagrams, README/GitHub destinations
+- Each builder's docstring in `scripts/` is its contract (fields, refusals, base state, what breaks, example). Read it before the code; `tests/test_contracts.py` keeps it true.
+- `references/CAPABILITIES.md` — the map: every type, variant, route and check, and what is not possible
+- `references/learning.md` — how an AI adds a new capability: the procedure, the rules, the learned log
+- `references/learned/` — one short record per capability learned (decisions, verification, what was not verified)
+- `references/readme-kit.md` — the README page kit: why stacked blocks read as one page, the gap-free markup (measured), the `spine` and `blueprint` styles, spec and checks
 - `references/diagrams.md` — diagram rules, layout, arrows, glow windows, failure modes
 - `references/multi-step.md` - sequencing phases on one clock without drift, `keyPoints` dwell, syncbase `begin` when it is the right tool, and `textPath`
 - `references/motion-vocabulary.md` — effect → technique cookbook (40+ verbs), decomposition method, timing recipes
@@ -172,13 +190,17 @@ svg-animator/
 │   ├── animated-things.md        10 non-diagram types: catalog and spec fields
 │   ├── combinations.md           mixing effects, diagrams, themes, timing
 │   ├── readme-diagrams.md        12 techniques, GitHub/README destinations
+│   ├── readme-kit.md             whole-README page kit: spine and blueprint styles
+│   ├── CAPABILITIES.md           the map of what the skill can make
+│   ├── learning.md               how an AI adds a new capability
+│   └── learned/                  one record per capability learned
 │   ├── diagrams.md               diagram rules + failure modes
 │   ├── motion-vocabulary.md      effect → technique cookbook, decomposition method
 │   ├── drawing-fundamentals.md   canvas, primitives, paths, composition, colour, objects
 │   ├── patterns.md · smil-cheatsheet.md · css-animation.md
 │   ├── design-principles.md · debugging.md
 ├── scripts/                      run, don't read
-│   ├── run_pipeline.py · gen_diagram.py · diagram_common.py · diagram_extra.py · things_a.py · things_b.py
+│   ├── run_pipeline.py · gen_diagram.py · diagram_common.py · diagram_extra.py · things_a.py · things_b.py · things_morph.py · things_c.py · doctor.py
 │   ├── lint_svg_anim.py · render_frames.py
 ├── assets/
 │   ├── template.svg · specs/*.json · examples/*.svg
