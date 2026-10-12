@@ -415,7 +415,7 @@ def write_all(spec, outdir, reg, do_preview=False, do_check=False):
         svgs, Htot = build_page(spec, mode, reg)
         for i, (name, svg, h) in enumerate(svgs):
             fn = f"{i:02d}-{name}-{mode}.svg" if not name[:2].isdigit() else f"{i:02d}-{name.split('-', 1)[1]}-{mode}.svg"
-            with open(os.path.join(adir, fn), "w", encoding="utf-8") as fh:
+            with open(os.path.join(adir, fn), "w", encoding="utf-8", newline="\n") as fh:
                 fh.write(svg)
             files.setdefault(i, {"name": name, "h": h})[mode] = fn
     # README.md
@@ -444,7 +444,7 @@ def write_all(spec, outdir, reg, do_preview=False, do_check=False):
     links = spec.get("footer", {}).get("links", [])
     if links:
         out.append('<p align="center">' + " · ".join(f'<a href="{l["href"]}">{l["label"]}</a>' for l in links if l.get("href")) + "</p>\n")
-    with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write("\n".join(out))
     if do_check:
         bad = 0
