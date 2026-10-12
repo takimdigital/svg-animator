@@ -253,7 +253,7 @@ def main():
         svg_text = open(src, encoding="utf-8").read()
         out = os.path.join(args.out_dir, name + ".svg")
         pre = loop_dur(svg_text) * args.preroll
-        open(out, "w", encoding="utf-8").write(
+        open(out, "w", encoding="utf-8", newline="\n").write(
             build_tile(name, kind, blurb, svg_text, i, pre, tw, th))
         print("  %s  (%d KB, %dx%d, preroll %.2fs)"
               % (out, os.path.getsize(out) // 1024, tw, th, pre))

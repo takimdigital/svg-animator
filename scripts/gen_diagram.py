@@ -509,7 +509,9 @@ def main():
             p = build(spec, th, name)
             svg = assemble(spec, th, p)
             dest = os.path.join(parent, base + suffix + ".svg")
-            open(dest, "w", encoding="utf-8").write(svg)
+            # newline="" would still translate on Windows; "\n" keeps the bytes LF so a
+            # fresh clone on any platform regenerates byte-identically (.gitattributes pins eol=lf).
+            open(dest, "w", encoding="utf-8", newline="\n").write(svg)
             written.append(dest)
             print(f"wrote {dest} ({max(1, len(svg) // 1024)} KB)  theme={name}")
         alt = spec.get("title") or spec.get("aria") or base
@@ -524,7 +526,7 @@ def main():
     th = theme_for(spec, cli_theme=a.theme)
     p = build(spec, th, a.theme)
     svg = assemble(spec, th, p)
-    open(a.out, "w", encoding="utf-8").write(svg)
+    open(a.out, "w", encoding="utf-8", newline="\n").write(svg)
     print("\n".join(p["sb"]))
     print(f"\nwrote {a.out} ({max(1, len(svg) // 1024)} KB). Next: python run_pipeline.py {a.out}")
 

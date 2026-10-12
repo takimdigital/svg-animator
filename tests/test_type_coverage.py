@@ -71,7 +71,7 @@ class TypeCoverage(unittest.TestCase):
                 theme = gen_diagram.theme_for(spec)
                 built = gen_diagram.build(spec, theme, None)
                 out = os.path.join(td, f"{name}.svg")
-                with open(out, "w", encoding="utf-8") as fh:
+                with open(out, "w", encoding="utf-8", newline="\n") as fh:
                     fh.write(gen_diagram.assemble(spec, theme, built))
                 if not filecmp.cmp(out, example, shallow=False):
                     drift.append(name)
