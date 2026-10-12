@@ -1,0 +1,27 @@
+{
+ "type": "pie",
+ "dur": 8,
+ "theme": "sunset",
+ "title": "where the time goes",
+ "donut": true,
+ "radius": 130,
+ "aria": "A donut chart: 45 percent building, 25 percent reviewing, 20 percent planning and 10 percent other work.",
+ "slices": [
+  {
+   "label": "Building",
+   "value": 45
+  },
+  {
+   "label": "Reviewing",
+   "value": 25
+  },
+  {
+   "label": "Planning",
+   "value": 20
+  },
+  {
+   "label": "Other",
+   "value": 10
+  }
+ ]
+}

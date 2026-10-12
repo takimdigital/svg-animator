@@ -169,7 +169,7 @@ Reach for the catalog when the content **is** structure:
 - the same shape as something the user already uses
 - you need it correct and fast, and the drawing has no character to convey
 
-Every one of the 22 types exists because that shape recurs. Using one is not the
+Every one of the 38 types exists because that shape recurs. Using one is not the
 boring choice — it is the *reliable* choice.
 
 ## When to leave the catalog
@@ -231,4 +231,4 @@ assembled, it was.
 - `references/combinations.md` — generator + custom art, and light/dark pairs
 - `references/static-first.md` — the rule that makes frame 0 count
 - `references/surfaces.md` - picking the visual grammar; the sixth answer to the brief
-- `assets/specs/` — 53 specs, all generated, all byte-reproducible
+- `assets/specs/` — 70 specs, all generated, all byte-reproducible

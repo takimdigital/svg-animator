@@ -56,6 +56,27 @@ from static_twin import main as static_twin_main  # noqa: E402
 
 # ------------------------------------------------------------------ FLOW
 def build_flow(spec, th, idp=""):
+    """flow: left-to-right pipeline in columns; fan-out and fan-in; optional feedback loop with relay dots.
+
+    Fields: columns (required; list of columns of nodes {id,label,sub,key,color,label_size});
+        arrows (true); edges ('auto' = every node to every node of the next column, or
+        [[a,b],...]); feedback ({id,label,sub,from,to}); gap_x (84); gap_y (46); node_h (62);
+        margin (48); title; title_zone (84 if title else 28); min_height (160); dur (loop
+        seconds, default 6).
+    Refuses: an edge that goes right-to-left: 'only left-to-right edges are supported (use
+        feedback for loops, or type network)'. Too many hops for one loop: make_slots raises
+        'too many hops for one loop'. Warned, not refused: a skipped column; a feedback node
+        closer than 30 px to its source or target.
+    Base state: rails, nodes and labels fully drawn; node glows and relay dots are overlays
+        (glows at base opacity 0, dots parked invisible).
+    Timing: one relay dot per rail. Rails that leave the same column share one hop slot of the
+        master loop (make_slots: start 0.02, dwell 0.03, tail 0.10).
+    Alternatives: one dot on a spine cannot follow a branching graph without crossing cards, so
+        each rail carries its own dot.
+    Breaks if changed: a dot's path must equal its rail's path (lint checks this); a dot must be
+        invisible outside its slot; rails must start and end on card edges.
+    Example: flow-with-feedback.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 6.0))
     cols = spec["columns"]
     C = len(cols)
@@ -175,6 +196,22 @@ def build_flow(spec, th, idp=""):
 
 # ------------------------------------------------------------------ RADIAL
 def build_radial(spec, th, idp=""):
+    """radial: a hub with clusters on a ring; sonar rings and a clockwise glow sweep.
+
+    Fields: items (required; list of {title,count,lines}); center (required; {label,sub});
+        radius (auto: 210, 230 or 256 by item count); core_r (60); title; title_zone (88 if
+        title else 40); dur (loop seconds, default 6).
+    Refuses: none explicit. A missing items or center key raises KeyError.
+    Base state: hub, cards and spokes fully drawn; sonar rings and the glow sweep are overlays
+        under the cards.
+    Timing: one glow step per cluster, clockwise; rings are phased by negative begin so frame 0
+        already shows rings.
+    Alternatives: spokes end on the card edge (ray-rectangle intersection), not at the centre of
+        the card.
+    Breaks if changed: rings must stay under the cards (z-order); spokes must end on the card
+        edge, not inside it.
+    Example: radial-hub.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 6.0))
     items, core = spec["items"], spec["center"]
     n = len(items)
@@ -240,6 +277,19 @@ def build_radial(spec, th, idp=""):
 
 # ------------------------------------------------------------------ PHASES
 def build_phases(spec, th, idp=""):
+    """phases: stacked panels that light in sequence, with chips inside each panel.
+
+    Fields: phases (required; list of {name,sub,chips,color}); chip_x (416); width (1020,
+        widened to fit the chips); title; title_zone (84 if title else 24); dur (loop seconds,
+        default 8).
+    Refuses: none explicit. The width grows to fit the chips rather than shrinking text.
+    Base state: panels, labels and chips fully drawn; the highlight, outline glow and rail dot
+        are overlays.
+    Timing: each phase lights in order within its own window; its chips light just after it
+        starts.
+    Breaks if changed: phase windows must not overlap; chips must not leave their panel.
+    Example: phases-method.json   Tests: tests/test_type_coverage.py.
+    """
     dur = float(spec.get("dur", 8.0))
     phases = spec["phases"]
     n = len(phases)
@@ -294,11 +344,17 @@ def registry():
     from diagram_extra import EXTRA_BUILDERS
     from things_a import THINGS_A
     from things_b import THINGS_B
+    from things_c import TYPING
+    from things_d import THINGS_D
+    from things_e import THINGS_E
     from things_morph import EXTRA_MORPH
     b = {"flow": build_flow, "radial": build_radial, "phases": build_phases}
     b.update(EXTRA_BUILDERS)
     b.update(THINGS_A)
     b.update(THINGS_B)
+    b.update(TYPING)
+    b.update(THINGS_D)
+    b.update(THINGS_E)
     b.update(EXTRA_MORPH)
     return b
 
@@ -311,7 +367,24 @@ def theme_for(spec, default_name="ember", cli_theme=None):
 
 
 def build_compose(spec, th, cli_theme=None):
-    """Combine several parts (any type except compose) on one canvas and one master clock."""
+    """compose: several parts on one canvas and one master clock (stack, row or grid).
+
+    Fields: parts (required; list of {type, window:[a,b], theme, ...}); layout ('stack' default,
+        'row' or 'grid'); cols (2, for grid); gap (28); margin (24); dur (10); theme; title;
+        title_zone.
+    Refuses: a part whose type is unknown or is compose itself: 'parts[i].type must be one of
+        [...] (compose cannot be nested)'.
+    Base state: each part's base state is kept; a window remaps that part's keyTimes into [a,b]
+        of the loop, so outside its window the part rests fully drawn.
+    Timing: windows: disjoint windows play parts one after another; overlapping windows cascade;
+        [0,1] plays all at once.
+    Alternatives: one clock for all parts: compose overrides each part's dur with its own, so
+        windows line up exactly. Loaders and icons keep their own periods.
+    Breaks if changed: a part's ids are prefixed per part; without the prefix two parts with the
+        same id break the SVG.
+    Example: compose-readme-hero.json; compose-story.json; compose-dashboard.json   Tests:
+        tests/test_type_coverage.py.
+    """
     builders = registry()
     dur = float(spec.get("dur", 10))
     layout = spec.get("layout", "stack")

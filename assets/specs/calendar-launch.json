@@ -1,0 +1,23 @@
+{
+ "type": "calendar",
+ "dur": 8,
+ "theme": "paper",
+ "year": 2026,
+ "month": 10,
+ "highlight": [
+  12,
+  19
+ ],
+ "events": [
+  {
+   "day": 12,
+   "label": "launch"
+  },
+  {
+   "day": 19,
+   "label": "review"
+  }
+ ],
+ "title": "October launch",
+ "aria": "A month calendar for October 2026 with the launch and review days highlighted."
+}

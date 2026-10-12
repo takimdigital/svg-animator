@@ -1,0 +1,11 @@
+{
+ "type": "waveform",
+ "dur": 8,
+ "theme": "ember",
+ "title": "a signal, drawn",
+ "aria": "A waveform of a sine signal with a slow beat, bars growing outward from the centre.",
+ "generate": {
+  "kind": "sine",
+  "n": 64
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "type": "scatter",
+ "dur": 8,
+ "theme": "ocean",
+ "trend": true,
+ "x_label": "hours spent",
+ "y_label": "output",
+ "title": "effort vs output",
+ "aria": "A scatter plot of hours spent against output for eight weeks, with a trend line.",
+ "points": [
+  {
+   "x": 4,
+   "y": 12
+  },
+  {
+   "x": 6,
+   "y": 15,
+   "label": "wk 2"
+  },
+  {
+   "x": 8,
+   "y": 22
+  },
+  {
+   "x": 10,
+   "y": 21
+  },
+  {
+   "x": 12,
+   "y": 30,
+   "label": "wk 5"
+  },
+  {
+   "x": 14,
+   "y": 33
+  },
+  {
+   "x": 16,
+   "y": 38
+  },
+  {
+   "x": 18,
+   "y": 41,
+   "label": "wk 8"
+  }
+ ]
+}

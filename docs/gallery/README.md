@@ -5,7 +5,7 @@ and every one is **lint-clean**: `0 errors, 0 warnings`. They're not mockups - t
 the artifacts the skill ships, produced by `python scripts/run_pipeline.py <spec>`.
 
 **This page is generated** by `python scripts/build_gallery.py`, and CI fails
-if it drifts. All **55** of the 55 examples in `assets/examples/` are here.
+if it drifts. All **70** of the 70 examples in `assets/examples/` are here.
 
 That is deliberate. GitHub does not render a raw `.svg` when you click one, so
 this page is the only place any of them can actually be *seen*. An example that
@@ -470,24 +470,20 @@ Several types on one canvas and one master clock, each with its own window. (`st
 
 ## Themes (7)
 
-Six palettes across all 55 examples. Pick one with `"theme"` in the spec;
+Six palettes across all 70 examples. Pick one with `"theme"` in the spec;
 `--theme` on the command line overrides it.
 
 | theme | polarity | examples | representative |
 |---|---|---|---|
-| `ember` | dark | 9 | [![ember](../../assets/examples/cards-stats.svg)](../../assets/examples/cards-stats.svg) |
-| `ocean` | dark | 15 | [![ocean](../../assets/examples/network-services.svg)](../../assets/examples/network-services.svg) |
-| `forest` | dark | 8 | [![forest](../../assets/examples/counter-stats.svg)](../../assets/examples/counter-stats.svg) |
-| `violet` | dark | 11 | [![violet](../../assets/examples/radar-skills.svg)](../../assets/examples/radar-skills.svg) |
-| `sunset` | dark | 7 | [![sunset](../../assets/examples/compose-launch-story.svg)](../../assets/examples/compose-launch-story.svg) |
-| `mono` | dark | 5 | [![mono](../../assets/examples/flow-flat.svg)](../../assets/examples/flow-flat.svg) |
-| `paper` | light | 0 | _unused_ |
+| `ember` | dark | 11 | [![ember](../../assets/examples/cards-stats.svg)](../../assets/examples/cards-stats.svg) |
+| `ocean` | dark | 17 | [![ocean](../../assets/examples/network-services.svg)](../../assets/examples/network-services.svg) |
+| `forest` | dark | 10 | [![forest](../../assets/examples/counter-stats.svg)](../../assets/examples/counter-stats.svg) |
+| `violet` | dark | 13 | [![violet](../../assets/examples/radar-skills.svg)](../../assets/examples/radar-skills.svg) |
+| `sunset` | dark | 10 | [![sunset](../../assets/examples/compose-launch-story.svg)](../../assets/examples/compose-launch-story.svg) |
+| `mono` | dark | 8 | [![mono](../../assets/examples/flow-flat.svg)](../../assets/examples/flow-flat.svg) |
+| `paper` | light | 1 | [![paper](../../assets/examples/calendar-launch.svg)](../../assets/examples/calendar-launch.svg) |
 
-`paper` is defined and available but no spec uses it - it is the only light
-palette, so light-theme output is untested by the examples. Build a pair with
-`--pair paper <dark>` and it works; nothing here proves it.
-
-**All 55 share one visual grammar** - a radial-gradient glow bed, a blur, and mono
+**All 70 share one visual grammar** - a radial-gradient glow bed, a blur, and mono
 type. That is deliberate consistency and it is also a limitation: six palettes is
 not six looks. It is the open visual-range item in `HANDOVER.md`.
 
@@ -509,9 +505,12 @@ not six looks. It is the open visual-range item in `HANDOVER.md`.
 | [`backdrop-stars`](../../assets/specs/backdrop-stars.json) | `backdrop` | `violet` | 12s | Ambient motion, slow and low contrast, meant to sit behind text |
 | [`backdrop-waves`](../../assets/specs/backdrop-waves.json) | `backdrop` | `ocean` | 12s | Ambient motion, slow and low contrast, meant to sit behind text |
 | [`banner-readme`](../../assets/specs/banner-readme.json) | `banner` | `ember` | 12s | A wide header strip, sized for a README hero |
+| [`calendar-launch`](../../assets/specs/calendar-launch.json) | `calendar` | `paper` | 8s |  |
 | [`cards-stats`](../../assets/specs/cards-stats.json) | `cards` | `ember` | 6s | Stat tiles that count up on one shared clock |
 | [`chart-bars`](../../assets/specs/chart-bars.json) | `chart` | `violet` | 8s | The finished chart is the base state; the animation grows out of zero |
 | [`chart-line`](../../assets/specs/chart-line.json) | `chart` | `forest` | 8s | The base attributes are the *finished* chart; the animation grows from zero |
+| [`clock-meeting`](../../assets/specs/clock-meeting.json) | `clock` | `mono` | 12s |  |
+| [`code-highlight`](../../assets/specs/code-highlight.json) | `code` | `mono` | 10s |  |
 | [`compose-dashboard`](../../assets/specs/compose-dashboard.json) | `compose` | `violet` | 10s | Several types on one canvas and one master clock, each with its own window |
 | [`compose-launch-story`](../../assets/specs/compose-launch-story.json) | `compose` | `sunset` | 16s | Several types on one canvas and one master clock, each with its own window |
 | [`compose-onboarding`](../../assets/specs/compose-onboarding.json) | `compose` | `sunset` | 16s | Several types on one canvas and one master clock, each with its own window |
@@ -524,25 +523,33 @@ not six looks. It is the open visual-range item in `HANDOVER.md`.
 | [`cycle-cicd`](../../assets/specs/cycle-cicd.json) | `cycle` | `sunset` | 9s | A closed loop, so the end connects visibly to the start |
 | [`flow-flat`](../../assets/specs/flow-flat.json) | `flow` | `mono` | 10s | Left-to-right stages on S-curve rails, with relay dots that dwell at each hop |
 | [`flow-with-feedback`](../../assets/specs/flow-with-feedback.json) | `flow` | `ember` | 10s | Columns left to right, S-curve rails, relay dots with `keyPoints` so a dot *pauses* at a node instead of racing past it |
+| [`funnel-sales`](../../assets/specs/funnel-sales.json) | `funnel` | `forest` | 8s |  |
+| [`gantt-plan`](../../assets/specs/gantt-plan.json) | `gantt` | `ocean` | 9s |  |
 | [`gauge-dashboard-flat`](../../assets/specs/gauge-dashboard-flat.json) | `gauge` | `ocean` | 8s | Count up, hold, reset - the three phases of any gauge |
 | [`gauge-dashboard`](../../assets/specs/gauge-dashboard.json) | `gauge` | `ocean` | 8s | Count up, hold, reset - the three phases every dashboard gauge has, on one clock, with rings, bars and a donut |
+| [`heatmap-week`](../../assets/specs/heatmap-week.json) | `heatmap` | `sunset` | 8s |  |
 | [`icons-set`](../../assets/specs/icons-set.json) | `icons` | `ember` | - | Twelve icons, twelve actions, each resting between its own beats |
 | [`layers-stack`](../../assets/specs/layers-stack.json) | `layers` | `forest` | 10s | A request travels down one lane and the response back up the other |
 | [`loader-sheet`](../../assets/specs/loader-sheet.json) | `loader` | `ocean` | - | Eight spinners, each on its own `period` and each resting between actions |
 | [`logo-hexagon`](../../assets/specs/logo-hexagon.json) | `logo` | `violet` | 8s | Draw, fill, shine - and frame 0 is already the finished mark |
 | [`logo-shield`](../../assets/specs/logo-shield.json) | `logo` | `forest` | 8s | The outline draws, then the fill arrives, then a shine sweeps across |
+| [`marquee-ticker`](../../assets/specs/marquee-ticker.json) | `marquee` | `sunset` | 16s |  |
 | [`morph-shapes`](../../assets/specs/morph-shapes.json) | `morph` | `violet` | 13s | Star, circle, heart, bolt, drop and cross share **no path-command structure**, which is the one thing `<animate attributeName="d">` refuses to interpolate |
 | [`network-services`](../../assets/specs/network-services.json) | `network` | `ocean` | 9s | Pulses propagate by BFS depth from the `start` nodes, so the wave front visibly follows the dependency graph rather than a fixed stagger |
 | [`phases-method`](../../assets/specs/phases-method.json) | `phases` | `forest` | 8s | Ordered phases on one timeline, each lighting inside its own window |
+| [`pie-split`](../../assets/specs/pie-split.json) | `pie` | `sunset` | 8s |  |
 | [`radar-skills`](../../assets/specs/radar-skills.json) | `radar` | `violet` | 8s | Polygons grow from the centre outward, one ring at a time |
 | [`radial-defects`](../../assets/specs/radial-defects.json) | `radial` | `ocean` | 14s | Cards around a hub, with signal radiating outward from the centre |
 | [`radial-hub`](../../assets/specs/radial-hub.json) | `radial` | `ocean` | 6s | Cards around a hub, with signal radiating outward from the centre |
+| [`scatter-effort`](../../assets/specs/scatter-effort.json) | `scatter` | `ocean` | 8s |  |
 | [`scene-coffee`](../../assets/specs/scene-coffee.json) | `scene` | `ember` | 8s | An illustrated scene with something moving in it |
 | [`scene-ocean`](../../assets/specs/scene-ocean.json) | `scene` | `ocean` | 8s | An illustrated scene with something moving in it |
 | [`scene-orbit`](../../assets/specs/scene-orbit.json) | `scene` | `sunset` | 8s | An illustrated scene with something moving in it |
 | [`scene-rocket`](../../assets/specs/scene-rocket.json) | `scene` | `violet` | 8s | An illustrated scene with something moving in it |
 | [`sequence-login`](../../assets/specs/sequence-login.json) | `sequence` | `ocean` | 10s | Lifelines with dashed return messages, like a protocol trace |
 | [`sequence-toolcall`](../../assets/specs/sequence-toolcall.json) | `sequence` | `ocean` | 16s | Lifelines with dashed return messages, like a protocol trace |
+| [`sprite-blink`](../../assets/specs/sprite-blink.json) | `sprite` | `mono` | - |  |
+| [`table-compare`](../../assets/specs/table-compare.json) | `table` | `violet` | 8s |  |
 | [`terminal-demo`](../../assets/specs/terminal-demo.json) | `terminal` | `mono` | 12s | All the text is in the base state; window-coloured cover rectangles slide away to reveal it |
 | [`terminal-verify`](../../assets/specs/terminal-verify.json) | `terminal` | `mono` | 16s | Typed commands with cover rectangles sliding off to reveal real text |
 | [`text-glitch`](../../assets/specs/text-glitch.json) | `text` | `forest` | 6s | Kinetic type: reveal, pop, per-letter type, shimmer, wave or glitch |
@@ -552,6 +559,10 @@ not six looks. It is the open visual-range item in `HANDOVER.md`.
 | [`text-type`](../../assets/specs/text-type.json) | `text` | `mono` | 6s | Kinetic type: reveal, pop, per-letter type, shimmer, wave or glitch |
 | [`text-wave`](../../assets/specs/text-wave.json) | `text` | `ember` | 6s | Kinetic type: reveal, pop, per-letter type, shimmer, wave or glitch |
 | [`timeline-roadmap`](../../assets/specs/timeline-roadmap.json) | `timeline` | `violet` | 8s | The progress dot walks segment by segment and each milestone lights *on arrival*, which is what makes it read as progress rather than ambience |
+| [`tree-team`](../../assets/specs/tree-team.json) | `tree` | `forest` | 8s |  |
+| [`typing-manifesto`](../../assets/specs/typing-manifesto.json) | `typing` | `ember` | 13s |  |
+| [`venn-skills`](../../assets/specs/venn-skills.json) | `venn` | `violet` | 8s |  |
+| [`waveform-signal`](../../assets/specs/waveform-signal.json) | `waveform` | `ember` | 8s |  |
 
 Browse them all in [`assets/examples/`](../../assets/examples) - they're plain SVG,
 so any of them will animate in your browser too.

@@ -1,0 +1,58 @@
+{
+  "style": "spine",
+  "name": "design-atlas",
+  "tagline": "Turn a vague brief into a finished site.",
+  "description": "A concept pool and a craft vocabulary that an LLM can grep, plus a deterministic workflow that ends in a standalone Next.js site.",
+  "badges": ["MIT", "v1.4.0", "502 concepts", "zero deps"],
+  "dur": 24,
+  "themes": {"dark": "ember", "light": "paper"},
+  "hero": {
+    "eyebrow": "open source",
+    "href": "https://github.com/your-name/design-atlas",
+    "cta": [{"label": "Get started"}, {"label": "Read the docs"}],
+    "visual": {"type": "art", "variant": "orbits"}
+  },
+  "nav": true,
+  "sections": [
+    {"id": "why", "nav": "Why", "title": "Why design-atlas",
+     "lede": "Most AI-built sites look generic because the model has no vocabulary. This gives it one.",
+     "part": {"type": "cards", "cols": 4, "items": [
+        {"value": "502", "label": "concepts", "sub": "in the pool", "key": true},
+        {"value": "354", "label": "craft terms", "sub": "greppable"},
+        {"value": "26", "label": "skills", "sub": "composable"},
+        {"value": "0", "label": "runtime deps", "sub": "static output"}]}},
+    {"id": "install", "nav": "Install", "title": "Install in ten seconds",
+     "lede": "One package, one command. Everything is generated into a plain folder you own.",
+     "copy": ["npm i -g design-atlas", "atlas init my-site", "atlas build"],
+     "part": {"type": "terminal", "window_title": "zsh — my-site", "lines": [
+        {"kind": "cmd", "text": "npm i -g design-atlas"}, {"kind": "out", "text": "added 1 package in 2.1s"},
+        {"kind": "cmd", "text": "atlas init my-site && atlas build"}, {"kind": "ok", "text": "✔ site ready in ./out (3.2s)"}]}},
+    {"id": "how", "nav": "How", "title": "How it works",
+     "lede": "A fixed pipeline: the same brief always produces the same site.",
+     "part": {"type": "flow", "arrows": true, "columns": [
+        [{"id": "u", "label": "Brief", "sub": "intent"}],
+        [{"id": "c", "label": "ATLAS", "sub": "concepts", "key": true}],
+        [{"id": "w", "label": "Workflow", "sub": "contract"}],
+        [{"id": "o", "label": "Site", "sub": "Next.js", "key": true}]],
+        "feedback": {"id": "m", "label": "Maintainer", "sub": "inbox → release", "from": "o", "to": "c"}}},
+    {"id": "inside", "nav": "Inside", "title": "What is inside",
+     "lede": "Eight small modules around one core. Take what you need.",
+     "part": {"type": "radial", "center": {"label": "core/", "sub": "orchestrator"}, "items": [
+        {"title": "POOL", "lines": ["concepts", "terms"]}, {"title": "BRIEF", "lines": ["intent", "DNA"]},
+        {"title": "SPECS", "lines": ["sections", "tokens"]}, {"title": "SITE", "lines": ["next.js", "assets"]},
+        {"title": "QA", "lines": ["lint", "frames"]}, {"title": "SYNC", "lines": ["releases", "hash"]}]}},
+    {"id": "numbers", "nav": "Numbers", "title": "By the numbers",
+     "lede": "Small on purpose.",
+     "part": {"type": "counter", "items": [{"value": 12840, "label": "stars", "suffix": "+"}, {"value": 502, "label": "concepts"}, {"value": 99, "label": "uptime", "suffix": "%"}]}},
+    {"id": "roadmap", "nav": "Roadmap", "title": "Where it is going",
+     "lede": "Shipping in the open, one station at a time.",
+     "part": {"type": "timeline", "items": [
+        {"tag": "Q1", "label": "Alpha", "sub": "core engine"}, {"tag": "Q2", "label": "Beta", "sub": "plugins", "key": true},
+        {"tag": "Q3", "label": "Launch", "sub": "public"}, {"tag": "Q4", "label": "Scale", "sub": "teams"}, {"tag": "2027", "label": "GA", "sub": "stable", "key": true}]}}
+  ],
+  "footer": {
+    "closing": "Build something worth reading.",
+    "text": "MIT © 2026 your-name · made with svg-animator",
+    "links": [{"label": "Docs", "href": "https://github.com/your-name/design-atlas#readme"}, {"label": "Issues", "href": "https://github.com/your-name/design-atlas/issues"}, {"label": "Discussions", "href": "https://github.com/your-name/design-atlas/discussions"}]
+  }
+}

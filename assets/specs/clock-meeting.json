@@ -1,0 +1,8 @@
+{
+ "type": "clock",
+ "dur": 12,
+ "theme": "mono",
+ "time": "09:45",
+ "title": "the meeting starts",
+ "aria": "An analogue clock at 09:45, with the second hand sweeping once per loop."
+}

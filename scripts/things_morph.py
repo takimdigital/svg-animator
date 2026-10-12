@@ -49,6 +49,22 @@ FORMS = {
 
 
 def build_morph(spec, th, idp=""):
+    """morph: one shape turns into the next without tearing; the path data is normalised first.
+
+    Fields: forms (required; list of names from the built-in shape set); cell; cols; dur; hold;
+        samples (points per shape); gap; label_h; pad; title; title_zone.
+    Refuses: an unknown form: 'unknown form <name>; choose from [...]'. Mismatched signatures
+        after normalisation: 'morph_path.py returned mismatched signatures'. Shapes with holes
+        or several subpaths are refused by morph_path.py (ValueError).
+    Base state: the first form is the base state; the morph runs continuously through the loop.
+    Timing: each form holds, then interpolates to the next; the loop closes back to the first
+        form.
+    Alternatives: every shape is resampled by arc length to the same point count, because SMIL
+        interpolates only identical command structures.
+    Breaks if changed: every keyframe must have the same command structure; changing samples
+        changes every path at once.
+    Example: morph-shapes.json   Tests: tests/test_type_coverage.py.
+    """
     forms = spec.get("forms") or ["star", "circle", "heart", "bolt"]
     for f in forms:
         if f not in FORMS:

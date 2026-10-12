@@ -1,0 +1,25 @@
+{
+ "type": "funnel",
+ "dur": 8,
+ "theme": "forest",
+ "title": "sales funnel",
+ "aria": "A sales funnel: 12,000 visitors, 2,400 sign-ups, 600 trials and 120 paying customers.",
+ "stages": [
+  {
+   "label": "Visitors",
+   "value": 12000
+  },
+  {
+   "label": "Sign-ups",
+   "value": 2400
+  },
+  {
+   "label": "Trials",
+   "value": 600
+  },
+  {
+   "label": "Paid",
+   "value": 120
+  }
+ ]
+}
