@@ -256,6 +256,27 @@ class MotionDNATests(unittest.TestCase):
             report=inspect_svg(file)
             self.assertTrue(any('Duplicate id' in x for x in report['warnings']))
 
+    def test_unsupported_spline_pulse_reconstruction_refused(self):
+        src='''<svg xmlns="http://www.w3.org/2000/svg"><circle id="a"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.1 0.5 0.5 0.9;0.1 0.5 0.5 0.9" dur="1s" repeatCount="indefinite"/></circle><circle id="b"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.1 0.5 0.5 0.9;0.1 0.5 0.5 0.9" dur="1s" repeatCount="indefinite"/></circle></svg>'''
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)/'easing.svg';path.write_text(src)
+            with self.assertRaisesRegex(ValueError,'Spline'):
+                motion_to_svg(inspect_svg(path))
+
+    def test_half_rotation_must_not_be_replaced_by_full_turn(self):
+        src='''<svg xmlns="http://www.w3.org/2000/svg"><g id="rotor"><animateTransform attributeName="transform" type="rotate" from="0" to="180" dur="1s" repeatCount="indefinite"/></g></svg>'''
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)/'half.svg';path.write_text(src)
+            with self.assertRaisesRegex(ValueError,'0-to-360'):
+                motion_to_svg(inspect_svg(path))
+
+    def test_capture_refuses_oversized_source_before_browser(self):
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)/'large.svg'
+            path.write_text('<svg>' + ' '*4_100_000 + '</svg>')
+            with self.assertRaisesRegex(ValueError,'4 MB'):
+                capture(path,Path(td)/'out',screenshots=False)
+
     @unittest.skipUnless(BROWSER_AVAILABLE, 'No installed Chromium')
     def test_browser_css_changes(self):
         with tempfile.TemporaryDirectory() as td:

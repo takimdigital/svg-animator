@@ -35,6 +35,8 @@ def motion_to_svg(data, shape='diamond', color='#4263EB', title='Motion study'):
             and a.get('duration_seconds') and a.get('repeat')=='indefinite']
     unique={a['target']:a for a in pulses}
     if len(unique)>=2 and len(unique)<=8:
+        if any(a.get('easing',{}).get('calcMode') not in ('linear','default',None) or a.get('easing',{}).get('keySplines') for a in pulses):
+            raise ValueError('Spline/discrete/paced opacity timing is not faithfully supported')
         if len(unique)!=len(pulses) or len(anims)!=len(pulses):
             raise ValueError('Source contains overlapping or unsupported additional animations; cannot transfer faithfully')
         pulses=sorted(unique.values(),key=lambda a:(a.get('begin_seconds') or 0,a['target']))
@@ -65,6 +67,10 @@ def motion_to_svg(data, shape='diamond', color='#4263EB', title='Motion study'):
         if len(anims)!=1:
             raise ValueError('Rotation recipe requires exactly one source animation')
         a=rotations[0];dur=a['duration_seconds']
+        if a.get('from') != '0' or a.get('to') != '360' or a.get('values') or a.get('by'):
+            raise ValueError('Rotation recipe only supports an explicit 0-to-360 degree full turn')
+        if a.get('easing',{}).get('calcMode') not in ('linear','default',None) or a.get('easing',{}).get('keySplines'):
+            raise ValueError('Nonlinear rotation easing is not supported in this variation recipe')
         shape_code=SHAPES[shape]
         rotation=('''  <g transform="translate(150 90)">\n    <g fill="%s">%s\n      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="%ss" repeatCount="indefinite"/>\n    </g>\n  </g>'''%(color,shape_code,_fmt(dur)))
         return _wrap(300,180,title,[rotation],'single-rotation',{'source_motion':'extracted rotation period','new_geometry':shape})

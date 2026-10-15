@@ -81,9 +81,10 @@ def _browser(p,browser_path=None):
 
 def capture(svg, out_dir, samples=9, times=None, width=900, screenshots=True, browser_path=None):
     from playwright.sync_api import sync_playwright
+    # Check input size before even parsing large untrusted XML in the browser path.
+    info=inspect_svg(svg)
     src=Path(svg).read_text(encoding='utf-8-sig')
     safe_svg(src)  # refuse scripts, remote media, external links and entities
-    info=inspect_svg(svg)
     stamps=timepoints(info,samples,times)
     out=Path(out_dir);out.mkdir(parents=True,exist_ok=True)
     # Use inline document so Playwright can seek SVG/SMIL and CSS keyframes.
