@@ -278,6 +278,19 @@ class MotionDNATests(unittest.TestCase):
                 capture(path,Path(td)/'out',screenshots=False)
 
     @unittest.skipUnless(BROWSER_AVAILABLE, 'No installed Chromium')
+    def test_reconstructed_rotation_has_aligned_transform(self):
+        reference=inspect_svg(FIX/'rotation.svg')
+        with tempfile.TemporaryDirectory() as td:
+            dest=Path(td)
+            file=dest/'variation.svg'
+            file.write_text(motion_to_svg(reference),encoding='utf-8')
+            a=capture(FIX/'rotation.svg',dest/'ref',times='0,0.25,0.5,0.75,1,1.25,1.5',screenshots=False)
+            b=capture(file,dest/'cand',times='0,0.25,0.5,0.75,1,1.25,1.5',screenshots=False)
+            result=compare(a,b,mode='transform',target_map={'rotor':'motion-1'})
+            self.assertEqual(result['verdict'],'PASS',result)
+            self.assertEqual(result['coverage'],7)
+
+    @unittest.skipUnless(BROWSER_AVAILABLE, 'No installed Chromium')
     def test_browser_css_changes(self):
         with tempfile.TemporaryDirectory() as td:
             report=capture(FIX/'css-bounce.svg',td,samples=5,screenshots=False)

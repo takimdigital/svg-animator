@@ -13,7 +13,7 @@ def main(argv=None):
     ap.add_argument('--candidate',help='Optional SVG to compare using aligned timestamps and element ids')
     ap.add_argument('--targets',help='Comma-separated IDs for comparison')
     ap.add_argument('--target-map',help='Explicit ref:candidate element mapping')
-    ap.add_argument('--mode',choices=['state','opacity'],default='state')
+    ap.add_argument('--mode',choices=['state','opacity','transform'],default='state')
     ap.add_argument('--samples',type=int,default=9)
     ap.add_argument('--no-browser',action='store_true',help='Static inspection only')
     ap.add_argument('--no-images',action='store_true',help='Capture state but not screenshots')

@@ -2,7 +2,8 @@
 """Compare aligned, element-specific motion traces without whole-frame pixel scores.
 
 `state` compares normalized location/size and visibility/opacity on identical
-SVG element IDs. `opacity` compares opacity choreography only and supports an
+SVG element IDs. `opacity` compares opacity choreography only; `transform` compares
+SVG CTM linear terms (rotation/scale/skew). Both support an
 explicit reference->candidate ID map for original artwork variations.
 """
 from __future__ import annotations
@@ -29,7 +30,7 @@ def _norm(frame, target, view):
 
 def compare(reference,candidate,targets=None,pos_tol=0.035,opacity_tol=0.1,
             ignore_missing=False, mode='state', target_map=None):
-    if mode not in ('state','opacity'):raise ValueError('mode must be state or opacity')
+    if mode not in ('state','opacity','transform'):raise ValueError('mode must be state, opacity or transform')
     if not (math.isfinite(pos_tol) and 0 <= pos_tol <= 1 and math.isfinite(opacity_tol) and 0 <= opacity_tol <= 1):
         raise ValueError('Tolerances must be finite numbers within [0,1]')
     target_map=target_map or {}
@@ -83,8 +84,9 @@ def compare(reference,candidate,targets=None,pos_tol=0.035,opacity_tol=0.1,
                         delta.append({**base,'property':'bbox.'+field,
                                       'reference':round(a['bbox'][field],5),'candidate':round(b['bbox'][field],5),
                                       'deviation':round(diff,5),'tolerance':pos_tol})
+            if mode in ('state','transform'):
                 # A symmetrical object can rotate without changing its bbox.
-                # Matrix linear terms capture movement/state missed by box checks.
+                # Matrix terms recover rotation/scale/skew missing from box checks.
                 if a['ctm'] is not None and b['ctm'] is not None:
                     for field in ('a','b','c','d'):
                         av=a['ctm'][field];bv=b['ctm'][field]
@@ -92,12 +94,12 @@ def compare(reference,candidate,targets=None,pos_tol=0.035,opacity_tol=0.1,
                             delta.append({**base,'property':'ctm.'+field,
                                           'reference':round(av,5),'candidate':round(bv,5),
                                           'deviation':round(abs(av-bv),5),'tolerance':pos_tol})
-                elif (a['ctm'] is None)!=(b['ctm'] is None):
-                    delta.append({**base,'property':'ctm','reference':a['ctm'],
-                                  'candidate':b['ctm']})
-            d=abs(a['opacity']-b['opacity'])
-            if d>opacity_tol:
-                delta.append({**base,'property':'opacity',
+                elif mode=='transform' or (a['ctm'] is None)!=(b['ctm'] is None):
+                    missing.append({**base,'reason':'SVG transformation matrix unavailable'})
+            if mode!='transform':
+                d=abs(a['opacity']-b['opacity'])
+                if d>opacity_tol:
+                    delta.append({**base,'property':'opacity',
                               'reference':a['opacity'],'candidate':b['opacity'],
                               'deviation':round(d,5),'tolerance':opacity_tol})
             for field in ('visibility','display'):
@@ -120,6 +122,7 @@ def compare(reference,candidate,targets=None,pos_tol=0.035,opacity_tol=0.1,
             'missing_candidate_timestamps':absent_candidate_times,
             'thresholds':{'position_fraction_of_viewport':pos_tol,'opacity':opacity_tol},
             'method':('element-specific computed opacity + visibility; no geometry' if mode=='opacity' else
+                      'relative SVG CTM linear coefficients (rotation, scale, skew)' if mode=='transform' else
                       'element-specific boxes, opacity, and relative SVG transform matrix, normalized where appropriate'),
             'limitations':['Equal samples do not prove identical behavior between timestamps',
                            'Opacity-only verification is unsuitable for movement or morph equivalence',
@@ -144,7 +147,7 @@ def main(argv=None):
     ap.add_argument('candidate',help='trace.json from candidate')
     ap.add_argument('--targets',help='Comma-separated SVG element IDs (same in both traces)')
     ap.add_argument('--target-map',help='Mapping ref-id:candidate-id,... for renamed targets')
-    ap.add_argument('--mode',choices=['state','opacity'],default='state')
+    ap.add_argument('--mode',choices=['state','opacity','transform'],default='state')
     ap.add_argument('--position-tolerance',type=float,default=.035)
     ap.add_argument('--opacity-tolerance',type=float,default=.1)
     ap.add_argument('--out',help='Write comparison JSON')

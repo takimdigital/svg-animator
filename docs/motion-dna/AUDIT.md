@@ -9,7 +9,7 @@ We treated every `PASS` and every extracted motion fact as potentially wrong.
 | Missing all observed targets, `ignore_missing=True` | Old comparator could return PASS with `coverage=0` | No comparison evidence => INCONCLUSIVE; missing requested elements => FAIL |
 | Candidate supplies only one matching frame | Old comparator compared timestamp intersection and could PASS incomplete timeline | All reference/candidate sample times must align for PASS; INCONCLUSIVE otherwise |
 | Moving reference element missing but shared background remains | Old auto-targets selected only intersections and could omit vanished elements | Default target selection covers every reference element; missing => FAIL |
-| Symmetric element rotates but bbox unchanged | Old geometry comparison could certify unchanged bbox | Trace records relative SVG CTM; compare a/b/c/d rotation, skew and scale coefficients |
+| Symmetric element rotates but bbox unchanged | Old geometry comparison could certify unchanged bbox | Trace records relative SVG CTM; compare a/b/c/d rotation, skew and scale coefficients; `transform` mode supports different artwork |
 | Multiple source animations on same target | Reconstruction collapsed duplicate targets, silently omitting an animation | Reject ambiguous/mixed recipes |
 | Invalid NaN tolerances | Python float NaN could deactivate threshold comparisons | Require finite tolerance in [0,1] |
 | Installer `--force` with an existing backup | Could partially install before detecting late backup collision | Preflight all backup collisions before writing |

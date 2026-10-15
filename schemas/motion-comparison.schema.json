@@ -6,7 +6,7 @@
   "properties": {
     "schema_version": {"const": "0.1.0"},
     "verdict": {"enum": ["PASS", "FAIL", "INCONCLUSIVE"]},
-    "mode": {"enum": ["state", "opacity"]},
+    "mode": {"enum": ["state", "opacity", "transform"]},
     "compared_timestamps": {"type": "array", "items": {"type": "number"}},
     "coverage": {"type": "integer", "minimum": 0},
     "missing": {"type": "array", "items": {"type": "object"}},

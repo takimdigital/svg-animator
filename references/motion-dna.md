@@ -10,7 +10,7 @@ Motion DNA is an **optional Route E** for the existing `svg-animator` agent skil
 4. **Hypothesize.** Identify a specific motion property and a testable claim, e.g. “the 3 pulses are staggered by 0.15s, with a 1.2s cycle.” Retain original source/evidence hash.
 5. **Create.** If the input fits the narrow supported recipes, `python scripts/reconstruct_motion.py run/motion-dna.json --shape diamond --out run/variation.svg`. Otherwise route to generator A or hand-build B, reusing the measured motion facts and describing what cannot be transferred automatically.
 6. **Validate.** Run the existing `scripts/run_pipeline.py` (or lint, `verify.py`, `render_frames.py`) on the variation. Inspect actual screenshots manually; do not declare aesthetic quality based on comparison scores.
-7. **Compare.** For the same geometry and element IDs use `compare_motion.py ... --mode state`; for opacity-only choreography applied to different artwork use `--mode opacity --target-map reference-id:new-id,...`. For differing geometry, state comparisons are inappropriate. Always use aligned timestamps.
+7. **Compare.** For the same geometry and element IDs use `compare_motion.py ... --mode state`; for opacity-only choreography applied to different artwork use `--mode opacity --target-map reference-id:new-id,...`. For differing geometry, state comparisons are inappropriate. Use `--mode transform --target-map rotor:motion-1` to verify rotation/scale/skew choreography across different artwork (not positions or appearance). Always use aligned timestamps.
 8. **Report.** Distinguish directly parsed source facts, actual browser observations, inferred choreography and unresolved unknowns. Include the verification surface and limitations.
 
 ## Quick run
