@@ -1,0 +1,57 @@
+name: Motion DNA browser verification
+
+on:
+  push:
+    branches: [feature/motion-dna-mvp]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-motion:
+    name: Motion DNA — Chromium motion and adversarial tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser probe
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Verify actual browser launch (no silent skipped tests)
+        run: |
+          python - <<'PYCODE'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True)
+              print('Chromium:', browser.version)
+              browser.close()
+          PYCODE
+      - name: Run full repository test suite including browser cases
+        run: |
+          set -o pipefail
+          python -m unittest discover -s tests -v 2>&1 | tee /tmp/motion-dna-tests.log
+          if grep -E '^test_browser_.*skipped' /tmp/motion-dna-tests.log; then
+            echo 'Motion DNA browser test unexpectedly skipped' >&2
+            exit 1
+          fi
+      - name: Check variation with upstream SVG lint
+        run: |
+          python scripts/inspect_motion.py tests/fixtures/motion-dna/staggered-pulse.svg --out /tmp/motion-dna.json
+          python scripts/reconstruct_motion.py /tmp/motion-dna.json --shape diamond --out /tmp/diamond.svg
+          python scripts/lint_svg_anim.py /tmp/diamond.svg
+      - name: Check skill integration docs
+        run: |
+          python - <<'PYCODE'
+          from pathlib import Path
+          skill=Path('SKILL.md').read_text(encoding='utf-8')
+          capabilities=Path('references/CAPABILITIES.md').read_text(encoding='utf-8')
+          assert 'Optional Route E' in skill
+          assert 'Motion DNA' in capabilities
+          assert Path('references/motion-dna.md').exists()
+          PYCODE

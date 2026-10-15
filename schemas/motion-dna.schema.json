@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/takimdigital/svg-animator/tree/main/schemas/motion-dna.schema.json",
+  "title": "SVG Animator Motion DNA evidence report v0.1",
+  "type": "object",
+  "required": ["schema_version", "source", "canvas", "summary", "animations", "choreography", "issues", "warnings", "unknowns", "evidence"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "tool_version": {"type": "string"},
+    "source": {
+      "type": "object",
+      "required": ["file", "sha256", "bytes"],
+      "properties": {
+        "file": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "canvas": {"type": "object", "properties": {
+      "viewBox": {"type": ["string", "null"]},
+      "width": {"type": ["string", "null"]},
+      "height": {"type": ["string", "null"]}
+    }},
+    "summary": {"type": "object", "required": ["animation_count", "target_count", "methods", "loop_seconds"],
+      "properties": {
+        "animation_count": {"type": "integer", "minimum": 0},
+        "target_count": {"type": "integer", "minimum": 0},
+        "methods": {"type": "array", "items": {"enum": ["SMIL", "CSS"]}},
+        "loop_seconds": {"oneOf": [{"type": "number"}, {"const": "unknown"}]},
+        "longest_declared_duration_seconds": {"type": ["number", "null"]}
+      }
+    },
+    "animations": {"type": "array", "items": {
+      "type": "object", "required": ["index", "target", "mechanism", "motion_type"],
+      "properties": {
+        "index": {"type": "integer", "minimum": 0},
+        "target": {"type": "string"},
+        "mechanism": {"enum": ["SMIL", "CSS"]},
+        "motion_type": {"type": "string"},
+        "duration_seconds": {"type": ["number", "null"]},
+        "begin_seconds": {"type": ["number", "null"]}
+      }
+    }},
+    "choreography": {"type": "array", "items": {"type": "object"}},
+    "issues": {"type": "array", "items": {"type": "object"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "unknowns": {"type": "array", "items": {"type": "string"}},
+    "evidence": {"type": "object", "required": ["kind", "hash", "runtime_observed"],
+      "properties": {
+        "kind": {"type": "string"},
+        "hash": {"type": "string"},
+        "runtime_observed": {"type": "boolean"}
+      }
+    }
+  }
+}

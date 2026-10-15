@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <path id="morph" fill="#4263eb" d="M30 30 L170 30 L170 170 L30 170 Z">
+    <animate attributeName="d" values="M30 30 L170 30 L170 170 L30 170 Z;M100 10 L190 100 L100 190 L10 100 Z;M30 30 L170 30 L170 170 L30 170 Z" dur="2s" keyTimes="0;0.5;1" repeatCount="indefinite"/>
+  </path>
+</svg>

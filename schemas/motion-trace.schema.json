@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SVG Animator Motion DNA browser trace v0.1",
+  "type": "object",
+  "required": ["schema_version", "source", "canvas", "sampling", "frames", "notes", "anomalies"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "source": {"type": "object", "required": ["sha256"]},
+    "canvas": {"type": "object"},
+    "sampling": {"type": "object", "required": ["times_seconds", "viewport", "seek"],
+      "properties": {
+        "times_seconds": {"type": "array", "items": {"type": "number", "minimum": 0}},
+        "viewport": {"type": "object", "required": ["width", "height"]},
+        "seek": {"type": "string"}
+      }
+    },
+    "frames": {"type": "array", "items": {"type": "object", "required": ["time_seconds", "elements", "screenshot"]}},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "anomalies": {"type": "array", "items": {"type": "object"}}
+  }
+}
