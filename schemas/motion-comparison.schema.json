@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SVG Animator Motion DNA comparison v0.1",
+  "type": "object",
+  "required": ["schema_version", "verdict", "mode", "compared_timestamps", "coverage", "missing", "differences", "limitations"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "verdict": {"enum": ["PASS", "FAIL", "INCONCLUSIVE"]},
+    "mode": {"enum": ["state", "opacity", "transform"]},
+    "compared_timestamps": {"type": "array", "items": {"type": "number"}},
+    "coverage": {"type": "integer", "minimum": 0},
+    "missing": {"type": "array", "items": {"type": "object"}},
+    "differences": {"type": "array", "items": {"type": "object"}},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

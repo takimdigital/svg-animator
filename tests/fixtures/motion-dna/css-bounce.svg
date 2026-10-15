@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120">
+  <style>
+    @keyframes bounce { 0%, 100% { transform: translateY(0px); opacity:0.6; }
+                        50% { transform: translateY(-20px); opacity:1; } }
+    .dot { animation: bounce 1.2s ease-in-out infinite; }
+  </style>
+  <circle id="css-1" class="dot" cx="80" cy="75" r="12" fill="#4263eb"/>
+  <circle id="css-2" style="animation: bounce 1.2s ease-in-out .15s infinite" cx="150" cy="75" r="12" fill="#4263eb"/>
+</svg>

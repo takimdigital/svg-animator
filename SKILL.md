@@ -206,3 +206,18 @@ svg-animator/
 │   ├── template.svg · specs/*.json · examples/*.svg
 └── docs/                         README artwork and the curated gallery
 ```
+
+
+<!-- MOTION-DNA-EXTENSION-START -->
+## Optional Route E — Motion DNA: investigate SVG reference motion
+
+When the user provides a **local, self-contained SVG animation** and requests investigation, diagnosis or an original variation, consult `references/motion-dna.md` before building. This is **optional** and preserves the standard BRIEF → ROUTE → SPEC → BUILD → LINT → FRAMES → FIX → DELIVER workflow.
+
+1. Inspect source: `python scripts/inspect_motion.py reference.svg --out run/motion-dna.json`.
+2. Observe browser states: `python scripts/capture_motion.py reference.svg --out-dir run/reference --samples 13` (optional Playwright/Chromium).
+3. Record actual evidence, unknowns and hypotheses; do not infer motion intent from sampled frames.
+4. Create an independent variation only for a supported pattern via `scripts/reconstruct_motion.py`; otherwise fall back to existing generator/hand-build routes.
+5. Run existing SVG lint and visual verification. Compare aligned traces using `scripts/compare_motion.py`; a sampled PASS is **not** proof of continuous motion, artistic equivalence or full accessibility.
+
+Security: accept only local self-contained SVG without scripts, remote resources, DTD or event handlers. Untrusted SVG browser inspection is not a hardened sandbox.
+<!-- MOTION-DNA-EXTENSION-END -->

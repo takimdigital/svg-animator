@@ -121,3 +121,18 @@ Two styles: `spine` and `blueprint` (`"style"` key). Spec reference in `referenc
 - **Raster and video output are not produced.** PNG frames exist for review only; GIF and MP4 are out of scope.
 - **Reduced motion cannot be honoured inside the file.** SMIL ignores `prefers-reduced-motion`; use a static twin and a `<picture>` element.
 - **Hand-built work depends on judgement.** Route B has no generator guarantees beyond the lint and the frame check.
+
+
+<!-- MOTION-DNA-EXTENSION-START -->
+## Optional experimental route: Motion DNA v0.2
+
+- Input: local, self-contained SMIL or basic CSS animated SVG; websites, videos, GIF and JS-driven animations are unsupported.
+- Tools: `scripts/inspect_motion.py`, `capture_motion.py`, `compare_motion.py`, `reconstruct_motion.py`, `investigate_motion.py`.
+- Source analysis: SMIL/CSS keyframes, timeline, basic stagger groups, path command signatures, provenance SHA-256 and unknowns.
+- Browser evidence: aligned sampled opacity, bounds and relative SVG transformation matrices, with optional screenshots; no unsupported whole-frame pixel-fidelity claim.
+- Automatic original variations: 2–8 repeating opacity pulses sharing one duration, or one repeating SMIL rotation. Mixed or ambiguous source animations are refused.
+- Comparison safeguards: missing observations, missing timestamps or zero coverage cannot produce PASS.
+- Existing generator routes, lint, render and verification remain authoritative for the delivered SVG.
+
+Read `references/motion-dna.md` and `docs/motion-dna/AUDIT.md` for limitations, usage and regression findings.
+<!-- MOTION-DNA-EXTENSION-END -->

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="270" height="150" viewBox="0 0 270 150" role="img" aria-label="Motion DNA original variation">
+  <title>Motion DNA original variation</title>
+  <desc>Original staggered-opacity-pulse variation from a Motion DNA timing specification; geometry independently drawn.</desc>
+  <rect x="0" y="0" width="270" height="150" fill="#101828" rx="15"/>
+  <g id="motion-1" transform="translate(67.5 75)" fill="#4263EB" opacity="0">
+    <path d="M0 -23 L23 0 L0 23 L-23 0 Z"/>
+    <animate attributeName="opacity" values="0.3;1;0.3" keyTimes="0;0.5;1" dur="1.2s" begin="0s" repeatCount="indefinite"/>
+  </g>
+  <g id="motion-2" transform="translate(135 75)" fill="#4263EB" opacity="0">
+    <path d="M0 -23 L23 0 L0 23 L-23 0 Z"/>
+    <animate attributeName="opacity" values="0.3;1;0.3" keyTimes="0;0.5;1" dur="1.2s" begin="0.15s" repeatCount="indefinite"/>
+  </g>
+  <g id="motion-3" transform="translate(202.5 75)" fill="#4263EB" opacity="0">
+    <path d="M0 -23 L23 0 L0 23 L-23 0 Z"/>
+    <animate attributeName="opacity" values="0.3;1;0.3" keyTimes="0;0.5;1" dur="1.2s" begin="0.3s" repeatCount="indefinite"/>
+  </g>
+</svg>
