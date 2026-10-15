@@ -21,10 +21,12 @@ FIX=ROOT/'tests/fixtures/motion-dna'
 def browser_available():
     # CI playwright install chromium supplies a browser in Playwright's cache,
     # not necessarily one named /usr/bin/chromium.
-    if shutil.which('chromium') or shutil.which('chromium-browser'):
-        return True
+    # A system Chromium executable alone is not enough: the optional
+    # Playwright Python package must also be installed.
     try:
         from playwright.sync_api import sync_playwright
+        if shutil.which('chromium') or shutil.which('chromium-browser'):
+            return True
         with sync_playwright() as p:
             return Path(p.chromium.executable_path).is_file()
     except Exception:
@@ -221,6 +223,7 @@ class MotionDNATests(unittest.TestCase):
             self.assertFalse((dest/'scripts/inspect_motion.py').exists())
             self.assertEqual((dest/'SKILL.md').read_text(),'Original')
 
+    @unittest.skipUnless(BROWSER_AVAILABLE, 'No installed Chromium')
     def test_svg_rotation_matrix_detects_equal_bbox_motion(self):
         # Transform rotation of a perfectly symmetric SVG circle has identical
         # bounding boxes. A box-only verifier falsely certifies it.

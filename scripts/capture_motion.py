@@ -80,7 +80,6 @@ def _browser(p,browser_path=None):
 
 
 def capture(svg, out_dir, samples=9, times=None, width=900, screenshots=True, browser_path=None):
-    from playwright.sync_api import sync_playwright
     # Check input size before even parsing large untrusted XML in the browser path.
     info=inspect_svg(svg)
     src=Path(svg).read_text(encoding='utf-8-sig')
@@ -100,6 +99,7 @@ def capture(svg, out_dir, samples=9, times=None, width=900, screenshots=True, br
         except ValueError:pass
     h=max(100,min(3000,round(width*aspect)))
     evidence=[];notes=[]
+    from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         browser=_browser(p,browser_path)
         try:
