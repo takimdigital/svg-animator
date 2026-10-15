@@ -45,6 +45,28 @@ jobs:
           python scripts/inspect_motion.py tests/fixtures/motion-dna/staggered-pulse.svg --out /tmp/motion-dna.json
           python scripts/reconstruct_motion.py /tmp/motion-dna.json --shape diamond --out /tmp/diamond.svg
           python scripts/lint_svg_anim.py /tmp/diamond.svg
+      - name: Inspect upstream animation examples (cross-generator compatibility)
+        run: |
+          python - <<'PYCODE'
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, 'scripts')
+          from motion_dna_core import inspect_svg
+          paths=sorted(Path('assets/examples').glob('*.svg'))
+          assert len(paths)>=30, 'Unexpectedly few upstream SVG examples'
+          success=0; refused=[]
+          for path in paths:
+              try:
+                  report=inspect_svg(path)
+                  assert report['source']['sha256'],path
+                  success+=1
+              except ValueError as exc:
+                  refused.append((str(path),str(exc)))
+          print(f'Inspected {success}/{len(paths)} examples; explicit refusals: {len(refused)}')
+          for path,reason in refused:
+              print('UNSUPPORTED', path, reason)
+          assert success>=30, 'Motion DNA cannot inspect enough of its own existing SVG examples'
+          PYCODE
       - name: Check skill integration docs
         run: |
           python - <<'PYCODE'
